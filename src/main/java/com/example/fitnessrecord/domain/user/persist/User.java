@@ -1,5 +1,7 @@
 package com.example.fitnessrecord.domain.user.persist;
 
+import com.example.fitnessrecord.domain.user.type.UserType;
+import com.example.fitnessrecord.domain.userbodyinfo.persist.BodyInfo;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,11 +10,24 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 public class User {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "USER_ID")
   private Long id;
 
@@ -20,16 +35,15 @@ public class User {
   private String email;
   private String password;
 
-  private double height;
-  private double weight;
+  private String nickname;
 
-  private double muscleMass; //골격근량
-  private double fatMass; //체지방량
-  private double fatPercent; //체지방률
+  @OneToOne
+  @JoinColumn(name = "BODY_INFO_ID")
+  private BodyInfo bodyInfo;
 
   //이메일 인증 관련
   private boolean emailAuthYn;
-  private LocalDateTime emailAuthDt;
+  private LocalDateTime emailAuthDateTime;
   private String emailAuthKey;
 
   @Enumerated(EnumType.STRING)

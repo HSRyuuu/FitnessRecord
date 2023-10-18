@@ -39,4 +39,4 @@ out/
 ### private ###
 src/main/resources/application-private.properties
 
-memo
+memo/**

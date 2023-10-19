@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.auth.model;
+package com.example.fitnessrecord.global.auth.dto;
 
 import lombok.Data;
 

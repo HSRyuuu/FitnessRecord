@@ -4,7 +4,7 @@ package com.example.fitnessrecord.global.auth.service;
 import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
-import com.example.fitnessrecord.global.auth.model.LoginInput;
+import com.example.fitnessrecord.global.auth.dto.LoginInput;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;

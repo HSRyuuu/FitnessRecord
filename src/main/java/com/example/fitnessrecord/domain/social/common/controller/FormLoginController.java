@@ -1,6 +1,6 @@
-package com.example.fitnessrecord.global.social.common.controller;
+package com.example.fitnessrecord.domain.social.common.controller;
 
-import com.example.fitnessrecord.global.social.common.model.AuthAttributes;
+import com.example.fitnessrecord.domain.social.common.model.AuthAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class FormLoginController {
 
-  @GetMapping("/login/social")
+  @GetMapping("/login-page")
   public String socialLogin(Model model){
     model.addAttribute("authObject", new AuthAttributes());
 

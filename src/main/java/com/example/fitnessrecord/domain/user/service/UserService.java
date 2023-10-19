@@ -3,6 +3,7 @@ package com.example.fitnessrecord.domain.user.service;
 import com.example.fitnessrecord.domain.user.dto.EmailAuthResult;
 import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.dto.RegisterUserInput;
+import com.example.fitnessrecord.domain.user.persist.User;
 
 public interface UserService {
 
@@ -12,10 +13,22 @@ public interface UserService {
   boolean userExistsByEmail(String email);
 
   /**
-   * 유저 회원가입
+   * 유저 회원 가입
    */
   UserDto register(RegisterUserInput input);
 
+  /**
+   * 유저 회원 가입 2
+   */
+  UserDto register(User user);
+
+  /**
+   * find user by email
+   */
+  UserDto findByEmail(String email);
+  /**
+   * 이메일 인증 처리
+   */
   EmailAuthResult emailAuth(String uuid);
 
 }

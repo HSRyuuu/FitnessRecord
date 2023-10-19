@@ -35,19 +35,35 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserDto register(User user) {
+    User saved = userRepository.save(user);
+    return UserDto.fromEntity(saved);
+  }
+
+  @Override
+  public UserDto findByEmail(String email) {
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new MyException(ErrorCode.USER_NOT_FOUND));
+    return UserDto.fromEntity(user);
+  }
+
+  @Override
   public EmailAuthResult emailAuth(String uuid) {
     User user = userRepository.findByEmailAuthKey(uuid)
         .orElseThrow(() -> new MyException(ErrorCode.EMAIL_AUTH_KEY_ERROR));
+
     EmailAuthResult result = new EmailAuthResult();
-    if(user.isEmailAuthYn()){
+
+    if (user.isEmailAuthYn()) {
       result.setResult(false);
       result.setMessage("이미 인증 완료된 계정입니다.");
-    }else{
+    } else {
       result.setResult(true);
       result.setMessage("이메일 인증이 완료되었습니다.");
     }
     user.setEmailAuthYn(true);
     user.setEmailAuthDateTime(LocalDateTime.now());
+
     userRepository.save(user);
 
     return result;
@@ -57,7 +73,7 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByEmail(input.getEmail())) {
       throw new MyException(ErrorCode.USER_ALREADY_EXIST);
     }
-    if (!PasswordUtils.equalsPlainText(input.getPassword(), input.getPasswordCheck())){
+    if (!PasswordUtils.equalsPlainText(input.getPassword(), input.getPasswordCheck())) {
       throw new MyException(ErrorCode.PASSWORD_CHECK_INCORRECT);
     }
   }

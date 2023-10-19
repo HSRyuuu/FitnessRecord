@@ -39,7 +39,7 @@ public class KakaoAuthController {
     UserDto userDto;
     if (!isExist) {//회원가입
       User user = KakaoProfile.toEntity(kakaoProfile);
-      userDto = userService.register(user);
+      userDto = userService.registerDirectly(user);
     } else {
       userDto = userService.findByEmail(kakaoProfile.getEmail());
     }

@@ -30,6 +30,7 @@ public class UserController {
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody RegisterUserInput input) {
     UserDto registeredUser = userService.register(input);
+
     mailComponents.sendMailForRegister(
         new SendMailDto(
             registeredUser.getEmail(),

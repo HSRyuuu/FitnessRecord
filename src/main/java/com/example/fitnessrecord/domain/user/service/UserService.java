@@ -14,13 +14,15 @@ public interface UserService {
 
   /**
    * 유저 회원 가입
+   * @Param : RegisterUserInput
    */
   UserDto register(RegisterUserInput input);
 
   /**
-   * 유저 회원 가입 2
+   * 유저 회원 가입 (소셜 회원가입 시)
+   * @Param : User entity
    */
-  UserDto register(User user);
+  UserDto registerDirectly(User user);
 
   /**
    * find user by email

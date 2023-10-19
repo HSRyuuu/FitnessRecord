@@ -40,6 +40,7 @@ public class AuthService implements UserDetailsService {
     User user = userRepository.findByEmail(username)
         .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 존재하지 않습니다."));
     log.info("로그인 성공[ ID : {} ]", user.getEmail());
+
     return new PrincipalDetails(user);
   }
 }

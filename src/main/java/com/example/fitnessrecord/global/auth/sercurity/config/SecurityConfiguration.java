@@ -4,7 +4,6 @@ import com.example.fitnessrecord.global.auth.sercurity.errorhandler.MyAccessDeni
 import com.example.fitnessrecord.global.auth.sercurity.errorhandler.MyAuthenticationEntryPoint;
 import com.example.fitnessrecord.global.auth.sercurity.filter.AuthenticationFilter;
 import com.example.fitnessrecord.global.auth.sercurity.filter.JwtExceptionFilter;
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -40,27 +39,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http
         .httpBasic().disable()
         .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+          .authorizeRequests()
+          .antMatchers("/admin/**")
+          .hasAuthority("ROLE_ADMIN")
+        .and()
+          .authorizeRequests()
+          .antMatchers("/user/**")
+          .hasAuthority("ROLE_USER")
+        .and()
+          .exceptionHandling()
+            .authenticationEntryPoint(myAuthenticationEntryPoint)
+            .accessDeniedHandler(myAccessDeniedHandler)
+        .and()
+            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtExceptionFilter, AuthenticationFilter.class);
 
-    //admin 페이지 권한
-    http
-        .authorizeRequests()
-        .antMatchers("/admin/**")
-        .hasAuthority("ROLE_ADMIN");
-
-    //예외 핸들링
-    http
-        .exceptionHandling()
-        .authenticationEntryPoint(myAuthenticationEntryPoint)
-        .accessDeniedHandler(myAccessDeniedHandler);
-    http
-        .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(jwtExceptionFilter, AuthenticationFilter.class);
-
-    // 개발용
-    if (Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
-      http.authorizeRequests().antMatchers("/**").permitAll();
-    }
+//    // 개발용
+//    if (Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
+//      http.authorizeRequests().antMatchers("/**").permitAll();
+//    }
 
   }
 

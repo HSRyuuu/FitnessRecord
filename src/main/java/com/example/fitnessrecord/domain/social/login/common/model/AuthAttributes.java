@@ -1,8 +1,6 @@
-package com.example.fitnessrecord.domain.social.common.model;
+package com.example.fitnessrecord.domain.social.login.common.model;
 
-import com.example.fitnessrecord.domain.social.common.component.AuthConstUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.example.fitnessrecord.domain.social.login.common.component.AuthConstUtil;
 import lombok.Data;
 
 

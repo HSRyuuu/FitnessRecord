@@ -1,8 +1,6 @@
 package com.example.fitnessrecord.global.auth.sercurity.filter;
 
 import com.example.fitnessrecord.global.auth.sercurity.jwt.TokenProvider;
-import com.example.fitnessrecord.global.exception.ErrorCode;
-import com.example.fitnessrecord.global.exception.MyException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -34,9 +32,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     String token = resolveTokenFromRequest(request.getHeader(TOKEN_HEADER));
 
+    boolean hasText = true;
     if(!StringUtils.hasText(token)){
-      log.info("Authorization 헤더를 찾을 수 없습니다.");
-    }else if (tokenProvider.validateToken(token)) {
+      log.info("No TOKEN");
+      hasText = false;
+    }
+
+    if (hasText && tokenProvider.validateToken(token)) {
       //토큰 유효성 검증 성공
       Authentication auth = tokenProvider.getAuthentication(token);
       SecurityContextHolder.getContext().setAuthentication(auth);

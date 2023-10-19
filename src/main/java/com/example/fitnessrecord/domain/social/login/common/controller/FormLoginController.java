@@ -1,6 +1,6 @@
-package com.example.fitnessrecord.domain.social.common.controller;
+package com.example.fitnessrecord.domain.social.login.common.controller;
 
-import com.example.fitnessrecord.domain.social.common.model.AuthAttributes;
+import com.example.fitnessrecord.domain.social.login.common.model.AuthAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

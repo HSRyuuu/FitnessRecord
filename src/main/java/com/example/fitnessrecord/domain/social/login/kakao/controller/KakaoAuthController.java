@@ -1,8 +1,8 @@
-package com.example.fitnessrecord.domain.social.kakao.controller;
+package com.example.fitnessrecord.domain.social.login.kakao.controller;
 
-import com.example.fitnessrecord.domain.social.kakao.api.KakaoApi;
-import com.example.fitnessrecord.domain.social.kakao.model.KakaoProfile;
-import com.example.fitnessrecord.domain.social.kakao.model.OAuthToken;
+import com.example.fitnessrecord.domain.social.login.kakao.api.KakaoApi;
+import com.example.fitnessrecord.domain.social.login.kakao.model.KakaoProfile;
+import com.example.fitnessrecord.domain.social.login.kakao.model.OAuthToken;
 import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.service.UserService;

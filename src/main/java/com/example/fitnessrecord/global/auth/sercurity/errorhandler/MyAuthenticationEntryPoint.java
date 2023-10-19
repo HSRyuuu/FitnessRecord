@@ -1,6 +1,5 @@
 package com.example.fitnessrecord.global.auth.sercurity.errorhandler;
 
-import com.example.fitnessrecord.global.exception.MyException;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

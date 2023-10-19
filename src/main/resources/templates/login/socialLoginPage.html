@@ -1,0 +1,24 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head >
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title >SOCIAL LOGIN</title>
+</head>
+
+
+<body>
+
+<div>
+    <!-- kakao button -->
+    <div class="text-center">
+      <a href="https://kauth.kakao.com/oauth/authorize"
+         th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${authObject.kakaoApiKey}, redirect_uri=${authObject.kakaoRedirectUrl}, response_type='code')}">
+        <img src="/image/kakao_login_medium_narrow.png">
+      </a>
+    </div>
+</div>
+
+</body>
+</html>

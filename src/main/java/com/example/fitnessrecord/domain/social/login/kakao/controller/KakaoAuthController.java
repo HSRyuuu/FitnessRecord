@@ -44,8 +44,8 @@ public class KakaoAuthController {
       userDto = userService.findByEmail(kakaoProfile.getEmail());
     }
 
-    String token = tokenProvider.generateToken(userDto.getEmail(),
-        GrantUtils.getStringAuthoritiesByUserType(userDto.getUserType()));
+    String token = tokenProvider.generateToken(userDto.getEmail(),userDto.getUserType());
+
     return new AuthResponse(userDto.getEmail(), userDto.getNickname(), token);
   }
 }

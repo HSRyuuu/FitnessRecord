@@ -1,0 +1,33 @@
+package com.example.fitnessrecord.domain.userbodyinfo.dto;
+
+import com.example.fitnessrecord.domain.userbodyinfo.persist.BodyInfo;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class BodyInfoInput {
+
+  private double height;
+  private double weight;
+
+  private double muscleMass; //골격근량
+  private double fatMass; //체지방량
+
+  public static BodyInfo toEntity(BodyInfoInput input){
+    return BodyInfo.builder()
+        .height(input.getHeight())
+        .weight(input.getWeight())
+        .muscleMass(input.getMuscleMass())
+        .fatMass(input.getFatMass())
+        .createdAt(LocalDateTime.now())
+        .build();
+  }
+}

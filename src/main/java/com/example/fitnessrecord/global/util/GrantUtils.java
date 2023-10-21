@@ -15,13 +15,4 @@ public class GrantUtils {
     }
     return grantedAuthorities;
   }
-
-  public static List<String> getStringAuthoritiesByUserType(UserType userType){
-    List<String> list = new ArrayList<>();
-    list.add("ROLE_USER");
-    if (userType.equals(UserType.ADMIN)) {
-      list.add("ROLE_ADMIN");
-    }
-    return list;
-  }
 }

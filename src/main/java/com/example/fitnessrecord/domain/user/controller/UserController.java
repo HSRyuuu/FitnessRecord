@@ -5,13 +5,11 @@ import com.example.fitnessrecord.domain.user.dto.RegisterUserInput;
 import com.example.fitnessrecord.domain.user.dto.RegisterUserResult;
 import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.service.UserService;
-import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import com.example.fitnessrecord.global.mail.MailComponents;
 import com.example.fitnessrecord.global.mail.SendMailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,13 +45,9 @@ public class UserController {
     return result;
   }
 
-  @GetMapping("/user/test")
-  public String test(@AuthenticationPrincipal PrincipalDetails principalDetails){
-    if(principalDetails == null){
-      return "principalDetails is null";
-    }
-    return principalDetails.getUser().getEmail();
-  }
+
+
+
 
 
 

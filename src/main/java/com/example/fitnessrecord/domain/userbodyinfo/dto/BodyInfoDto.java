@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.domain.userbodyinfo.dto;
 
 import com.example.fitnessrecord.domain.userbodyinfo.persist.BodyInfo;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class BodyInfoDto {
 
   private double muscleMass; //골격근량
   private double fatMass; //체지방량
+  private LocalDate createDate;
 
   public static BodyInfoDto fromEntity(BodyInfo bodyInfo) {
     return BodyInfoDto.builder()
@@ -32,6 +34,7 @@ public class BodyInfoDto {
         .weight(bodyInfo.getWeight())
         .muscleMass(bodyInfo.getMuscleMass())
         .fatMass(bodyInfo.getFatMass())
+        .createDate(bodyInfo.getCreateDate())
         .build();
   }
 }

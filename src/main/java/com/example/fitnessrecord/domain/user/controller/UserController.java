@@ -7,6 +7,7 @@ import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.service.UserService;
 import com.example.fitnessrecord.global.mail.MailComponents;
 import com.example.fitnessrecord.global.mail.SendMailDto;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class UserController {
   private final UserService userService;
   private final MailComponents mailComponents;
 
+  @ApiOperation("회원 가입")
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody RegisterUserInput input) {
     UserDto registeredUser = userService.register(input);
@@ -39,6 +41,7 @@ public class UserController {
     return ResponseEntity.ok(RegisterUserResult.fromDto(registeredUser));
   }
 
+  @ApiOperation("이메일 인증")
   @GetMapping("/auth/email-auth")
   public @ResponseBody EmailAuthResult emailAuth(@RequestParam String key){
     EmailAuthResult result = userService.emailAuth(key);

@@ -6,8 +6,11 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.domain.userbodyinfo.dto.BodyInfoDto;
 import com.example.fitnessrecord.domain.userbodyinfo.dto.BodyInfoInput;
+import com.example.fitnessrecord.domain.userbodyinfo.persist.BodyInfo;
+import com.example.fitnessrecord.domain.userbodyinfo.persist.BodyInfoRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import java.time.LocalDate;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -24,7 +27,10 @@ class BodyInfoServiceTest {
   @Autowired
   BodyInfoService bodyInfoService;
   @Autowired
+  BodyInfoRepository bodyInfoRepository;
+  @Autowired
   UserRepository userRepository;
+
 
   @Nested
   @DisplayName("BODY_INFO 등록")
@@ -52,6 +58,40 @@ class BodyInfoServiceTest {
       assertThat(saved.getId()).isEqualTo(result.getUserId());
       assertThat(result.getHeight()).isEqualTo(input.getHeight());
       assertThat(result.getWeight()).isEqualTo(input.getWeight());
+    }
+
+    @Test
+    @DisplayName("성공 - 하루에 여러번 추가")
+    void addBodyInfoTwice() {
+      //given
+      User user = User.builder()
+          .email("test@test.com")
+          .build();
+      User saved = userRepository.save(user);
+
+      BodyInfoInput input1 = BodyInfoInput.builder()
+          .height(170)
+          .weight(70.5)
+          .muscleMass(30)
+          .fatMass(21.5)
+          .build();
+      bodyInfoService.addBodyInfo(saved.getId(), input1);
+
+      BodyInfoInput input2 = BodyInfoInput.builder()
+          .height(170)
+          .weight(75)
+          .muscleMass(35)
+          .fatMass(20)
+          .build();
+
+      //when
+      bodyInfoService.addBodyInfo(saved.getId(), input2);
+
+      BodyInfo bodyInfo = bodyInfoRepository.findByUserAndCreateDate(saved, LocalDate.now()).get();
+
+      //then
+      assertThat(bodyInfo.getMuscleMass()).isEqualTo(input2.getMuscleMass());
+      assertThat(bodyInfo.getFatMass()).isEqualTo(input2.getFatMass());
     }
 
     @Test

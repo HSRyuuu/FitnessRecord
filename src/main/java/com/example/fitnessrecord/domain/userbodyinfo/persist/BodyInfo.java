@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.domain.userbodyinfo.persist;
 
 import com.example.fitnessrecord.domain.user.persist.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,5 +37,5 @@ public class BodyInfo {
   private double muscleMass; //골격근량
   private double fatMass; //체지방량
 
-  private LocalDateTime createdAt;
+  private LocalDate createDate;
 }

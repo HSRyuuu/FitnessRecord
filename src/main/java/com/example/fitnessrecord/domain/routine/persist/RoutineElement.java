@@ -1,7 +1,7 @@
 package com.example.fitnessrecord.domain.routine.persist;
 
 
-import com.example.fitnessrecord.domain.training.basic.type.BodyPart;
+import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -39,7 +39,6 @@ public class RoutineElement {
   @Enumerated(EnumType.STRING)
   private BodyPart bodyPart; //운동 부위
 
-  private double weight; //무게
   private Integer reps; //횟수
 
 }

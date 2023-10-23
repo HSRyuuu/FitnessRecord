@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.domain.routine.persist;
 
 import com.example.fitnessrecord.domain.user.persist.User;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -35,8 +36,11 @@ public class Routine {
   @JoinColumn(name = "USER_ID")
   private User user;
 
+  private String routineName;
+
+  private LocalDate lastModifiedDate;
+
   @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RoutineElement> list = new ArrayList<>();
-
 
 }

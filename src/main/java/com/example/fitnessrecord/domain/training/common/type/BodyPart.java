@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.domain.training.basic.type;
+package com.example.fitnessrecord.domain.training.common.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ public enum BodyPart {
   SHOULDER("어깨(Shoulder)"),
   ARM("팔(Arms)"),
   ABS("복근(Abs)"),
-  LOWER_BODY("하체(Lower body)"),
+  LEGS("하체(Legs)"),
   QUADS("대퇴 사두(Quads)"),
   HAMSTRINGS("햄스트링(Hamstrings)"),
   CALVES("종아리(Calves)"),

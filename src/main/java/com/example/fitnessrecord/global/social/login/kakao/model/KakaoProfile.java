@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.domain.social.login.kakao.model;
+package com.example.fitnessrecord.global.social.login.kakao.model;
 
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.type.UserType;

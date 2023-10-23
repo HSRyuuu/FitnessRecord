@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.domain.social.login.common.component;
+package com.example.fitnessrecord.global.social.login.common.component;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

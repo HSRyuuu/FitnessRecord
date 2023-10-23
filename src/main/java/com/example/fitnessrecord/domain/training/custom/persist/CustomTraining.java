@@ -1,6 +1,6 @@
 package com.example.fitnessrecord.domain.training.custom.persist;
 
-import com.example.fitnessrecord.domain.training.basic.type.BodyPart;
+import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.user.persist.User;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

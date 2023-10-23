@@ -1,7 +1,7 @@
 package com.example.fitnessrecord.domain.record.persist;
 
 
-import com.example.fitnessrecord.domain.training.basic.type.BodyPart;
+import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDate;
 import javax.persistence.Entity;

@@ -14,8 +14,12 @@ public enum ErrorCode {
     EMAIL_AUTH_REQUIRED(HttpStatus.UNAUTHORIZED.value(), "이메일 인증이 완료되지 않았습니다."),
     EMAIL_AUTH_KEY_ERROR(HttpStatus.NOT_FOUND.value(), "이메일 인증 키에 문제가 있습니다."),
 
-    //BodyInfo
+    //BodyInfo 관련
     BODY_INFO_DATA_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "바디 데이터가 존재하지 않습니다."),
+
+    //Training 관련
+    TRAINING_NAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST.value(), "이미 존재 하는 Training Name 입니다."),
+    TRAINING_NAME_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 Training Name 을 찾을 수 없습니다."),
 
 
 

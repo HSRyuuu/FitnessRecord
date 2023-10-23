@@ -46,10 +46,9 @@ public class SecurityConfiguration {
         .authorizeRequests()
         .antMatchers("/admin/**")
         .hasAuthority("ROLE_ADMIN")
-        .and()
-        .authorizeRequests()
         .antMatchers("/**")
         .hasAuthority("ROLE_USER");
+
 
     http
         .exceptionHandling()
@@ -68,7 +67,7 @@ public class SecurityConfiguration {
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
-    return web -> web.ignoring().antMatchers("/register/**", "/login/**", "/exception/**");
+    return web -> web.ignoring().antMatchers("/register/**", "/login/**", "/exception/**", "/login-page ");
   }
 
   @Bean

@@ -26,6 +26,7 @@ public class BasicTraining {
   private Long id;
 
   private String trainingName;
+  private String trainingNameKor;
 
   @Enumerated(EnumType.STRING)
   private BodyPart bodyPart;

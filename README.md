@@ -1,5 +1,5 @@
 # FitnessRecord
-(운동(웨이트 트레이닝) 기록 서비스)
+운동(웨이트 트레이닝) 기록 서비스
 
 ## Skills
 - Java 11, Spring Boot 2.7.10, gradle 8.2.1
@@ -59,7 +59,6 @@
 
 ## ERD
 ERD는 아직 완성본이 아닙니다.
-![ERD.png](src%2Fmain%2Fresources%2Fstatic%2Fimage%2FERD.png)
-
+![ERD](src/main/resources/static/image/ERD.png)
 
 

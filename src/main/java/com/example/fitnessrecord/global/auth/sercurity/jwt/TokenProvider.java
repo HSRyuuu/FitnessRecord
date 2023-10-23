@@ -88,6 +88,8 @@ public class TokenProvider {
             throw new JwtException(ErrorCode.TOKEN_TIME_OUT.getDescription());
         }catch (SignatureException e){
             throw new JwtException(ErrorCode.JWT_TOKEN_WRONG_TYPE.getDescription());
+        }catch (MalformedJwtException e){
+            throw new JwtException(ErrorCode.JWT_TOKEN_MALFORMED.getDescription());
         }
     }
 

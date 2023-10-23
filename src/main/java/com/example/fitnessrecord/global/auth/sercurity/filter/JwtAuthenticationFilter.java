@@ -32,13 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     String token = resolveTokenFromRequest(request.getHeader(TOKEN_HEADER));
 
-    boolean hasText = true;
-    if(!StringUtils.hasText(token)){
-      log.info("No TOKEN");
-      hasText = false;
-    }
-
-    if (hasText && tokenProvider.validateToken(token)) {
+    if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
       //토큰 유효성 검증 성공
       Authentication auth = tokenProvider.getAuthentication(token);
       SecurityContextHolder.getContext().setAuthentication(auth);

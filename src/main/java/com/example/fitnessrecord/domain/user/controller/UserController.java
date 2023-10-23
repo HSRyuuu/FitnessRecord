@@ -5,13 +5,12 @@ import com.example.fitnessrecord.domain.user.dto.RegisterUserInput;
 import com.example.fitnessrecord.domain.user.dto.RegisterUserResult;
 import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.service.UserService;
-import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import com.example.fitnessrecord.global.mail.MailComponents;
 import com.example.fitnessrecord.global.mail.SendMailDto;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +26,7 @@ public class UserController {
   private final UserService userService;
   private final MailComponents mailComponents;
 
+  @ApiOperation("회원 가입")
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody RegisterUserInput input) {
     UserDto registeredUser = userService.register(input);
@@ -41,19 +41,16 @@ public class UserController {
     return ResponseEntity.ok(RegisterUserResult.fromDto(registeredUser));
   }
 
+  @ApiOperation("이메일 인증")
   @GetMapping("/auth/email-auth")
   public @ResponseBody EmailAuthResult emailAuth(@RequestParam String key){
     EmailAuthResult result = userService.emailAuth(key);
     return result;
   }
 
-  @GetMapping("/user/test")
-  public String test(@AuthenticationPrincipal PrincipalDetails principalDetails){
-    if(principalDetails == null){
-      return "principalDetails is null";
-    }
-    return principalDetails.getUser().getEmail();
-  }
+
+
+
 
 
 

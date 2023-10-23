@@ -2,12 +2,14 @@ package com.example.fitnessrecord.global.auth.sercurity.config;
 
 import com.example.fitnessrecord.global.auth.sercurity.errorhandler.MyAccessDeniedHandler;
 import com.example.fitnessrecord.global.auth.sercurity.errorhandler.MyAuthenticationEntryPoint;
-import com.example.fitnessrecord.global.auth.sercurity.filter.AuthenticationFilter;
+import com.example.fitnessrecord.global.auth.sercurity.filter.JwtAuthenticationFilter;
 import com.example.fitnessrecord.global.auth.sercurity.filter.JwtExceptionFilter;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,7 +28,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfiguration {
 
-  private final AuthenticationFilter authenticationFilter;
+  private final Environment environment;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final JwtExceptionFilter jwtExceptionFilter;
 
   private final MyAccessDeniedHandler myAccessDeniedHandler;
@@ -37,22 +40,28 @@ public class SecurityConfiguration {
     http
         .httpBasic().disable()
         .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http
         .authorizeRequests()
         .antMatchers("/admin/**")
         .hasAuthority("ROLE_ADMIN")
         .and()
         .authorizeRequests()
-        .antMatchers("/user/**")
-        .hasAuthority("ROLE_USER")
-        .and()
+        .antMatchers("/**")
+        .hasAuthority("ROLE_USER");
+
+    http
         .exceptionHandling()
         .authenticationEntryPoint(myAuthenticationEntryPoint)
-        .accessDeniedHandler(myAccessDeniedHandler)
-        .and()
-        .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(jwtExceptionFilter, AuthenticationFilter.class);
+        .accessDeniedHandler(myAccessDeniedHandler);
+    http
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
+
+    if (Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
+      http.authorizeRequests().antMatchers("/**").permitAll();
+    }
 
     return http.build();
   }

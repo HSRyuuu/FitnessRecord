@@ -146,7 +146,7 @@ class AuthServiceTest {
           (PrincipalDetails) authService.loadUserByUsername(email);
 
       //then
-      assertThat(principalDetails.getUser().getId()).isEqualTo(saved.getId());
+      assertThat(principalDetails.getUserId()).isEqualTo(saved.getId());
       assertThat(principalDetails.getUsername()).isEqualTo(email);
     }
 

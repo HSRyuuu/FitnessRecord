@@ -23,8 +23,7 @@ public class AuthController {
   public ResponseEntity<?> login(@RequestBody LoginInput loginInput) {
     UserDto user = authService.authenticateUser(loginInput);
 
-    String token = tokenProvider.generateToken(user.getEmail(),
-        GrantUtils.getStringAuthoritiesByUserType(user.getUserType()));
+    String token = tokenProvider.generateToken(user.getEmail(), user.getUserType());
 
     return ResponseEntity.ok(new AuthResponse(user.getEmail(), user.getNickname(), token));
   }

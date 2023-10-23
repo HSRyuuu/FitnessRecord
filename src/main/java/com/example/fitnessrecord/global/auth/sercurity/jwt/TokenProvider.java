@@ -1,8 +1,10 @@
 package com.example.fitnessrecord.global.auth.sercurity.jwt;
 
+import com.example.fitnessrecord.domain.user.type.UserType;
 import com.example.fitnessrecord.global.auth.service.AuthService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import io.jsonwebtoken.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,9 @@ public class TokenProvider {
     /**
      * 토큰 생성 (발급)
      */
-    public String generateToken(String username, List<String> roles) {
+    public String generateToken(String username, UserType userType) {
+        List<String> roles = getRolesByUserType(userType);
+
         Claims claims = Jwts.claims().setSubject(username);
         claims.put(KEY_ROLES, roles);
 
@@ -43,6 +47,15 @@ public class TokenProvider {
                 .setExpiration(expiredDate) // 토큰 만료시간
                 .signWith(SignatureAlgorithm.HS512, this.secretKey) //사용할 암호화 알고리즘, 시크릿 키
                 .compact();
+    }
+
+    private List<String> getRolesByUserType(UserType userType){
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_USER");
+        if (userType.equals(UserType.ADMIN)) {
+            roles.add("ROLE_ADMIN");
+        }
+        return roles;
     }
 
     /**

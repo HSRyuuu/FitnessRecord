@@ -1,7 +1,7 @@
 package com.example.fitnessrecord.global.auth.sercurity.principal;
 
-import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.persist.User;
+import com.example.fitnessrecord.domain.user.type.UserType;
 import com.example.fitnessrecord.global.util.GrantUtils;
 import java.util.Collection;
 import lombok.Data;
@@ -11,25 +11,31 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 public class PrincipalDetails implements UserDetails {
 
-  private UserDto user;
+  private Long userId;
+  private String email;
+  private String password;
+  private UserType userType;
 
   public PrincipalDetails(User user) {
-    this.user = UserDto.fromEntity(user);
+    this.userId = user.getId();
+    this.email = user.getEmail();
+    this.password = user.getPassword();
+    this.userType = user.getUserType();
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return GrantUtils.getAuthoritiesByUserType(this.user.getUserType());
+    return GrantUtils.getAuthoritiesByUserType(this.userType);
   }
 
   @Override
   public String getPassword() {
-    return this.user.getPassword();
+    return this.password;
   }
 
   @Override
   public String getUsername() {
-    return this.user.getEmail();
+    return this.email;
   }
 
   @Override

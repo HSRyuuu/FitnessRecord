@@ -37,10 +37,6 @@ public class User {
 
   private String nickname;
 
-  @OneToOne
-  @JoinColumn(name = "BODY_INFO_ID")
-  private BodyInfo bodyInfo;
-
   //이메일 인증 관련
   private boolean emailAuthYn;
   private LocalDateTime emailAuthDateTime;

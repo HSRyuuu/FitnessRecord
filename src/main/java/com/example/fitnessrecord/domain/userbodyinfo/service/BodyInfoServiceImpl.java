@@ -32,10 +32,12 @@ public class BodyInfoServiceImpl implements BodyInfoService {
         bodyInfoRepository.findByUserAndDate(user,  LocalDate.now());
 
     BodyInfo bodyInfo;
+    //해당 일자에 이미 BodyInfo가 존재하는 경우 - 수정
     if(findBodyInfo.isPresent()){
       bodyInfo = findBodyInfo.get();
       BodyInfoInput.updateBodyInfo(bodyInfo, input);
     }else{
+      //BodyInfo 추가
       bodyInfo = BodyInfoInput.toEntity(input);
       bodyInfo.setUser(user);
     }
@@ -43,6 +45,16 @@ public class BodyInfoServiceImpl implements BodyInfoService {
     BodyInfo saved = bodyInfoRepository.save(bodyInfo);
 
     return BodyInfoDto.fromEntity(saved);
+  }
+
+  @Override
+  public BodyInfoDto deleteByDate(Long userId, LocalDate date) {
+    BodyInfo bodyInfo = bodyInfoRepository.findByUserIdAndDate(userId, date)
+        .orElseThrow(() -> new MyException(ErrorCode.BODY_INFO_DATA_NOT_FOUND));
+
+    bodyInfoRepository.delete(bodyInfo);
+
+    return BodyInfoDto.fromEntity(bodyInfo);
   }
 
   @Override
@@ -55,14 +67,6 @@ public class BodyInfoServiceImpl implements BodyInfoService {
     return findList.stream().map(bodyInfo -> BodyInfoDto.fromEntity(bodyInfo)).collect(Collectors.toList());
   }
 
-  @Override
-  public BodyInfoDto deleteByDate(Long userId, LocalDate date) {
-    BodyInfo bodyInfo = bodyInfoRepository.findByUserIdAndDate(userId, date)
-        .orElseThrow(() -> new MyException(ErrorCode.BODY_INFO_DATA_NOT_FOUND));
 
-    bodyInfoRepository.delete(bodyInfo);
-
-    return BodyInfoDto.fromEntity(bodyInfo);
-  }
 
 }

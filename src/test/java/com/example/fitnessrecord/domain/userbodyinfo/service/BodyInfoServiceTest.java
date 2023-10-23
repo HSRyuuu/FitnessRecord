@@ -13,7 +13,6 @@ import com.example.fitnessrecord.global.exception.MyException;
 import java.time.LocalDate;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -87,7 +86,7 @@ class BodyInfoServiceTest {
       //when
       bodyInfoService.addBodyInfo(saved.getId(), input2);
 
-      BodyInfo bodyInfo = bodyInfoRepository.findByUserAndCreateDate(saved, LocalDate.now()).get();
+      BodyInfo bodyInfo = bodyInfoRepository.findByUserAndDate(saved, LocalDate.now()).get();
 
       //then
       assertThat(bodyInfo.getMuscleMass()).isEqualTo(input2.getMuscleMass());

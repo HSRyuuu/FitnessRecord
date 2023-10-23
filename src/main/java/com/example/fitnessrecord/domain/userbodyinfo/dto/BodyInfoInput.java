@@ -27,7 +27,7 @@ public class BodyInfoInput {
         .weight(input.getWeight())
         .muscleMass(input.getMuscleMass())
         .fatMass(input.getFatMass())
-        .createDate(LocalDate.now())
+        .date(LocalDate.now())
         .build();
   }
 

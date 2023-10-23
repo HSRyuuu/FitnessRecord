@@ -14,6 +14,9 @@ public enum ErrorCode {
     EMAIL_AUTH_REQUIRED(HttpStatus.UNAUTHORIZED.value(), "이메일 인증이 완료되지 않았습니다."),
     EMAIL_AUTH_KEY_ERROR(HttpStatus.NOT_FOUND.value(), "이메일 인증 키에 문제가 있습니다."),
 
+    //BodyInfo
+    BODY_INFO_DATA_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "바디 데이터가 존재하지 않습니다."),
+
 
 
 

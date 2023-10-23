@@ -24,7 +24,7 @@ public class BodyInfoDto {
 
   private double muscleMass; //골격근량
   private double fatMass; //체지방량
-  private LocalDate createDate;
+  private LocalDate date;
 
   public static BodyInfoDto fromEntity(BodyInfo bodyInfo) {
     return BodyInfoDto.builder()
@@ -34,7 +34,7 @@ public class BodyInfoDto {
         .weight(bodyInfo.getWeight())
         .muscleMass(bodyInfo.getMuscleMass())
         .fatMass(bodyInfo.getFatMass())
-        .createDate(bodyInfo.getCreateDate())
+        .date(bodyInfo.getDate())
         .build();
   }
 }

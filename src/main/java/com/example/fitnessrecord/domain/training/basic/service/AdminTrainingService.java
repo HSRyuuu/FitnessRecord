@@ -1,7 +1,7 @@
 package com.example.fitnessrecord.domain.training.basic.service;
 
-import com.example.fitnessrecord.domain.training.basic.dto.BasicTrainingDto;
 import com.example.fitnessrecord.domain.training.basic.dto.AddBasicTrainingInput;
+import com.example.fitnessrecord.domain.training.basic.dto.BasicTrainingDto;
 import com.example.fitnessrecord.domain.training.basic.dto.EditBasicTrainingInput;
 import com.example.fitnessrecord.domain.training.basic.persist.BasicTraining;
 import com.example.fitnessrecord.domain.training.basic.persist.BasicTrainingRepository;
@@ -21,8 +21,8 @@ public class AdminTrainingService {
   /**
    * ADMIN - Basic Training 추가
    */
-  public BasicTrainingDto addTraining(AddBasicTrainingInput input){
-    if(basicTrainingRepository.existsByTrainingName(input.getTrainingName())){
+  public BasicTrainingDto addTraining(AddBasicTrainingInput input) {
+    if (basicTrainingRepository.existsByTrainingName(input.getTrainingName())) {
       throw new MyException(ErrorCode.TRAINING_NAME_ALREADY_EXIST);
     }
 
@@ -50,13 +50,6 @@ public class AdminTrainingService {
     return BasicTrainingDto.fromEntity(basicTraining);
   }
 
-  /**
-   * ADMIN - Basic Training 리스트
-   */
-  public List<BasicTrainingDto> list() {
-    List<BasicTraining> list = basicTrainingRepository.findAll();
-    return list.stream().map(t -> BasicTrainingDto.fromEntity(t)).collect(Collectors.toList());
-  }
 
   /**
    * ADMIN - Basic Training 수정
@@ -70,5 +63,13 @@ public class AdminTrainingService {
     basicTrainingRepository.save(basicTraining);
 
     return BasicTrainingDto.fromEntity(basicTraining);
+  }
+
+  /**
+   * ADMIN - Basic Training 리스트
+   */
+  public List<BasicTrainingDto> trainingList() {
+    List<BasicTraining> list = basicTrainingRepository.findAll();
+    return list.stream().map(t -> BasicTrainingDto.fromEntity(t)).collect(Collectors.toList());
   }
 }

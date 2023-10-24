@@ -53,7 +53,7 @@ public class AdminTrainingController {
   @ApiOperation("ADMIN - BasicTraining 리스트")
   @GetMapping("/admin/list/training")
   public ResponseEntity<?> list(){
-    List<BasicTrainingDto> list = adminTrainingService.list();
+    List<BasicTrainingDto> list = adminTrainingService.trainingList();
     return ResponseEntity.ok(list);
   }
 

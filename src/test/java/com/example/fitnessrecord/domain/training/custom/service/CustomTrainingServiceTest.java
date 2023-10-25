@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 
 @Slf4j
 @Transactional
@@ -249,14 +250,37 @@ class CustomTrainingServiceTest {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
       }
     }
-
-
-  }
-  @Test
-  void deleteCustomTraining() {
   }
 
-  @Test
-  void customTrainingList() {
+  @Nested
+  @DisplayName("CustomTraining 리스트")
+  class CustomTrainingList{
+
+    @Test
+    @DisplayName("성공")
+    void customTrainingList(){
+      //given
+      String username = user.getEmail();
+      int amount = 3;
+      for(int i = 0; i < amount; i++){
+        CustomTraining customTraining = CustomTraining.builder()
+            .user(user)
+            .trainingName("test" + i)
+            .bodyPart(BodyPart.ETC)
+            .build();
+        customTrainingRepository.save(customTraining);
+      }
+
+      //when
+      Page<CustomTrainingDto> result =
+          customTrainingService.customTrainingList(username, 1);
+
+      int cnt = 0;
+      for (CustomTrainingDto customTrainingDto : result) {
+        assertThat(customTrainingDto.getUsername()).isEqualTo(username);
+        cnt++;
+      }
+      assertThat(cnt).isEqualTo(amount);
+    }
   }
 }

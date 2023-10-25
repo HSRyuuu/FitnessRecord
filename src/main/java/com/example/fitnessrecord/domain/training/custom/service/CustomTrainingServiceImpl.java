@@ -10,9 +10,11 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import com.example.fitnessrecord.global.util.PageConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -71,7 +73,14 @@ public class CustomTrainingServiceImpl implements CustomTrainingService{
   }
 
   @Override
-  public Page<CustomTrainingDto> customTrainingList(String userEmail) {
-    return null;
+  public Page<CustomTrainingDto> customTrainingList(String username, Integer page) {
+    User user = userRepository.findByEmail(username)
+        .orElseThrow(() -> new MyException(ErrorCode.USER_NOT_FOUND));
+
+    Page<CustomTraining> list =
+        customTrainingRepository.findByUserId(user.getId(),
+            PageRequest.of(page - 1, PageConstant.DEFAULT_PAGE_SIZE));
+
+    return list.map(CustomTrainingDto::fromEntity);
   }
 }

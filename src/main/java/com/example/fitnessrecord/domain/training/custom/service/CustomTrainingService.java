@@ -26,6 +26,6 @@ public interface CustomTrainingService {
   /**
    * Custom 운동 종목 리스트
    */
-  Page<CustomTrainingDto> customTrainingList(String username);
+  Page<CustomTrainingDto> customTrainingList(String username, Integer page);
 
 }

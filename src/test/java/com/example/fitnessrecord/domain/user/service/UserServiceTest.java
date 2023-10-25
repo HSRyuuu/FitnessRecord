@@ -132,7 +132,7 @@ class UserServiceTest {
           .build();
 
       //when
-      UserDto userDto = userService.registerDirectly(user);
+      UserDto userDto = userService.registerSocialUser(user);
       User findUser = userRepository.findById(userDto.getId()).get();
       //then
       assertThat(findUser.getEmail()).isEqualTo(userDto.getEmail());
@@ -154,7 +154,7 @@ class UserServiceTest {
       //when
       //then
       try {
-        userService.registerDirectly(newUser);
+        userService.registerSocialUser(newUser);
       } catch (MyException e) {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.USER_ALREADY_EXIST);
       }

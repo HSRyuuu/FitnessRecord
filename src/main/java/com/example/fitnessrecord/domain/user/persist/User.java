@@ -40,6 +40,7 @@ public class User {
   //이메일 인증 관련
   private boolean emailAuthYn;
   private LocalDateTime emailAuthDateTime;
+  private LocalDateTime emailAuthDeadline;
   private String emailAuthKey;
 
   @Enumerated(EnumType.STRING)

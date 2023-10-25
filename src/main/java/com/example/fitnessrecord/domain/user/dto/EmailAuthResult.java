@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class EmailAuthResult {
   private boolean result;
   private String message;
+
+  private UserDto userDto;
 }

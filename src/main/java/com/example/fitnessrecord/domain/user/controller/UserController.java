@@ -27,31 +27,34 @@ public class UserController {
   private final MailComponents mailComponents;
 
   @ApiOperation("회원 가입")
-  @PostMapping("/register")
+  @PostMapping("/auth/register")
   public ResponseEntity<?> register(@RequestBody RegisterUserInput input) {
     UserDto registeredUser = userService.register(input);
 
-    mailComponents.sendMailForRegister(
-        new SendMailDto(
-            registeredUser.getEmail(),
-            registeredUser.getNickname(),
-            registeredUser.getEmailAuthKey())
-    );
+    this.sendMail(registeredUser);
 
     return ResponseEntity.ok(RegisterUserResult.fromDto(registeredUser));
   }
 
   @ApiOperation("이메일 인증")
   @GetMapping("/auth/email-auth")
-  public @ResponseBody EmailAuthResult emailAuth(@RequestParam String key){
+  public @ResponseBody String emailAuth(@RequestParam String key) {
     EmailAuthResult result = userService.emailAuth(key);
-    return result;
+
+    if (!result.isResult()) {
+      this.sendMail(result.getUserDto());
+    }
+
+    return result.getMessage();
   }
 
-
-
-
-
-
+  private void sendMail(UserDto user) {
+    mailComponents.sendMailForRegister(
+        new SendMailDto(
+            user.getEmail(),
+            user.getNickname(),
+            user.getEmailAuthKey())
+    );
+  }
 
 }

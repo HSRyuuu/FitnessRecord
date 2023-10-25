@@ -22,7 +22,7 @@ public class MailComponents {
         String mail = sendMailDto.getEmail();
         String subject = "[" + sendMailDto.getNickname()+ "]님 FitnessRecord 가입을 환영합니다. ";
         String text = new StringBuilder()
-                .append("<p>HelloMovie 가입을 환영합니다. </p>")
+                .append("<p>FitnessRecord 가입을 환영합니다. </p>")
                 .append("<p>아래 링크를 클릭하셔서 가입을 완료 하세요. </p>")
                 .append("<div><a target='_blank' href='http://localhost:8080/auth/email-auth?key=" + sendMailDto.getAuthKey() + "'>이메일 인증하기</a></div>")
                 .toString();

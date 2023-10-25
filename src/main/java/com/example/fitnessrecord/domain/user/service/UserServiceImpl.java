@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     if (!Objects.isNull(user.getEmailAuthDateTime())) {
       //이미 인증된 경우
       result.setResult(true);
-      result.setMessage("이미 인증 완료된 계정 입니다.");
+      result.setMessage("이미 인증 완료된 계정입니다.");
     } else if (user.getEmailAuthDeadline().isBefore(LocalDateTime.now())) {
       //유효 기한이 지난 경우
       user.setEmailAuthDeadline(LocalDateTime.now().plusDays(1L));

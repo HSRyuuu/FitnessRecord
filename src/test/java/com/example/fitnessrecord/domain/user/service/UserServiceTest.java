@@ -10,6 +10,7 @@ import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import com.example.fitnessrecord.global.util.PasswordUtils;
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -211,8 +212,8 @@ class UserServiceTest {
       String emailAuthKey = "hello";
       User user = User.builder()
           .email("test@test.com")
-          .emailAuthYn(false)
           .emailAuthKey(emailAuthKey)
+          .emailAuthDeadline(LocalDateTime.now().plusDays(1L))
           .build();
       userRepository.save(user);
 
@@ -231,8 +232,28 @@ class UserServiceTest {
       String emailAuthKey = "hello";
       User user = User.builder()
           .email("test@test.com")
-          .emailAuthYn(true)
           .emailAuthKey(emailAuthKey)
+          .emailAuthDateTime(LocalDateTime.now())
+          .build();
+      userRepository.save(user);
+
+      //when
+      EmailAuthResult result = userService.emailAuth(emailAuthKey);
+
+      //then
+      assertThat(result.isResult()).isTrue();
+      assertThat(result.getMessage()).isEqualTo("이미 인증 완료된 계정입니다.");
+    }
+
+    @Test
+    @DisplayName("실패 :이메일 유효기한 만료")
+    void emailAuth_deadline_passed() {
+      //given
+      String emailAuthKey = "hello";
+      User user = User.builder()
+          .email("test@test.com")
+          .emailAuthKey(emailAuthKey)
+          .emailAuthDeadline(LocalDateTime.now().minusDays(1L))
           .build();
       userRepository.save(user);
 
@@ -241,11 +262,12 @@ class UserServiceTest {
 
       //then
       assertThat(result.isResult()).isFalse();
-      assertThat(result.getMessage()).isEqualTo("이미 인증 완료된 계정입니다.");
+      assertThat(result.getMessage()).isEqualTo("이메일 인증 유효 기간이 만료 되었습니다. 이메일을 다시 발송했습니다.");
+      assertThat(result.getUserDto()).isNotNull();
     }
 
     @Test
-    @DisplayName("실패 - 이메일 인증 키 문제")
+    @DisplayName("실패: 이메일 인증 키 문제")
     void emailAuth_EMAIL_AUTH_KEY_ERROR() {
       //given
       String emailAuthKey = "hello";

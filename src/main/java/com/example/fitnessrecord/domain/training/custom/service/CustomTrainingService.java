@@ -9,23 +9,23 @@ import org.springframework.data.domain.Page;
 public interface CustomTrainingService {
 
   /**
-   * Custom 운동 추가
+   * Custom 운동 종목 추가
    */
-  CustomTrainingDto addCustomTraining(String userEmail, AddCustomTrainingInput input);
+  CustomTrainingDto addCustomTraining(String username, AddCustomTrainingInput input);
 
   /**
-   * Custom 운동 수정
+   * Custom 운동 종목 수정
    */
-  CustomTrainingDto editCustomTraining(String userEmail, EditCustomTrainingInput input);
+  CustomTrainingDto editCustomTraining(String username, EditCustomTrainingInput input);
 
   /**
-   * Custom 운동 삭제
+   * Custom 운동 종목 삭제
    */
-  CustomTrainingDto deleteCustomTraining(String userEmail, String trainingName);
+  CustomTrainingDto deleteCustomTraining(String username, String trainingName);
 
   /**
-   * Custom 운동 리스트
+   * Custom 운동 종목 리스트
    */
-  Page<CustomTrainingDto> customTrainingList(String userEmail);
+  Page<CustomTrainingDto> customTrainingList(String username);
 
 }

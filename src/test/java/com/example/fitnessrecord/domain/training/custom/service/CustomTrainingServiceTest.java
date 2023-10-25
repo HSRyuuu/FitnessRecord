@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.training.custom.dto.AddCustomTrainingInput;
 import com.example.fitnessrecord.domain.training.custom.dto.CustomTrainingDto;
+import com.example.fitnessrecord.domain.training.custom.dto.EditCustomTrainingInput;
 import com.example.fitnessrecord.domain.training.custom.persist.CustomTraining;
 import com.example.fitnessrecord.domain.training.custom.persist.CustomTrainingRepository;
 import com.example.fitnessrecord.domain.user.persist.User;
@@ -87,15 +88,82 @@ class CustomTrainingServiceTest {
     }
 
   }
+  @Nested
+  @DisplayName("Custom Training 수정")
+  class EditCustomTraining{
+    @Test
+    @DisplayName("성공")
+    void editCustomTraining(){
+      //given
+      String username = user.getEmail();
+      CustomTraining customTraining = CustomTraining.builder()
+          .user(user)
+          .trainingName("before")
+          .bodyPart(BodyPart.ETC)
+          .build();
+      CustomTraining savedCustomTraining = customTrainingRepository.save(customTraining);
 
-  @Test
-  void addCustomTraining() {
+      EditCustomTrainingInput input =
+          new EditCustomTrainingInput(savedCustomTraining.getId(), "after", BodyPart.ABS);
+
+      //when
+      CustomTrainingDto result =
+          customTrainingService.editCustomTraining(username, input);
+
+      //then
+      assertThat(result.getTrainingName()).isEqualTo(input.getTrainingName());
+      assertThat(result.getBodyPart()).isEqualTo(input.getBodyPart());
+    }
+
+    @Test
+    @DisplayName("실패: 해당 Custom Training 이 존재하지 않음")
+    void editCustomTraining_TRAINING_NOT_FOUND_BY_ID(){
+      //given
+      String username = user.getEmail();
+      CustomTraining customTraining = CustomTraining.builder()
+          .user(user)
+          .trainingName("before")
+          .bodyPart(BodyPart.ETC)
+          .build();
+      CustomTraining savedCustomTraining = customTrainingRepository.save(customTraining);
+
+      EditCustomTrainingInput input =
+          new EditCustomTrainingInput(-1L, "after", BodyPart.ABS);
+
+      //when
+      //then
+      try{
+        customTrainingService.editCustomTraining(username, input);
+      }catch(MyException e){
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.TRAINING_NOT_FOUND_BY_ID);
+      }
+    }
+
+    @Test
+    @DisplayName("실패: 권한 없음 - 로그인 유저의 Custom Training이 아님")
+    void editCustomTraining_NO_AUTHORITY_ERROR(){
+      //given
+      String username = user.getEmail();
+      CustomTraining customTraining = CustomTraining.builder()
+          .user(user)
+          .trainingName("before")
+          .bodyPart(BodyPart.ETC)
+          .build();
+      CustomTraining savedCustomTraining = customTrainingRepository.save(customTraining);
+
+      EditCustomTrainingInput input =
+          new EditCustomTrainingInput(savedCustomTraining.getId(), "after", BodyPart.ABS);
+
+      //when
+      //then
+      try{
+        customTrainingService.editCustomTraining("!wrongUser!", input);
+      }catch(MyException e){
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
+      }
+    }
+
   }
-
-  @Test
-  void editCustomTraining() {
-  }
-
   @Test
   void deleteCustomTraining() {
   }

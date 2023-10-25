@@ -43,7 +43,7 @@ public class AdminTrainingService {
    */
   public BasicTrainingDto deleteTraining(String name) {
     BasicTraining basicTraining = basicTrainingRepository.findByTrainingName(name)
-        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_NAME_NOT_FOUND));
+        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_NOT_FOUND_BY_NAME));
 
     basicTrainingRepository.delete(basicTraining);
 
@@ -56,7 +56,7 @@ public class AdminTrainingService {
    */
   public BasicTrainingDto updateTraining(EditBasicTrainingInput input) {
     BasicTraining basicTraining = basicTrainingRepository.findById(input.getId())
-        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_NAME_NOT_FOUND));
+        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_NOT_FOUND_BY_ID));
     basicTraining.setTrainingName(input.getTrainingName());
     basicTraining.setTrainingNameKor(input.getTrainingNameKor());
     basicTraining.setBodyPart(input.getBodyPart());

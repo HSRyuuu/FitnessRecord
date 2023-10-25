@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,9 +25,9 @@ public class CustomTrainingServiceImpl implements CustomTrainingService{
   private final CustomTrainingRepository customTrainingRepository;
 
   @Override
-  public CustomTrainingDto addCustomTraining(String userEmail, AddCustomTrainingInput input) {
+  public CustomTrainingDto addCustomTraining(String username, AddCustomTrainingInput input) {
 
-    User user = userRepository.findByEmail(userEmail)
+    User user = userRepository.findByEmail(username)
         .orElseThrow(() -> new MyException(ErrorCode.USER_NOT_FOUND));
 
     CustomTraining customTraining = AddCustomTrainingInput.toEntity(user, input);
@@ -37,8 +38,19 @@ public class CustomTrainingServiceImpl implements CustomTrainingService{
   }
 
   @Override
-  public CustomTrainingDto editCustomTraining(String userEmail, EditCustomTrainingInput input) {
-    return null;
+  public CustomTrainingDto editCustomTraining(String username, EditCustomTrainingInput input) {
+    CustomTraining customTraining = customTrainingRepository.findById(input.getId())
+        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_NOT_FOUND_BY_ID));
+
+    if(!customTraining.getUser().getEmail().equals(username)){
+      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
+    }
+
+    customTraining.setTrainingName(input.getTrainingName());
+    customTraining.setBodyPart(input.getBodyPart());
+    CustomTraining saved = customTrainingRepository.save(customTraining);
+
+    return CustomTrainingDto.fromEntity(saved);
   }
 
   @Override

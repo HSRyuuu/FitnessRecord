@@ -11,21 +11,21 @@ public interface CustomTrainingService {
   /**
    * Custom 운동 추가
    */
-  CustomTrainingDto addCustomTraining(String userId, AddCustomTrainingInput input);
+  CustomTrainingDto addCustomTraining(String userEmail, AddCustomTrainingInput input);
 
   /**
    * Custom 운동 수정
    */
-  CustomTrainingDto editCustomTraining(String userId, EditCustomTrainingInput input);
+  CustomTrainingDto editCustomTraining(String userEmail, EditCustomTrainingInput input);
 
   /**
    * Custom 운동 삭제
    */
-  CustomTrainingDto deleteCustomTraining(String userId, String trainingName);
+  CustomTrainingDto deleteCustomTraining(String userEmail, String trainingName);
 
   /**
    * Custom 운동 리스트
    */
-  Page<CustomTrainingDto> customTrainingList(String userId);
+  Page<CustomTrainingDto> customTrainingList(String userEmail);
 
 }

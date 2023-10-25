@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -54,8 +53,17 @@ public class CustomTrainingServiceImpl implements CustomTrainingService{
   }
 
   @Override
-  public CustomTrainingDto deleteCustomTraining(String userEmail, String trainingName) {
-    return null;
+  public CustomTrainingDto deleteCustomTraining(String username, Long trainingId) {
+    CustomTraining customTraining = customTrainingRepository.findById(trainingId)
+        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_NOT_FOUND_BY_ID));
+
+    if(!customTraining.getUser().getEmail().equals(username)){
+      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
+    }
+
+    customTrainingRepository.delete(customTraining);
+
+    return CustomTrainingDto.fromEntity(customTraining);
   }
 
   @Override

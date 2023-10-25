@@ -9,9 +9,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -37,6 +39,16 @@ public class CustomTrainingController {
 
     CustomTrainingDto result =
         customTrainingService.editCustomTraining(principalDetails.getEmail(), input);
+
+    return ResponseEntity.ok(result);
+  }
+
+  @DeleteMapping("/user/custom-training/delete")
+  public ResponseEntity<?> deleteCustomTraining(@RequestParam Long id,
+        @AuthenticationPrincipal PrincipalDetails principalDetails){
+
+    CustomTrainingDto result = customTrainingService.deleteCustomTraining(
+        principalDetails.getEmail(), id);
 
     return ResponseEntity.ok(result);
   }

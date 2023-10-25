@@ -12,6 +12,7 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -162,6 +163,70 @@ class CustomTrainingServiceTest {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
       }
     }
+
+  }
+
+  @Nested
+  @DisplayName("Custom Training 삭제")
+  class DeleteCustomTraining{
+    @Test
+    @DisplayName("성공")
+    void deleteCustomTraining(){
+      //given
+      String username = user.getEmail();
+      CustomTraining customTraining = CustomTraining.builder()
+          .user(user)
+          .trainingName("before")
+          .bodyPart(BodyPart.ETC)
+          .build();
+      CustomTraining savedCustomTraining = customTrainingRepository.save(customTraining);
+
+      //when
+      CustomTrainingDto result = customTrainingService.deleteCustomTraining(username,
+          savedCustomTraining.getId());
+
+      //then
+      assertThat(result.getTrainingName()).isEqualTo(savedCustomTraining.getTrainingName());
+      assertThat(result.getBodyPart()).isEqualTo(savedCustomTraining.getBodyPart());
+      assertThat(result.getUsername()).isEqualTo(username);
+      assertThat(customTrainingRepository.findById(customTraining.getId()))
+          .isEqualTo(Optional.empty());
+    }
+
+    @Test
+    @DisplayName("실패: 해당 ID의 Custom Training이 존재하지 않음")
+    void deleteCustomTraining_TRAINING_NOT_FOUND_BY_ID(){
+      //given
+      String username = user.getEmail();
+      //when
+      //then
+      try{
+        customTrainingService.deleteCustomTraining(username, -1L);
+      }catch(MyException e){
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.TRAINING_NOT_FOUND_BY_ID);
+      }
+    }
+
+    @Test
+    @DisplayName("실패: 권한 없음 - 해당 Custom Training의 삭제 권한 없음")
+    void deleteCustomTraining_NO_AUTHORITY_ERROR(){
+      //given
+      String username = user.getEmail();
+      CustomTraining customTraining = CustomTraining.builder()
+          .user(user)
+          .trainingName("before")
+          .bodyPart(BodyPart.ETC)
+          .build();
+      CustomTraining savedCustomTraining = customTrainingRepository.save(customTraining);
+      //when
+      //then
+      try{
+        customTrainingService.deleteCustomTraining("!wrongUser!", savedCustomTraining.getId());
+      }catch(MyException e){
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
+      }
+    }
+
 
   }
   @Test

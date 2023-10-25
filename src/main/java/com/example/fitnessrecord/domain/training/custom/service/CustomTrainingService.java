@@ -21,7 +21,7 @@ public interface CustomTrainingService {
   /**
    * Custom 운동 종목 삭제
    */
-  CustomTrainingDto deleteCustomTraining(String username, String trainingName);
+  CustomTrainingDto deleteCustomTraining(String username, Long trainingId);
 
   /**
    * Custom 운동 종목 리스트

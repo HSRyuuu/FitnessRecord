@@ -88,7 +88,30 @@ class CustomTrainingServiceTest {
       }
     }
 
+    @Test
+    @DisplayName("실패: 이미 존재하는 Training Name")
+    void addCustomTraining_TRAINING_NAME_ALREADY_EXIST() {
+      //given
+      String duplicateName = "dupName";
+      AddCustomTrainingInput input = new AddCustomTrainingInput(duplicateName, BodyPart.ETC);
+      CustomTraining customTraining = CustomTraining.builder()
+          .user(user)
+          .trainingName(duplicateName)
+          .bodyPart(BodyPart.ETC)
+          .build();
+      CustomTraining savedCustomTraining = customTrainingRepository.save(customTraining);
+
+      //when
+      //then
+      try{
+        customTrainingService.addCustomTraining(user.getEmail(), input);
+      }catch(MyException e){
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.TRAINING_NAME_ALREADY_EXIST);
+      }
+    }
+
   }
+
   @Nested
   @DisplayName("Custom Training 수정")
   class EditCustomTraining{

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CustomTrainingRepository extends JpaRepository<CustomTraining, Long> {
-
+  boolean existsByTrainingName(String trainingName);
 }

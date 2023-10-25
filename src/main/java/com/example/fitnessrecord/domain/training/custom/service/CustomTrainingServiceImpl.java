@@ -29,6 +29,10 @@ public class CustomTrainingServiceImpl implements CustomTrainingService{
     User user = userRepository.findByEmail(username)
         .orElseThrow(() -> new MyException(ErrorCode.USER_NOT_FOUND));
 
+    if(customTrainingRepository.existsByTrainingName(input.getTrainingName())){
+      throw new MyException(ErrorCode.TRAINING_NAME_ALREADY_EXIST);
+    }
+
     CustomTraining customTraining = AddCustomTrainingInput.toEntity(user, input);
 
     CustomTraining saved = customTrainingRepository.save(customTraining);

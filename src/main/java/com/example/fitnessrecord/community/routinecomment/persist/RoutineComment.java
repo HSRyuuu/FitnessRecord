@@ -1,6 +1,6 @@
-package com.example.fitnessrecord.community.comment.persist;
+package com.example.fitnessrecord.community.routinecomment.persist;
 
-import com.example.fitnessrecord.community.post.persist.Post;
+import com.example.fitnessrecord.community.routinepost.persist.RoutinePost;
 import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -23,15 +23,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Comment {
+public class RoutineComment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "POST_ID")
-  private Post post;
+  @JoinColumn(name = "ROUTINE_POST_ID")
+  private RoutinePost routinePost;
 
   @OneToOne
   @JoinColumn(name = "WRITER_ID")

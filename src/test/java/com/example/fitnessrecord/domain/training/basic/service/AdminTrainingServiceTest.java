@@ -118,7 +118,7 @@ class AdminTrainingServiceTest {
       try {
         adminTrainingService.deleteTraining(name);
       } catch (MyException e) {
-        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.TRAINING_NAME_NOT_FOUND);
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.TRAINING_NOT_FOUND_BY_NAME);
       }
     }
 
@@ -184,7 +184,7 @@ class AdminTrainingServiceTest {
       try {
         adminTrainingService.updateTraining(input);
       } catch (MyException e) {
-        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.TRAINING_NAME_NOT_FOUND);
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.TRAINING_NOT_FOUND_BY_ID);
       }
     }
 

@@ -19,7 +19,8 @@ public enum ErrorCode {
 
     //Training 관련
     TRAINING_NAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST.value(), "이미 존재 하는 Training Name 입니다."),
-    TRAINING_NAME_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 Training Name 을 찾을 수 없습니다."),
+    TRAINING_NOT_FOUND_BY_NAME(HttpStatus.NOT_FOUND.value(), "해당 Training을 찾을 수 없습니다."),
+    TRAINING_NOT_FOUND_BY_ID(HttpStatus.NOT_FOUND.value(), "해당 Training을 찾을 수 없습니다."),
 
 
 

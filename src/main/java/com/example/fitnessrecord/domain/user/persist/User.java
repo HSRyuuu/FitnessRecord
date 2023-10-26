@@ -38,7 +38,6 @@ public class User {
   private String nickname;
 
   //이메일 인증 관련
-  private boolean emailAuthYn;
   private LocalDateTime emailAuthDateTime;
   private LocalDateTime emailAuthDeadline;
   private String emailAuthKey;

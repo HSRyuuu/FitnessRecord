@@ -20,8 +20,8 @@ public class UserDto {
 
   private String nickname;
 
-  private boolean emailAuthYn;
   private LocalDateTime emailAuthDateTime;
+  private LocalDateTime emailAuthDeadline;
   private String emailAuthKey;
 
   private UserType userType;
@@ -35,8 +35,8 @@ public class UserDto {
         .email(user.getEmail())
         .password(user.getPassword())
         .nickname(user.getNickname())
-        .emailAuthYn(user.isEmailAuthYn())
         .emailAuthDateTime(user.getEmailAuthDateTime())
+        .emailAuthDeadline(user.getEmailAuthDeadline())
         .emailAuthKey(user.getEmailAuthKey())
         .userType(user.getUserType())
         .createdAt(user.getCreatedAt())

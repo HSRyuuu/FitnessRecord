@@ -22,7 +22,7 @@ public interface UserService {
    * 유저 회원 가입 (소셜 회원가입 시)
    * @Param : User entity
    */
-  UserDto registerDirectly(User user);
+  UserDto registerSocialUser(User user);
 
   /**
    * find user by email

@@ -27,6 +27,7 @@ public class RegisterUserInput {
         .password(PasswordUtils.encPassword(input.getPassword()))
         .nickname(input.getNickname())
         .emailAuthKey(UUID.randomUUID().toString())
+        .emailAuthDeadline(LocalDateTime.now().plusDays(1L))
         .userType(UserType.BASIC)
         .createdAt(LocalDateTime.now())
         .lastModifiedAt(LocalDateTime.now())

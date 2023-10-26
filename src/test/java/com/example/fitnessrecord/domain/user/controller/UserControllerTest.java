@@ -55,7 +55,7 @@ class UserControllerTest {
     String req = gson.toJson(input);
 
     mockMvc.perform(
-            post("/register")
+            post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(req))
         .andDo(print())

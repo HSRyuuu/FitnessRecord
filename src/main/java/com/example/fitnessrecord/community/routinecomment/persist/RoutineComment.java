@@ -1,17 +1,16 @@
-package com.example.fitnessrecord.domain.record.persist;
+package com.example.fitnessrecord.community.routinecomment.persist;
 
-
-import com.example.fitnessrecord.domain.training.common.type.BodyPart;
+import com.example.fitnessrecord.community.routinepost.persist.RoutinePost;
 import com.example.fitnessrecord.domain.user.persist.User;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,25 +23,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Entity
-public class SetRecord {
+public class RoutineComment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "USER_ID")
-  private User user;
+  @JoinColumn(name = "ROUTINE_POST_ID")
+  private RoutinePost routinePost;
 
-  private String trainingName; //운동 이름
+  @OneToOne
+  @JoinColumn(name = "WRITER_ID")
+  private User writer;
 
-  @Enumerated(EnumType.STRING)
-  private BodyPart bodyPart; //운동 부위
+  private String text;
 
-  private Integer reps; //반복횟수
-
-  private String memo; //개인 메모
-
-  private LocalDate date; //운동 일자
+  private LocalDateTime createDateTime;
+  private LocalDateTime lastModifiedDateTime;
 
 }

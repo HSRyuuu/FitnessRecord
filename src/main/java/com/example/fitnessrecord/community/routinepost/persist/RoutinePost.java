@@ -45,4 +45,5 @@ public class RoutinePost {
 
   private int views;
   private int likes;
+
 }

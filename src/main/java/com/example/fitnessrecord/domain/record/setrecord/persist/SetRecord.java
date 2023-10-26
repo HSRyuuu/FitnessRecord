@@ -1,9 +1,12 @@
-package com.example.fitnessrecord.community.post.persist;
+package com.example.fitnessrecord.domain.record.setrecord.persist;
 
+
+import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.user.persist.User;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import javax.persistence.Entity;
-
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Post {
+public class SetRecord {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +34,15 @@ public class Post {
   @JoinColumn(name = "USER_ID")
   private User user;
 
-  private String title;
-  private String content;
+  private String trainingName; //운동 이름
 
-  private LocalDateTime createDateTime;
-  private LocalDateTime lastModifiedDateTime;
+  @Enumerated(EnumType.STRING)
+  private BodyPart bodyPart; //운동 부위
 
-  private Integer views;
+  private Integer reps; //반복횟수
+
+  private String memo; //개인 메모
+
+  private LocalDate date; //운동 일자
+
 }

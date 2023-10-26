@@ -1,16 +1,13 @@
-package com.example.fitnessrecord.community.comment.persist;
+package com.example.fitnessrecord.domain.record.volume.persist;
 
-import com.example.fitnessrecord.community.post.persist.Post;
 import com.example.fitnessrecord.domain.user.persist.User;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import javax.persistence.Entity;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,23 +20,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Comment {
+public class VolumeRecord {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "POST_ID")
-  private Post post;
+  @JoinColumn(name = "USER_ID")
+  private User user;
 
-  @OneToOne
-  @JoinColumn(name = "WRITER_ID")
-  private User writer;
+  private LocalDate date;
 
-  private String text;
-
-  private LocalDateTime createDateTime;
-  private LocalDateTime lastModifiedDateTime;
+  private double chest;
+  private double back;
+  private double arms;
+  private double legs;
+  private double shoulder;
+  private double biceps;
+  private double triceps;
+  private double etc;
 
 }

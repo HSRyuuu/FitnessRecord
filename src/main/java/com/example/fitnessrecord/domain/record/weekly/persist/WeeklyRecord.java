@@ -1,12 +1,8 @@
-package com.example.fitnessrecord.domain.record.persist;
+package com.example.fitnessrecord.domain.record.weekly.persist;
 
-
-import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDate;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,8 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Entity
-public class SetRecord {
-
+public class WeeklyRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -34,15 +29,19 @@ public class SetRecord {
   @JoinColumn(name = "USER_ID")
   private User user;
 
-  private String trainingName; //운동 이름
+  private int trainingPerWeek;
 
-  @Enumerated(EnumType.STRING)
-  private BodyPart bodyPart; //운동 부위
+  private LocalDate startDate;
+  private LocalDate endDate;
 
-  private Integer reps; //반복횟수
-
-  private String memo; //개인 메모
-
-  private LocalDate date; //운동 일자
+  //주간 volume 기록
+  private double chest;
+  private double back;
+  private double arms;
+  private double legs;
+  private double shoulder;
+  private double biceps;
+  private double triceps;
+  private double etc;
 
 }

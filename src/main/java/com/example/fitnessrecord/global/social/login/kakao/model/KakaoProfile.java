@@ -44,7 +44,6 @@ public class KakaoProfile {
             .email(kakaoProfile.getEmail())
             .password(encPassword)
             .nickname(kakaoProfile.getNickname())
-            .emailAuthYn(true)
             .emailAuthDateTime(LocalDateTime.now())
             .userType(UserType.KAKAO)
             .createdAt(LocalDateTime.now())

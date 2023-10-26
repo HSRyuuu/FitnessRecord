@@ -23,7 +23,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 public class Routine {
 
@@ -43,4 +42,11 @@ public class Routine {
   @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RoutineElement> list = new ArrayList<>();
 
+  @Builder
+  private Routine(Long id, User user, String routineName, LocalDate lastModifiedDate) {
+    this.id = id;
+    this.user = user;
+    this.routineName = routineName;
+    this.lastModifiedDate = lastModifiedDate;
+  }
 }

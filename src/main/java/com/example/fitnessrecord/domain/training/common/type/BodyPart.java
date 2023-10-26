@@ -12,6 +12,7 @@ public enum BodyPart {
   SHOULDER("어깨(Shoulder)"),
   BICEPS("이두(Biceps)"),
   TRICEPS("삼두(Triceps)"),
+  ABS("복근(Abs)"),
   ETC("기타(Etc)");
 
   private final String description;

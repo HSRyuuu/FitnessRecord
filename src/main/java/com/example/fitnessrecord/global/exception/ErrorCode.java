@@ -22,6 +22,9 @@ public enum ErrorCode {
     TRAINING_NOT_FOUND_BY_NAME(HttpStatus.NOT_FOUND.value(), "해당 Training을 찾을 수 없습니다."),
     TRAINING_NOT_FOUND_BY_ID(HttpStatus.NOT_FOUND.value(), "해당 Training을 찾을 수 없습니다."),
 
+    //Record 관련
+    TRAINING_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "운동 기록을 찾을 수 없습니다."),
+
 
 
 

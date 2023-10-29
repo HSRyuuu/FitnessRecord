@@ -1,7 +1,10 @@
 package com.example.fitnessrecord.domain.training.common.type;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.StreamingHttpOutputMessage.Body;
 
 @Getter
 @AllArgsConstructor
@@ -16,4 +19,12 @@ public enum BodyPart {
   ETC("기타(Etc)");
 
   private final String description;
+
+  @JsonCreator
+  public static BodyPart validation(String input){
+    return Stream.of(BodyPart.values())
+        .filter(bodyPart -> bodyPart.toString().equals(input.toUpperCase()))
+        .findFirst()
+        .orElse(null);
+  }
 }

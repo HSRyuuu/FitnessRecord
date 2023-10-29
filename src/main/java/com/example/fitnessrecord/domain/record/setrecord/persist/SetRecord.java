@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.domain.record.setrecord.persist;
 
 
+import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDate;
@@ -31,18 +32,17 @@ public class SetRecord {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "USER_ID")
-  private User user;
-
-  private String trainingName; //운동 이름
+  @JoinColumn(name = "TRAINING_RECORD_ID")
+  private TrainingRecord trainingRecord; //전체 운동
+  private LocalDate date;
 
   @Enumerated(EnumType.STRING)
   private BodyPart bodyPart; //운동 부위
+  private String trainingName; //운동 이름
 
-  private Integer reps; //반복횟수
+  private int reps; //반복횟수
+  private double weight; //무게
 
   private String memo; //개인 메모
-
-  private LocalDate date; //운동 일자
 
 }

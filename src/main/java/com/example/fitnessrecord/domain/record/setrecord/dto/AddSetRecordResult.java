@@ -8,8 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class AddSetRecordResult {
 
-
-  private TrainingRecordDto trainingRecordDto;
+  private TrainingRecordDto trainingRecord;
   private Integer addAmount;
 
 }

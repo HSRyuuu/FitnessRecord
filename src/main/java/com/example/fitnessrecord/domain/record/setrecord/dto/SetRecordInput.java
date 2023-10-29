@@ -4,10 +4,14 @@ import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 @Data
+@AllArgsConstructor
+@Builder
 public class SetRecordInput {
 
   @NotNull(message = "유효하지 않은 운동 부위(BodyPart)가 입력되었습니다.")

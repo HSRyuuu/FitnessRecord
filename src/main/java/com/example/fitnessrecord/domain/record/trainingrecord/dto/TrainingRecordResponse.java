@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SetRecordListResponse {
+public class TrainingRecordResponse {
   private TrainingRecordDto trainingRecord;
   private List<SetRecordDto> setList;
 }

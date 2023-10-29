@@ -1,7 +1,7 @@
 package com.example.fitnessrecord.domain.record.trainingrecord.controller;
 
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordDto;
-import com.example.fitnessrecord.domain.record.trainingrecord.dto.SetRecordListResponse;
+import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordResponse;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordDto;
 import com.example.fitnessrecord.domain.record.trainingrecord.service.TrainingRecordService;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
@@ -36,12 +36,10 @@ public class TrainingRecordController {
   @GetMapping("/record/training/{id}")
   public ResponseEntity<?> setRecordList(@PathVariable Long id,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
-    List<SetRecordDto> setRecordList = trainingRecordService.getSetRecordList(id,
+    TrainingRecordResponse result = trainingRecordService.getTrainingRecordInfo(id,
         principalDetails.getUsername());
 
-    TrainingRecordDto trainingRecord = trainingRecordService.getTrainingRecord(id);
-
-    return ResponseEntity.ok(new SetRecordListResponse(trainingRecord, setRecordList));
+    return ResponseEntity.ok(result);
   }
 
 }

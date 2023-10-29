@@ -4,6 +4,7 @@ import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordDto;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordDto;
+import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordResponse;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecordRepository;
 import com.example.fitnessrecord.domain.user.persist.User;
@@ -41,16 +42,9 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     return TrainingRecordDto.fromEntity(saved);
   }
 
-  @Override
-  public TrainingRecordDto getTrainingRecord(Long trainingRecordId) {
-    return TrainingRecordDto.fromEntity(
-        trainingRecordRepository.findById(trainingRecordId)
-        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND))
-    );
-  }
 
   @Override
-  public List<SetRecordDto> getSetRecordList(Long trainingRecordId, String username) {
+  public TrainingRecordResponse getTrainingRecordInfo(Long trainingRecordId, String username) {
     TrainingRecord trainingRecord = trainingRecordRepository.findById(trainingRecordId)
         .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND));
 
@@ -60,6 +54,11 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
 
     List<SetRecord> list = setRecordRepository.findAllByTrainingRecordId(
         trainingRecordId);
-    return list.stream().map(SetRecordDto::fromEntity).collect(Collectors.toList());
+
+    return new TrainingRecordResponse(
+        TrainingRecordDto.fromEntity(trainingRecord),
+        list.stream().map(SetRecordDto::fromEntity).collect(Collectors.toList())
+    );
+
   }
 }

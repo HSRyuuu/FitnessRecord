@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 하나의 운동 기록을 반환할 때 사용한다.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

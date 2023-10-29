@@ -4,6 +4,7 @@ import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordDto;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordDto;
+import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordListResponse;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordResponse;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecordRepository;
@@ -12,6 +13,7 @@ import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -48,17 +50,37 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     TrainingRecord trainingRecord = trainingRecordRepository.findById(trainingRecordId)
         .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND));
 
-    if(!trainingRecord.getUser().getEmail().equals(username)){
+    if (!trainingRecord.getUser().getEmail().equals(username)) {
       throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
     }
 
-    List<SetRecord> list = setRecordRepository.findAllByTrainingRecordId(
-        trainingRecordId);
+    return this.getTrainingRecordResponse(trainingRecord);
+
+  }
+
+  private TrainingRecordResponse getTrainingRecordResponse(TrainingRecord trainingRecord) {
+
+    List<SetRecord> list = setRecordRepository.findAllByTrainingRecordId(trainingRecord.getId());
 
     return new TrainingRecordResponse(
         TrainingRecordDto.fromEntity(trainingRecord),
         list.stream().map(SetRecordDto::fromEntity).collect(Collectors.toList())
     );
-
   }
+
+  @Override
+  public TrainingRecordListResponse getTrainingRecordList(
+      Long userId, LocalDate start, LocalDate end) {
+    List<TrainingRecord> trainingRecords =
+        trainingRecordRepository.findAllByUserIdAndDateBetween(userId, start, end);
+
+    List<TrainingRecordResponse> responseList = new ArrayList<>();
+
+    for (TrainingRecord trainingRecord : trainingRecords) {
+      responseList.add(this.getTrainingRecordResponse(trainingRecord));
+    }
+
+    return new TrainingRecordListResponse(start, end, responseList);
+  }
+
 }

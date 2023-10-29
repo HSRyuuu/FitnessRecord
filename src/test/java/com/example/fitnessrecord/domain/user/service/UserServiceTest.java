@@ -274,7 +274,7 @@ class UserServiceTest {
       String wrongKey = "wrong";
       User user = User.builder()
           .email("test@test.com")
-          .emailAuthYn(false)
+          .emailAuthDateTime(LocalDateTime.now())
           .emailAuthKey(emailAuthKey)
           .build();
       userRepository.save(user);

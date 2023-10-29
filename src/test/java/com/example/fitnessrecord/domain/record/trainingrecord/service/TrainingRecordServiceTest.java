@@ -4,10 +4,14 @@ package com.example.fitnessrecord.domain.record.trainingrecord.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordDto;
+import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
+import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordDto;
+import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordListResponse;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordResponse;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecordRepository;
+import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
@@ -34,6 +38,9 @@ class TrainingRecordServiceTest {
 
   @Autowired
   TrainingRecordRepository trainingRecordRepository;
+
+  @Autowired
+  SetRecordRepository setRecordRepository;
 
   static User user;
 
@@ -154,5 +161,57 @@ class TrainingRecordServiceTest {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
       }
     }
+  }
+
+  @Nested
+  @DisplayName("일정 기간 내의 운동 기록 조회")
+  class GetTrainingRecordList{
+    @Test
+    @DisplayName("성공")
+    void getTrainingRecordList(){
+      //given
+      int trainingAmount = 3;
+      Long trainingRecordId = 1L;
+      for(int i = 0; i < trainingAmount; i++){
+        TrainingRecord trainingRecord = TrainingRecord.builder()
+            .user(user)
+            .date(LocalDate.now())
+            .build();
+        TrainingRecord saved = trainingRecordRepository.save(trainingRecord);
+        trainingRecordId = saved.getId();
+        SetRecord setRecord = SetRecord.builder()
+            .trainingRecord(saved)
+            .trainingName("test")
+            .bodyPart(BodyPart.ETC)
+            .date(LocalDate.now())
+            .reps(10)
+            .weight(100)
+            .memo("test")
+            .build();
+        setRecordRepository.save(setRecord);
+      }
+      Long userId = user.getId();
+      LocalDate start = LocalDate.now();
+      LocalDate end = LocalDate.now();
+
+      //when
+      TrainingRecordListResponse result =
+          trainingRecordService.getTrainingRecordList(userId, start, end);
+      List<TrainingRecordResponse> list = result.getList();
+
+      //then
+      assertThat(list.size()).isEqualTo(trainingAmount);
+      assertThat(result.getStart()).isEqualTo(start);
+      assertThat(result.getEnd()).isEqualTo(end);
+
+      for (TrainingRecordResponse response : list) {
+        TrainingRecordDto trainingRecord = response.getTrainingRecord();
+        assertThat(trainingRecord.getUsername()).isEqualTo(user.getEmail());
+        assertThat(response.getSetList().get(0).getTrainingRecordId())
+            .isEqualTo(trainingRecord.getId());
+      }
+
+    }
+
   }
 }

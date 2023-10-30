@@ -13,7 +13,6 @@ import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -74,11 +73,9 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     List<TrainingRecord> trainingRecords =
         trainingRecordRepository.findAllByUserIdAndDateBetween(userId, start, end);
 
-    List<TrainingRecordResponse> responseList = new ArrayList<>();
-
-    for (TrainingRecord trainingRecord : trainingRecords) {
-      responseList.add(this.getTrainingRecordResponse(trainingRecord));
-    }
+    List<TrainingRecordResponse> responseList = trainingRecords.stream()
+        .map(this::getTrainingRecordResponse)
+        .collect(Collectors.toList());
 
     return new TrainingRecordListResponse(start, end, responseList);
   }

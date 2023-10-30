@@ -52,7 +52,7 @@ public class TrainingRecordController {
       @RequestParam("d1") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
       @RequestParam(value = "d2", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
-
+    //d2(end)값이 들어오지 않았을 때 : d1으로 들어온 날의 데이터를 반환
     if (Objects.isNull(end)) {
       end = start;
     }

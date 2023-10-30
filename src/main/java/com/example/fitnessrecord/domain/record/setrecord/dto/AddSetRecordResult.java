@@ -9,6 +9,6 @@ import lombok.Data;
 public class AddSetRecordResult {
 
   private TrainingRecordDto trainingRecord;
-  private Integer addAmount;
+  private int addAmount;
 
 }

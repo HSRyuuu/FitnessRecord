@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.StreamingHttpOutputMessage.Body;
 
 @Getter
 @AllArgsConstructor
@@ -21,10 +20,12 @@ public enum BodyPart {
   private final String description;
 
   @JsonCreator
-  public static BodyPart validation(String input){
-    return Stream.of(BodyPart.values())
-        .filter(bodyPart -> bodyPart.toString().equals(input.toUpperCase()))
-        .findFirst()
-        .orElse(null);
+  public static BodyPart of(String input) {
+    if (Stream.of(BodyPart.values())
+        .anyMatch(bodyPart -> bodyPart.name().equals(input.toUpperCase()))
+    ) {
+      return BodyPart.valueOf(input.toUpperCase());
+    }
+    return null;
   }
 }

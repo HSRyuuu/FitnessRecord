@@ -14,6 +14,7 @@ import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +71,11 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
   @Override
   public TrainingRecordListResponse getTrainingRecordList(
       Long userId, LocalDate start, LocalDate end) {
+    //d2(end)값이 들어오지 않았을 때 : d1으로 들어온 날의 데이터를 반환
+    if (Objects.isNull(end)) {
+      end = start;
+    }
+
     List<TrainingRecord> trainingRecords =
         trainingRecordRepository.findAllByUserIdAndDateBetween(userId, start, end);
 

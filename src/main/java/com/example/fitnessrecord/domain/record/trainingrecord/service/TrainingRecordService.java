@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TrainingRecordService {
-  TrainingRecordDto addTrainingRecord(Long userId);
+  TrainingRecordDto addTrainingRecord(Long userId, LocalDate date);
   TrainingRecordResponse getTrainingRecordInfo(Long trainingRecordId, String username);
 
   TrainingRecordListResponse getTrainingRecordList(Long userId, LocalDate start, LocalDate end);

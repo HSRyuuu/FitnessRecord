@@ -66,12 +66,27 @@ class TrainingRecordServiceTest {
     void addTrainingRecord() {
       //given
       Long userId = user.getId();
+      LocalDate today = LocalDate.now();
 
       //when
-      TrainingRecordDto result = trainingRecordService.addTrainingRecord(userId);
+      TrainingRecordDto result = trainingRecordService.addTrainingRecord(userId, today);
       //then
       assertThat(result.getUsername()).isEqualTo(user.getEmail());
-      assertThat(result.getDate()).isEqualTo(LocalDate.now());
+      assertThat(result.getDate()).isEqualTo(today);
+    }
+
+    @Test
+    @DisplayName("성공: date == null 일 때")
+    void addTrainingRecord_date_is_null() {
+      //given
+      Long userId = user.getId();
+      LocalDate today = LocalDate.now();
+
+      //when
+      TrainingRecordDto result = trainingRecordService.addTrainingRecord(userId, null);
+      //then
+      assertThat(result.getUsername()).isEqualTo(user.getEmail());
+      assertThat(result.getDate()).isEqualTo(today);
     }
 
     @Test
@@ -79,11 +94,12 @@ class TrainingRecordServiceTest {
     void addTrainingRecord_USER_NOT_FOUND() {
       //given
       Long userId = user.getId();
+      LocalDate today = LocalDate.now();
 
       //when
       //then
       try {
-        trainingRecordService.addTrainingRecord(-1L);
+        trainingRecordService.addTrainingRecord(-1L, today);
       } catch (MyException e) {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.USER_NOT_FOUND);
       }

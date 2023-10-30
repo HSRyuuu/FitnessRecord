@@ -30,14 +30,18 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
   private final UserRepository userRepository;
 
   @Override
-  public TrainingRecordDto addTrainingRecord(Long userId) {
+  public TrainingRecordDto addTrainingRecord(Long userId, LocalDate date) {
+    if(Objects.isNull(date)){
+      date = LocalDate.now();
+    }
+
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new MyException(ErrorCode.USER_NOT_FOUND));
 
     TrainingRecord saved =
         trainingRecordRepository.save(TrainingRecord.builder()
             .user(user)
-            .date(LocalDate.now())
+            .date(date)
             .build()
         );
 

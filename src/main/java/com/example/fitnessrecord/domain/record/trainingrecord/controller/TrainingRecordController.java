@@ -30,9 +30,10 @@ public class TrainingRecordController {
       notes = "여기서 생성된 운동의 id로 각 SetRecord를 저장한다.")
   @PostMapping("/record/training/add")
   public ResponseEntity<?> addTrainingRecord(
+      @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
     TrainingRecordDto result = trainingRecordService.addTrainingRecord(
-        principalDetails.getUserId());
+        principalDetails.getUserId(), date);
     return ResponseEntity.ok(result);
   }
 

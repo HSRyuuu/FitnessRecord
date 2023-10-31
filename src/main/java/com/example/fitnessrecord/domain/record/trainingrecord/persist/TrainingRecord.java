@@ -36,6 +36,8 @@ public class TrainingRecord {
 
   private LocalDate date; //운동 날짜
 
+  private boolean volumeSavedYn;
+
   @OneToMany(mappedBy = "trainingRecord")
   List<SetRecord> setRecords = new ArrayList<>();
 

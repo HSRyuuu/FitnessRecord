@@ -1,5 +1,6 @@
 package com.example.fitnessrecord.domain.record.volume.persist;
 
+import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
 import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDate;
 import javax.persistence.Entity;
@@ -18,13 +19,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 @Entity
 public class VolumeRecord {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "TRAINING_RECORD_ID")
+  private TrainingRecord trainingRecord;
 
   @ManyToOne
   @JoinColumn(name = "USER_ID")
@@ -34,11 +39,36 @@ public class VolumeRecord {
 
   private double chest;
   private double back;
-  private double arms;
   private double legs;
   private double shoulder;
   private double biceps;
   private double triceps;
   private double etc;
 
+  @Builder
+  public VolumeRecord(double chest, double back, double legs,
+      double shoulder, double biceps, double triceps, double etc) {
+    this.chest = chest;
+    this.back = back;
+    this.legs = legs;
+    this.shoulder = shoulder;
+    this.biceps = biceps;
+    this.triceps = triceps;
+    this.etc = etc;
+  }
+
+  @Override
+  public String toString() {
+    return "VolumeRecord{" +
+        "id=" + id +
+        "date=" + date +
+        ", chest=" + chest +
+        ", back=" + back +
+        ", legs=" + legs +
+        ", shoulder=" + shoulder +
+        ", biceps=" + biceps +
+        ", triceps=" + triceps +
+        ", etc=" + etc +
+        '}';
+  }
 }

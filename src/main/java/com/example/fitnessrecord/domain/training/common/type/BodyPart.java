@@ -1,5 +1,7 @@
 package com.example.fitnessrecord.domain.training.common.type;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,4 +18,14 @@ public enum BodyPart {
   ETC("기타(Etc)");
 
   private final String description;
+
+  @JsonCreator
+  public static BodyPart of(String input) {
+    if (Stream.of(BodyPart.values())
+        .anyMatch(bodyPart -> bodyPart.name().equals(input.toUpperCase()))
+    ) {
+      return BodyPart.valueOf(input.toUpperCase());
+    }
+    return null;
+  }
 }

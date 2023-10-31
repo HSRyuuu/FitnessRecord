@@ -9,6 +9,7 @@ import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetail
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import com.example.fitnessrecord.global.util.PasswordUtils;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +30,7 @@ public class AuthService implements UserDetailsService {
     if (!PasswordUtils.equalsPlainTextAndHashed(input.getPassword(), user.getPassword())) {
       throw new MyException(ErrorCode.LOGIN_FAILED_PASSWORD_INCORRECT);
     }
-    if (!user.isEmailAuthYn()) {
+    if (Objects.isNull(user.getEmailAuthDateTime())) {
       throw new MyException(ErrorCode.EMAIL_AUTH_REQUIRED);
     }
     return UserDto.fromEntity(user);

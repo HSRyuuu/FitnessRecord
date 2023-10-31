@@ -35,8 +35,22 @@ public class SecurityConfiguration {
   private final MyAccessDeniedHandler myAccessDeniedHandler;
   private final MyAuthenticationEntryPoint myAuthenticationEntryPoint;
 
+  private static final String[] PERMIT_URL = {
+      //swagger
+      "/v2/api-docs",
+      "/swagger-resources/**",
+      "/configuration/ui",
+      "/configuration/security",
+      "/swagger-ui.html",
+      "/swagger-ui/**",
+      "/webjars/**",
+      "/auth/**",
+      "/login-page"
+  };
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
     http
         .httpBasic().disable()
         .csrf().disable()
@@ -44,10 +58,13 @@ public class SecurityConfiguration {
 
     http
         .authorizeRequests()
+        .antMatchers(PERMIT_URL)
+        .permitAll()
         .antMatchers("/admin/**")
         .hasAuthority("ROLE_ADMIN")
-        .antMatchers("/**")
+        .antMatchers("/user/**")
         .hasAuthority("ROLE_USER");
+
 
 
     http
@@ -67,7 +84,7 @@ public class SecurityConfiguration {
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
-    return web -> web.ignoring().antMatchers("/auth/**", "/login/**", "/exception/**", "/login-page ");
+    return web -> web.ignoring().antMatchers( "/login/**", "/exception/**");
   }
 
   @Bean

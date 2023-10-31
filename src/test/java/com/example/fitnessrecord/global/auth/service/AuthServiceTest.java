@@ -12,6 +12,7 @@ import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetail
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import com.example.fitnessrecord.global.util.PasswordUtils;
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,7 @@ class AuthServiceTest {
       User user = User.builder()
           .email(email)
           .password(PasswordUtils.encPassword(password))
-          .emailAuthYn(true)
+          .emailAuthDateTime(LocalDateTime.now())
           .build();
       User saved = userRepository.save(user);
       LoginInput input = new LoginInput(email, password);
@@ -65,7 +66,7 @@ class AuthServiceTest {
       User user = User.builder()
           .email(email)
           .password(PasswordUtils.encPassword(password))
-          .emailAuthYn(true)
+          .emailAuthDateTime(LocalDateTime.now())
           .build();
       User saved = userRepository.save(user);
       LoginInput input = new LoginInput("xxx", password);
@@ -86,7 +87,7 @@ class AuthServiceTest {
       User user = User.builder()
           .email(email)
           .password(PasswordUtils.encPassword(password))
-          .emailAuthYn(true)
+          .emailAuthDateTime(LocalDateTime.now())
           .build();
       User saved = userRepository.save(user);
       LoginInput input = new LoginInput(email, "xxxx");
@@ -107,7 +108,7 @@ class AuthServiceTest {
       User user = User.builder()
           .email(email)
           .password(PasswordUtils.encPassword(password))
-          .emailAuthYn(false)
+          //.emailAuthDateTime(LocalDateTime.now())
           .build();
       userRepository.save(user);
       LoginInput input = new LoginInput(email, password);
@@ -136,7 +137,7 @@ class AuthServiceTest {
       User user = User.builder()
           .email(email)
           .password(PasswordUtils.encPassword("test"))
-          .emailAuthYn(true)
+          .emailAuthDateTime(LocalDateTime.now())
           .userType(UserType.BASIC)
           .build();
       User saved = userRepository.save(user);
@@ -158,7 +159,7 @@ class AuthServiceTest {
       User user = User.builder()
           .email("xxx")
           .password(PasswordUtils.encPassword("test"))
-          .emailAuthYn(true)
+          .emailAuthDateTime(LocalDateTime.now())
           .userType(UserType.BASIC)
           .build();
       userRepository.save(user);

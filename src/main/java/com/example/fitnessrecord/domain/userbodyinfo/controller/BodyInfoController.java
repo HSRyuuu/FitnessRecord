@@ -28,7 +28,7 @@ public class BodyInfoController {
   private final BodyInfoService bodyInfoService;
 
   @ApiOperation("사용자 Body Info 등록")
-  @PostMapping("/body-info/add")
+  @PostMapping("/body-info")
   public ResponseEntity<?> addBodyInfo(@RequestBody BodyInfoInput input,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
     BodyInfoDto result = bodyInfoService.addBodyInfo(principalDetails.getUserId(), input);
@@ -36,7 +36,7 @@ public class BodyInfoController {
   }
 
   @ApiOperation("사용자 Body Info 삭제")
-  @DeleteMapping("/body-info/delete")
+  @DeleteMapping("/body-info")
   public ResponseEntity<?> deleteBodyInfo(
       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -46,7 +46,7 @@ public class BodyInfoController {
   }
 
   @ApiOperation("사용자 Body Info 변화를 기간별 검색")
-  @GetMapping("/body-info/list")
+  @GetMapping("/body-infos")
   public ResponseEntity<?> bodyInfoList(
       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,

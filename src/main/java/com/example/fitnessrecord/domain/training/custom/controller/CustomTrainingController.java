@@ -5,6 +5,7 @@ import com.example.fitnessrecord.domain.training.custom.dto.CustomTrainingDto;
 import com.example.fitnessrecord.domain.training.custom.dto.EditCustomTrainingInput;
 import com.example.fitnessrecord.domain.training.custom.service.CustomTrainingService;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomTrainingController {
 
   private final CustomTrainingService customTrainingService;
-
-  @PostMapping("/user/custom-training/add")
+  @ApiOperation("CustomTraining 추가")
+  @PostMapping("/user/custom-training")
   public ResponseEntity<?> addCustomTraining(@RequestBody AddCustomTrainingInput input,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
@@ -34,8 +35,8 @@ public class CustomTrainingController {
 
     return ResponseEntity.ok(result);
   }
-
-  @PutMapping("/user/custom-training/edit")
+  @ApiOperation("CustomTraining 수정")
+  @PutMapping("/user/custom-training")
   public ResponseEntity<?> editCustomTraining(@RequestBody EditCustomTrainingInput input,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
@@ -44,8 +45,8 @@ public class CustomTrainingController {
 
     return ResponseEntity.ok(result);
   }
-
-  @DeleteMapping("/user/custom-training/delete")
+  @ApiOperation("CustomTraining 삭제")
+  @DeleteMapping("/user/custom-training")
   public ResponseEntity<?> deleteCustomTraining(@RequestParam Long id,
         @AuthenticationPrincipal PrincipalDetails principalDetails){
 
@@ -55,7 +56,8 @@ public class CustomTrainingController {
     return ResponseEntity.ok(result);
   }
 
-  @GetMapping("/user/custom-training/list")
+  @ApiOperation(value = "CustomTraining 리스트", notes = "로그인 된 유저를 바탕으로 커스텀 운동 정보를 반환")
+  @GetMapping("/user/custom-trainings")
   public ResponseEntity<?> customTrainingList(@RequestParam(required = false, defaultValue = "1") Integer page,
       @AuthenticationPrincipal PrincipalDetails principalDetails){
 

@@ -6,6 +6,7 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,8 +39,8 @@ public class TrainingRecord {
 
   private boolean volumeSavedYn;
 
-  @OneToMany(mappedBy = "trainingRecord")
-  List<SetRecord> setRecords = new ArrayList<>();
+  @OneToMany(mappedBy = "trainingRecord", cascade = CascadeType.REMOVE)
+  private List<SetRecord> setRecords = new ArrayList<>();
 
   @Builder
   public TrainingRecord(Long id, User user, LocalDate date) {

@@ -7,13 +7,16 @@ import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRe
 import com.example.fitnessrecord.domain.record.volume.persist.VolumeRecord;
 import com.example.fitnessrecord.domain.record.volume.persist.VolumeRecordRepository;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
+import com.example.fitnessrecord.global.util.PageConstant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,21 +34,26 @@ public class VolumeScheduler {
    */
   @Scheduled(cron = "0 0 2 * * *") //매일 오전 2시에 실행
   public void saveVolumes() {
-    log.info("(volume recording start) TIME: {}", LocalDateTime.now());
+    log.info("[volume recording start] TIME: {}", LocalDateTime.now());
 
-    List<TrainingRecord> trainingRecords =
-        trainingRecordRepository.findAllByDateAndVolumeSavedYnIsFalse(LocalDate.now().minusDays(7));
+    boolean hasNextPage = true;
+    int count = 0;
+    while (hasNextPage) {
+      Page<TrainingRecord> trainingRecords =
+          trainingRecordRepository.findAllByDateAndVolumeSavedYnIsFalse(
+              LocalDate.now(),
+              PageRequest.of(0, PageConstant.VOLUME_PROCESS_SIZE));
 
-    if (trainingRecords.isEmpty()) {
-      log.info("trainingRecords is Empty!");
-      return;
+      count += this.executeSaveVolumes(trainingRecords.getContent());
+
+      hasNextPage = trainingRecords.hasNext();
     }
 
-    for (TrainingRecord trainingRecord : trainingRecords) {
+    log.info("[volume recording end] AMOUNT: {}, TIME: {}", count, LocalDateTime.now());
+  }
 
-      if (volumeRecordRepository.existsByTrainingRecordId(trainingRecord.getId())) {
-        continue;
-      }
+  private int executeSaveVolumes(List<TrainingRecord> trainingRecords) {
+    for (TrainingRecord trainingRecord : trainingRecords) {
 
       List<SetRecord> setRecords = setRecordRepository.findByTrainingRecord(trainingRecord);
 
@@ -59,18 +67,17 @@ public class VolumeScheduler {
       trainingRecord.setVolumeSavedYn(true);
       trainingRecordRepository.save(trainingRecord);
     }
-
+    return trainingRecords.size();
   }
 
   private Map<BodyPart, Double> getVolumeMapBySetRecords(List<SetRecord> setRecords) {
-    Map<BodyPart, Double> weightMap = new HashMap<>();
+    return setRecords.stream()
+        .collect(Collectors.toMap(
+            item -> item.getBodyPart(), //key Mapper
+            item -> item.getReps() * item.getWeight(), //value Mapper
+            (v1, v2) -> v1 + v2) //key가 이미 존재할 때 merge 방법
+        );
 
-    for (SetRecord setRecord : setRecords) {
-      BodyPart bodyPart = setRecord.getBodyPart();
-      weightMap.put(bodyPart,
-          weightMap.getOrDefault(bodyPart, 0.0) + setRecord.getWeight() * setRecord.getReps());
-    }
-    return weightMap;
   }
 
   private VolumeRecord createVolumeRecord(Map<BodyPart, Double> volumeMap) {

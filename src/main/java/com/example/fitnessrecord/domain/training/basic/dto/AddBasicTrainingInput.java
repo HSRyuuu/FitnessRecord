@@ -4,11 +4,13 @@ import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class AddBasicTrainingInput {
+@NoArgsConstructor
+public class  AddBasicTrainingInput {
   private String trainingName;
   private String trainingNameKor;
   private BodyPart bodyPart;

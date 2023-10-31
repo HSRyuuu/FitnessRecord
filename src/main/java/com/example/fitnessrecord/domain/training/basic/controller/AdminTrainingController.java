@@ -15,19 +15,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/admin")
 public class AdminTrainingController {
 
   private final AdminTrainingService adminTrainingService;
 
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation("ADMIN - BasicTraining 추가")
-  @PostMapping("/admin/add/training")
+  @PostMapping("/basic-training")
   public ResponseEntity<?> addTraining(@RequestBody AddBasicTrainingInput input){
     BasicTrainingDto addedTraining = adminTrainingService.addTraining(input);
     return ResponseEntity.ok(addedTraining);
@@ -35,7 +37,7 @@ public class AdminTrainingController {
 
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation("ADMIN - BasicTraining 삭제")
-  @DeleteMapping("/admin/delete/training")
+  @DeleteMapping("/basic-training")
   public ResponseEntity<?> deleteTraining(@RequestParam String name){
     BasicTrainingDto deletedTraining = adminTrainingService.deleteTraining(name);
     return ResponseEntity.ok(deletedTraining);
@@ -43,7 +45,7 @@ public class AdminTrainingController {
 
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation("ADMIN - BasicTraining 수정")
-  @PutMapping("/admin/update/training")
+  @PutMapping("/basic-training")
   public ResponseEntity<?> updateTraining(@RequestBody EditBasicTrainingInput input){
     BasicTrainingDto updatedTraining = adminTrainingService.updateTraining(input);
     return ResponseEntity.ok(updatedTraining);
@@ -51,7 +53,7 @@ public class AdminTrainingController {
   
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation("ADMIN - BasicTraining 리스트")
-  @GetMapping("/admin/list/training")
+  @GetMapping("/basic-trainings")
   public ResponseEntity<?> list(){
     List<BasicTrainingDto> list = adminTrainingService.trainingList();
     return ResponseEntity.ok(list);

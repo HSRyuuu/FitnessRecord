@@ -16,19 +16,21 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/record")
 public class TrainingRecordController {
 
   private final TrainingRecordService trainingRecordService;
 
   @ApiOperation(value = "운동을 시작할 때, 가장 큰 단위인 TrainingRecord를 하나 생성한다.",
       notes = "여기서 생성된 운동의 id로 각 SetRecord를 저장한다.")
-  @PostMapping("/record/training/add")
+  @PostMapping("/training-record")
   public ResponseEntity<?> addTrainingRecord(
       @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -38,7 +40,7 @@ public class TrainingRecordController {
   }
 
   @ApiOperation("운동 기록을 조회한다. 운동 ID로 조회")
-  @GetMapping("/record/training/{id}")
+  @GetMapping("/training-record/{id}")
   public ResponseEntity<?> trainingRecord(@PathVariable Long id,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
     TrainingRecordResponse result = trainingRecordService.getTrainingRecordInfo(id,
@@ -48,7 +50,7 @@ public class TrainingRecordController {
   }
 
   @ApiOperation(value = "날짜 d1부터 d2 사이의 운동 기록을 조회한다.", notes = "d1만 입력할 경우 해당 날짜의 운동기록을 반환한다.")
-  @GetMapping("/record/training")
+  @GetMapping("/training-records")
   public ResponseEntity<?> trainingRecords(
       @RequestParam("d1") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
       @RequestParam(value = "d2", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,

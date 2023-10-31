@@ -51,13 +51,13 @@ public class TrainingRecordController {
 
   @ApiOperation(value = "날짜 d1부터 d2 사이의 운동 기록을 조회한다.", notes = "d1만 입력할 경우 해당 날짜의 운동기록을 반환한다.")
   @GetMapping("/training-records")
-  public ResponseEntity<?> trainingRecords(
+  public ResponseEntity<?> trainingRecords(@RequestParam(value = "p", defaultValue = "1")int page,
       @RequestParam("d1") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
       @RequestParam(value = "d2", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
     TrainingRecordListResponse result =
-        trainingRecordService.getTrainingRecordList(principalDetails.getUserId(), start, end);
+        trainingRecordService.getTrainingRecordList(principalDetails.getUserId(),page, start, end);
 
     return ResponseEntity.ok(result);
   }

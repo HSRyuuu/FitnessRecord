@@ -29,6 +29,7 @@ public class SetRecordDto {
   private Long id;
 
   private Long trainingRecordId; //전체 운동
+  private Long userId;
 
   private LocalDate date;
 
@@ -44,6 +45,7 @@ public class SetRecordDto {
     return SetRecordDto.builder()
         .id(setRecord.getId())
         .trainingRecordId(setRecord.getTrainingRecord().getId())
+        .userId(setRecord.getUser().getId())
         .date(setRecord.getDate())
         .bodyPart(setRecord.getBodyPart())
         .trainingName(setRecord.getTrainingName())

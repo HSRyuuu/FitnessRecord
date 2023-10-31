@@ -34,6 +34,11 @@ public class SetRecord {
   @ManyToOne
   @JoinColumn(name = "TRAINING_RECORD_ID")
   private TrainingRecord trainingRecord; //전체 운동
+
+  @ManyToOne
+  @JoinColumn(name = "USER_ID")
+  private User user;
+
   private LocalDate date;
 
   @Enumerated(EnumType.STRING)

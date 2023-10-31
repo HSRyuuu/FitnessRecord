@@ -35,6 +35,7 @@ public class SetRecordInput {
   public static SetRecord toEntity(SetRecordInput input, TrainingRecord trainingRecord){
     return SetRecord.builder()
         .trainingRecord(trainingRecord)
+        .user(trainingRecord.getUser())
         .date(trainingRecord.getDate())
         .bodyPart(input.getBodyPart())
         .trainingName(input.getTrainingName())

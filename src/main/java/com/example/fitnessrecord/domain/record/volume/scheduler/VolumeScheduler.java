@@ -40,7 +40,7 @@ public class VolumeScheduler {
     int count = 0;
     while (hasNextPage) {
       Page<TrainingRecord> trainingRecords =
-          trainingRecordRepository.findAllByDateAndVolumeSavedYnIsFalse(
+          trainingRecordRepository.findAllByDateBeforeAndVolumeSavedYnIsFalse(
               LocalDate.now(),
               PageRequest.of(0, PageConstant.VOLUME_PROCESS_SIZE));
 

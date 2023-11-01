@@ -8,7 +8,6 @@ import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecord
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordResponse;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecordRepository;
-import com.example.fitnessrecord.domain.record.volume.service.VolumeRecordService;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
@@ -21,7 +20,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Error;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -48,6 +46,7 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
         trainingRecordRepository.save(TrainingRecord.builder()
             .user(user)
             .date(date)
+            .lastModifiedDate(LocalDate.now())
             .build()
         );
 
@@ -95,7 +94,6 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
   }
 
 
-
   private Page<TrainingRecord> getTrainingRecords(
       Long userId, int page, LocalDate start, LocalDate end) {
     //사용자에게 페이지는 1부터 시작하지만, 프로그램에서는 0부터 시작하기 때문에 page에 1을 빼줌
@@ -139,10 +137,9 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
   public boolean hasAuthority(Long userId, Long trainingRecordId) {
     TrainingRecord trainingRecord = trainingRecordRepository.findById(trainingRecordId)
         .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND));
-    if(trainingRecord.getUser().getId().equals(userId)){
-      return true;
-    }
-    return false;
+
+    return trainingRecord.getUser().getId().equals(userId);
+
   }
 
 }

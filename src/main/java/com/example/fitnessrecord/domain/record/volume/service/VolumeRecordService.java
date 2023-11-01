@@ -7,6 +7,6 @@ public interface VolumeRecordService {
 
   int executeVolumeRecordProcess(List<TrainingRecord> trainingRecords);
 
-  boolean updateVolumeRecord(Long trainingRecordId);
+  boolean updateVolumeRecordByTrainingRecordId(Long trainingRecordId);
 
 }

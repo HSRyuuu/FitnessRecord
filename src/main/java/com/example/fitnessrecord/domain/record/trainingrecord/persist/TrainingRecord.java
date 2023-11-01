@@ -38,17 +38,16 @@ public class TrainingRecord {
 
   private LocalDate date; //운동 날짜
 
-  private boolean volumeSavedYn;
+  private LocalDate lastModifiedDate;
 
-  @OneToMany(mappedBy = "trainingRecord",
-      fetch = FetchType.LAZY,
-      cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "trainingRecord", cascade = CascadeType.REMOVE)
   private List<SetRecord> setRecords = new ArrayList<>();
 
   @Builder
-  public TrainingRecord(Long id, User user, LocalDate date) {
+  public TrainingRecord(Long id, User user, LocalDate date, LocalDate lastModifiedDate) {
     this.id = id;
     this.user = user;
     this.date = date;
+    this.lastModifiedDate = lastModifiedDate;
   }
 }

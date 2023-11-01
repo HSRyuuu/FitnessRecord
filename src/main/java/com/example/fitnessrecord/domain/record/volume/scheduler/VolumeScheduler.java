@@ -31,9 +31,10 @@ public class VolumeScheduler {
     boolean hasNextPage = true;
     int count = 0;
     while (hasNextPage) {
+      //scheduled 되어있는 시간 전날에 수정된 모든 training record를 의 volume을 update 함
       Page<TrainingRecord> trainingRecords =
-          trainingRecordRepository.findAllByDateBeforeAndVolumeSavedYnIsFalse(
-              LocalDate.now(),
+          trainingRecordRepository.findAllByLastModifiedDate(
+              LocalDate.now().minusDays(1L),
               PageRequest.of(0, PageConstant.VOLUME_PROCESS_SIZE));
 
       count += volumeRecordService.executeVolumeRecordProcess(trainingRecords.getContent());

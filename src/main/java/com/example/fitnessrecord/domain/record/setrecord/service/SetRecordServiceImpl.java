@@ -10,6 +10,7 @@ import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRe
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecordRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -38,6 +39,8 @@ public class SetRecordServiceImpl implements SetRecordService {
             .collect(Collectors.toList())
     );
 
+    this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
+
     return new AddSetRecordResult(TrainingRecordDto.fromEntity(trainingRecord), setRecords.size());
   }
 
@@ -50,13 +53,16 @@ public class SetRecordServiceImpl implements SetRecordService {
       throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
     }
 
-    //set record 수정 시 volume record도 새로 취합해야됌
-    TrainingRecord trainingRecord = setRecord.getTrainingRecord();
-    trainingRecord.setVolumeSavedYn(false);
-    trainingRecordRepository.save(trainingRecord);
+    //set record 수정 시 TrainingRecord 수정
+    this.saveLastModifiedDateOfTrainingRecord(setRecord.getTrainingRecord());
 
     setRecordRepository.delete(setRecord);
 
     return DeleteSetRecordResult.fromEntity(setRecord);
+  }
+
+  private void saveLastModifiedDateOfTrainingRecord(TrainingRecord trainingRecord){
+    trainingRecord.setLastModifiedDate(LocalDate.now());
+    trainingRecordRepository.save(trainingRecord);
   }
 }

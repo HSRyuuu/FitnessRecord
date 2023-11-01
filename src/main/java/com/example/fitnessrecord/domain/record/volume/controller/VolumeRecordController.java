@@ -33,7 +33,7 @@ public class VolumeRecordController {
       throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
     }
 
-    boolean result = volumeRecordService.updateVolumeRecord(id);
+    boolean result = volumeRecordService.updateVolumeRecordByTrainingRecordId(id);
 
     return ResponseEntity.ok(result);
   }

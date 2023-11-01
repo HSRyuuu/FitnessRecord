@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrainingRecordRepository extends JpaRepository<TrainingRecord, Long> {
-  Page<TrainingRecord> findAllByDateBeforeAndVolumeSavedYnIsFalse(LocalDate date, Pageable pageable);
-  Page<TrainingRecord> findAllByUserIdAndDateBetween(Long userId, Pageable pageable, LocalDate start, LocalDate end);
+
+  Page<TrainingRecord> findAllByLastModifiedDate(LocalDate lastModifiedDate, Pageable pageable);
+
+  Page<TrainingRecord> findAllByUserIdAndDateBetween(Long userId, Pageable pageable,
+      LocalDate start, LocalDate end);
 }

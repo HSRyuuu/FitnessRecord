@@ -34,8 +34,8 @@ public class SetRecordController {
   private final SetRecordService setRecordService;
 
   @ApiOperation(value = "SetRecord를 추가한다.",notes = "Training Record를 먼저 생성한 뒤 Set Record를 추가한다. ")
-  @PostMapping("/set-record")
-  public ResponseEntity<?> addSetRecord(@RequestParam("id") Long trainingRecordId,
+  @PostMapping("/training-record/{id}/set-record")
+  public ResponseEntity<?> addSetRecord(@PathVariable("id") Long trainingRecordId,
       @Valid @RequestBody  List<SetRecordInput> list) {
 
     AddSetRecordResult result = setRecordService.addSetRecords(trainingRecordId, list);
@@ -44,8 +44,8 @@ public class SetRecordController {
   }
 
   @ApiOperation("set-record 삭제")
-  @DeleteMapping("/set-record")
-  public ResponseEntity<?> deleteSetRecord(@RequestParam Long id,
+  @DeleteMapping("/set-record/{id}")
+  public ResponseEntity<?> deleteSetRecord(@PathVariable Long id,
       @AuthenticationPrincipal PrincipalDetails principalDetails){
     DeleteSetRecordResult result = setRecordService.deleteSetRecord(id,
         principalDetails.getUserId());

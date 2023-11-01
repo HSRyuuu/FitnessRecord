@@ -24,6 +24,8 @@ public enum ErrorCode {
 
     //Record 관련
     TRAINING_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "운동 기록을 찾을 수 없습니다."),
+    SET_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "세트 기록을 찾을 수 없습니다."),
+    VOLUME_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "볼륨 기록을 찾을 수 없습니다."),
 
 
 

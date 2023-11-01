@@ -51,18 +51,22 @@
 ### 회원 별 운동 기록 제공
 - 회원은 자신의 운동 내역(`TRAINING_RECORD 테이블`)을 기록할 수 있다.
 - 운동 내역은 세트별(`SET_RECORD 테이블`)로 기록한다.
+  - `SET_RECORD`는 `TRAINING_RECORD`에 포함된다.
+  - `SET_RECORD`는 추가, 삭제만 가능하다.
 - 일정 기간 사이의 운동 기록을 조회할 수 있다. (query param: d1, d2)
 
 ### 운동 기록 데이터 정리 스케쥴링
-- 일주일이 지난 운동 기록에 대해 `가슴/등/하체/어깨/이두/삼두/기타`의 대분류로 운동 volume을 기록한다.`매일 오전 2시로 Scheduling`
-- [ ] 한 주가 끝나면 주간 운동 기록을 유저 별로 따로 저장한다. `WEEKLY_RECORD`
-
-### 운동 기록 갱신 알림
-- [ ] 운동 종목 별 최고 기록 갱신 시 알림 기능 `(sse/polling/websocket 등 예정)`
+- 하루가 끝나면 운동 기록 별로 `가슴/등/하체/어깨/이두/삼두/기타` 대분류로 운동 volume을 기록한다.`(VOLUME_RECORD)매일 오전 2시로 Scheduling`
+  - 과거(하루 이전)의 SetRecord 수정 시에 VolumeRecord도 업데이트 하기 위해 `/training-records/{id}/update-volume`를 호출해야한다.
+  - 호출하지 않을 경우 volumeScheduling 시에 처리된다.
+- 한 주가 끝나면 주간 운동 기록을 유저 별로 따로 저장한다. `(WEEKLY_RECORD) 매주 화요일 2주전의 데이터 저장`
 
 ### 회원 별 운동 통계 제공
 - [ ] 일별, 주별 운동 기록, 통계를 제공한다.
   - [ ] 운동 부위 별 volume 주간 통계 제공
+
+### 운동 기록 갱신 알림
+- [ ] 운동 종목 별 최고 기록 갱신 시 알림 기능 `(sse/polling/websocket 등 예정)`
 
 ## 루틴 만들기
 - [ ] 하나의 루틴은 여러개의 `ROUTINE_ELEMENT`로 구성된다.

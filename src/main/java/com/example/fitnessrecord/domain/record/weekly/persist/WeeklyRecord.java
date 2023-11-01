@@ -1,8 +1,10 @@
 package com.example.fitnessrecord.domain.record.weekly.persist;
 
+import com.example.fitnessrecord.domain.record.volume.persist.VolumeRecord;
 import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDate;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +27,7 @@ public class WeeklyRecord {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_ID")
   private User user;
 
@@ -37,11 +39,20 @@ public class WeeklyRecord {
   //주간 volume 기록
   private double chest;
   private double back;
-  private double arms;
   private double legs;
   private double shoulder;
   private double biceps;
   private double triceps;
   private double etc;
+
+  public void addVolumesValues(VolumeRecord volumeRecord){
+    this.chest += volumeRecord.getChest();
+    this.back += volumeRecord.getBack();
+    this.legs += volumeRecord.getLegs();
+    this.shoulder += volumeRecord.getShoulder();
+    this.biceps += volumeRecord.getBiceps();
+    this.triceps += volumeRecord.getTriceps();
+    this.etc += volumeRecord.getEtc();
+  }
 
 }

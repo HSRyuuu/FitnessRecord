@@ -5,6 +5,7 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,11 +30,11 @@ public class RoutineComment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ROUTINE_POST_ID")
   private RoutinePost routinePost;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "WRITER_ID")
   private User writer;
 

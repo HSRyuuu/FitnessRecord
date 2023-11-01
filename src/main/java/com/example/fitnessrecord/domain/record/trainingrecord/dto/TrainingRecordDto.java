@@ -22,11 +22,14 @@ public class TrainingRecordDto {
 
   private LocalDate date; //운동 날짜
 
-  public static TrainingRecordDto fromEntity(TrainingRecord saved) {
+  private LocalDate lastModifiedDate;
+
+  public static TrainingRecordDto fromEntity(TrainingRecord trainingRecord) {
     return TrainingRecordDto.builder()
-        .id(saved.getId())
-        .username(saved.getUser().getEmail())
-        .date(saved.getDate())
+        .id(trainingRecord.getId())
+        .username(trainingRecord.getUser().getEmail())
+        .date(trainingRecord.getDate())
+        .lastModifiedDate(trainingRecord.getLastModifiedDate())
         .build();
   }
 }

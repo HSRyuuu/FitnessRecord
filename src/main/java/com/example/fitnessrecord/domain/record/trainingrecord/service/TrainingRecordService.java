@@ -24,4 +24,10 @@ public interface TrainingRecordService {
    */
   TrainingRecordListResponse getTrainingRecordList(Long userId, int page, LocalDate start, LocalDate end);
 
+  /**
+   * 해당 TrainingRecord에 대한 권한 확인
+   */
+  boolean hasAuthority(Long userId, Long trainingRecordId);
+
+
 }

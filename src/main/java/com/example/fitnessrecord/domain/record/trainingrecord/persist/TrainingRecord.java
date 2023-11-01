@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,21 +32,22 @@ public class TrainingRecord {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_ID")
   private User user;
 
   private LocalDate date; //운동 날짜
 
-  private boolean volumeSavedYn;
+  private LocalDate lastModifiedDate;
 
   @OneToMany(mappedBy = "trainingRecord", cascade = CascadeType.REMOVE)
   private List<SetRecord> setRecords = new ArrayList<>();
 
   @Builder
-  public TrainingRecord(Long id, User user, LocalDate date) {
+  public TrainingRecord(Long id, User user, LocalDate date, LocalDate lastModifiedDate) {
     this.id = id;
     this.user = user;
     this.date = date;
+    this.lastModifiedDate = lastModifiedDate;
   }
 }

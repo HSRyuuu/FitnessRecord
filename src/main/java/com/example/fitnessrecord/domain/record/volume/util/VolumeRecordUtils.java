@@ -32,6 +32,7 @@ public class VolumeRecordUtils {
     volumeRecord.setShoulder(volumeMap.getOrDefault(BodyPart.SHOULDER, 0.0));
     volumeRecord.setBiceps(volumeMap.getOrDefault(BodyPart.BICEPS, 0.0));
     volumeRecord.setTriceps(volumeMap.getOrDefault(BodyPart.TRICEPS, 0.0));
+    volumeRecord.setAbs(volumeMap.getOrDefault(BodyPart.ABS, 0.0));
     volumeRecord.setEtc(volumeMap.getOrDefault(BodyPart.ETC, 0.0));
 
     return volumeRecord;

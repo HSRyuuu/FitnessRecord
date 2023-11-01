@@ -45,17 +45,19 @@ public class VolumeRecord {
   private double shoulder;
   private double biceps;
   private double triceps;
+  private double abs;
   private double etc;
 
   @Builder
-  public VolumeRecord(double chest, double back, double legs,
-      double shoulder, double biceps, double triceps, double etc) {
+  public VolumeRecord(double chest, double back, double legs, double shoulder, double biceps,
+      double triceps, double abs, double etc) {
     this.chest = chest;
     this.back = back;
     this.legs = legs;
     this.shoulder = shoulder;
     this.biceps = biceps;
     this.triceps = triceps;
+    this.abs = abs;
     this.etc = etc;
   }
 

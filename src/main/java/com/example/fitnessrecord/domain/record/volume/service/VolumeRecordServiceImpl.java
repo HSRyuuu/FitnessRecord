@@ -40,20 +40,6 @@ public class VolumeRecordServiceImpl implements VolumeRecordService {
     return trainingRecords.size();
   }
 
-  @Override
-  public boolean updateVolumeRecordByTrainingRecordId(Long trainingRecordId) {
-    TrainingRecord trainingRecord = trainingRecordRepository.findById(trainingRecordId)
-        .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND));
-
-    //오늘 생성한 trainingRecord를 수정 또는 삭제한 경우에는 update하지 않음
-    if (!trainingRecord.getDate().isBefore(LocalDate.now())) {
-      return false;
-    }
-
-    this.updateVolumeRecord(trainingRecord);
-    return true;
-  }
-
   private void updateVolumeRecord(TrainingRecord trainingRecord) {
     VolumeRecord volumeRecord = volumeRecordRepository.findByTrainingRecord(trainingRecord)
         .orElseThrow(() -> new MyException(ErrorCode.VOLUME_RECORD_NOT_FOUND));
@@ -71,6 +57,51 @@ public class VolumeRecordServiceImpl implements VolumeRecordService {
     log.info("volume record saved: {}", saved);
 
   }
+
+  @Override
+  public void updateVolumeRecordForAdd(TrainingRecord trainingRecord, SetRecord setRecord) {
+    VolumeRecord volumeRecord = volumeRecordRepository.findByTrainingRecord(trainingRecord)
+        .orElseThrow(() -> new MyException(ErrorCode.VOLUME_RECORD_NOT_FOUND));
+    BodyPart bodyPart = setRecord.getBodyPart();
+    double volume = setRecord.getWeight() * setRecord.getReps();
+
+    switch (bodyPart){
+      case CHEST: volumeRecord.setChest(volumeRecord.getChest() + volume);break;
+      case BACK: volumeRecord.setBack(volumeRecord.getBack() + volume);break;
+      case LEGS: volumeRecord.setLegs(volumeRecord.getLegs() + volume);break;
+      case SHOULDER: volumeRecord.setShoulder(volumeRecord.getShoulder() + volume);break;
+      case BICEPS: volumeRecord.setBiceps(volumeRecord.getBiceps() + volume);break;
+      case TRICEPS: volumeRecord.setTriceps(volumeRecord.getTriceps() + volume);break;
+      case ABS: volumeRecord.setAbs(volumeRecord.getAbs() + volume);break;
+      case ETC: volumeRecord.setEtc(volumeRecord.getEtc() + volume);break;
+      default: throw new MyException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+    volumeRecordRepository.save(volumeRecord);
+
+  }
+
+  @Override
+  public void updateVolumeRecordForDelete(TrainingRecord trainingRecord, SetRecord setRecord) {
+    VolumeRecord volumeRecord = volumeRecordRepository.findByTrainingRecord(trainingRecord)
+        .orElseThrow(() -> new MyException(ErrorCode.VOLUME_RECORD_NOT_FOUND));
+    BodyPart bodyPart = setRecord.getBodyPart();
+    double volume = setRecord.getWeight() * setRecord.getReps();
+
+    switch (bodyPart){
+      case CHEST: volumeRecord.setChest(volumeRecord.getChest() - volume);break;
+      case BACK: volumeRecord.setBack(volumeRecord.getBack() - volume);break;
+      case LEGS: volumeRecord.setLegs(volumeRecord.getLegs() - volume);break;
+      case SHOULDER: volumeRecord.setShoulder(volumeRecord.getShoulder() - volume);break;
+      case BICEPS: volumeRecord.setBiceps(volumeRecord.getBiceps() - volume);break;
+      case TRICEPS: volumeRecord.setTriceps(volumeRecord.getTriceps() - volume);break;
+      case ABS: volumeRecord.setAbs(volumeRecord.getAbs() - volume);break;
+      case ETC: volumeRecord.setEtc(volumeRecord.getEtc() - volume);break;
+      default: throw new MyException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+    volumeRecordRepository.save(volumeRecord);
+  }
+
 
   /**
    * TrainingRecord의 volume을 새로 저장

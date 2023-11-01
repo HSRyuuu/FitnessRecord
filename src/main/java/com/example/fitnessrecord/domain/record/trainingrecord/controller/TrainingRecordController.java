@@ -61,14 +61,4 @@ public class TrainingRecordController {
     return ResponseEntity.ok(result);
   }
 
-  @ApiOperation(value = "TrainingRecord, SetRecord 변경 시 저장 완료 버튼 같은 저장 처리를 해줘야한다.",
-      notes = "VolumeRecord를 수정해주기 위함")
-  @PostMapping("/training-records/{id}/update-volume")
-  public ResponseEntity<?> saveComplete(@PathVariable Long id,
-      @AuthenticationPrincipal PrincipalDetails principalDetails) {
-
-    boolean result = trainingRecordService.updateVolumeRecord(principalDetails.getUserId(), id);
-
-    return ResponseEntity.ok(result);
-  }
 }

@@ -36,7 +36,7 @@ public class VolumeScheduler {
               LocalDate.now(),
               PageRequest.of(0, PageConstant.VOLUME_PROCESS_SIZE));
 
-      count += volumeRecordService.executeSaveVolumes(trainingRecords.getContent());
+      count += volumeRecordService.executeVolumeRecordProcess(trainingRecords.getContent());
 
       hasNextPage = trainingRecords.hasNext();
     }

@@ -5,7 +5,8 @@ import java.util.List;
 
 public interface VolumeRecordService {
 
-  int executeSaveVolumes(List<TrainingRecord> trainingRecords);
+  int executeVolumeRecordProcess(List<TrainingRecord> trainingRecords);
 
-  void updateVolumeRecord(TrainingRecord trainingRecord);
+  boolean updateVolumeRecord(Long trainingRecordId);
+
 }

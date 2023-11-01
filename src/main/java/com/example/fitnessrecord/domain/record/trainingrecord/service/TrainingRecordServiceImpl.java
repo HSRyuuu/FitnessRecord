@@ -34,7 +34,6 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
   private final TrainingRecordRepository trainingRecordRepository;
   private final SetRecordRepository setRecordRepository;
   private final UserRepository userRepository;
-  private final VolumeRecordService volumeRecordService;
 
   @Override
   public TrainingRecordDto addTrainingRecord(Long userId, LocalDate date) {
@@ -137,19 +136,12 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
   }
 
   @Override
-  public boolean updateVolumeRecord(Long userId, Long trainingRecordId) {
+  public boolean hasAuthority(Long userId, Long trainingRecordId) {
     TrainingRecord trainingRecord = trainingRecordRepository.findById(trainingRecordId)
         .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND));
-
-    if(!trainingRecord.getUser().getId().equals(userId)){
-      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
-    }
-
-    if(trainingRecord.getDate().isBefore(LocalDate.now())){
-      volumeRecordService.updateVolumeRecord(trainingRecord);
+    if(trainingRecord.getUser().getId().equals(userId)){
       return true;
     }
-
     return false;
   }
 

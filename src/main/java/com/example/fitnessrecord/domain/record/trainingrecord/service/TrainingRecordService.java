@@ -25,9 +25,9 @@ public interface TrainingRecordService {
   TrainingRecordListResponse getTrainingRecordList(Long userId, int page, LocalDate start, LocalDate end);
 
   /**
-   * VolumeRecord 업데이트
+   * 해당 TrainingRecord에 대한 권한 확인
    */
-  boolean updateVolumeRecord(Long userId, Long trainingRecordId);
+  boolean hasAuthority(Long userId, Long trainingRecordId);
 
 
 }

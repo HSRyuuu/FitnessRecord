@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.domain.record.setrecord.service;
 
 import com.example.fitnessrecord.domain.record.setrecord.dto.AddSetRecordResult;
+import com.example.fitnessrecord.domain.record.setrecord.dto.DeleteSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordInput;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
@@ -10,6 +11,7 @@ import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRe
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +39,24 @@ public class SetRecordServiceImpl implements SetRecordService {
     );
 
     return new AddSetRecordResult(TrainingRecordDto.fromEntity(trainingRecord), setRecords.size());
+  }
+
+  @Override
+  public DeleteSetRecordResult deleteSetRecord(Long id, Long userId) {
+    SetRecord setRecord = setRecordRepository.findById(id)
+        .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
+
+    if(!Objects.equals(setRecord.getUser().getId(), userId)){
+      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
+    }
+
+    //set record 수정 시 volume record도 새로 취합해야됌
+    TrainingRecord trainingRecord = setRecord.getTrainingRecord();
+    trainingRecord.setVolumeSavedYn(false);
+    trainingRecordRepository.save(trainingRecord);
+
+    setRecordRepository.delete(setRecord);
+
+    return DeleteSetRecordResult.fromEntity(setRecord);
   }
 }

@@ -24,4 +24,10 @@ public interface TrainingRecordService {
    */
   TrainingRecordListResponse getTrainingRecordList(Long userId, int page, LocalDate start, LocalDate end);
 
+  /**
+   * VolumeRecord 업데이트
+   */
+  boolean updateVolumeRecord(Long userId, Long trainingRecordId);
+
+
 }

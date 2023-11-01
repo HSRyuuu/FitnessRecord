@@ -2,16 +2,22 @@ package com.example.fitnessrecord.domain.record.setrecord.controller;
 
 
 import com.example.fitnessrecord.domain.record.setrecord.dto.AddSetRecordResult;
+import com.example.fitnessrecord.domain.record.setrecord.dto.DeleteSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordInput;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.service.SetRecordService;
+import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import io.swagger.annotations.ApiOperation;
+import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,4 +42,16 @@ public class SetRecordController {
 
     return ResponseEntity.ok(result);
   }
+
+  @ApiOperation("set-record 삭제")
+  @DeleteMapping("/set-record")
+  public ResponseEntity<?> deleteSetRecord(@RequestParam Long id,
+      @AuthenticationPrincipal PrincipalDetails principalDetails){
+    DeleteSetRecordResult result = setRecordService.deleteSetRecord(id,
+        principalDetails.getUserId());
+
+    return ResponseEntity.ok(result);
+  }
+
+
 }

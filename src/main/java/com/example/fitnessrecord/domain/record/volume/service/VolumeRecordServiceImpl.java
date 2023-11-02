@@ -1,5 +1,6 @@
 package com.example.fitnessrecord.domain.record.volume.service;
 
+import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordUpdateRequest;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
@@ -65,17 +66,8 @@ public class VolumeRecordServiceImpl implements VolumeRecordService {
     BodyPart bodyPart = setRecord.getBodyPart();
     double volume = setRecord.getWeight() * setRecord.getReps();
 
-    switch (bodyPart){
-      case CHEST: volumeRecord.setChest(volumeRecord.getChest() + volume);break;
-      case BACK: volumeRecord.setBack(volumeRecord.getBack() + volume);break;
-      case LEGS: volumeRecord.setLegs(volumeRecord.getLegs() + volume);break;
-      case SHOULDER: volumeRecord.setShoulder(volumeRecord.getShoulder() + volume);break;
-      case BICEPS: volumeRecord.setBiceps(volumeRecord.getBiceps() + volume);break;
-      case TRICEPS: volumeRecord.setTriceps(volumeRecord.getTriceps() + volume);break;
-      case ABS: volumeRecord.setAbs(volumeRecord.getAbs() + volume);break;
-      case ETC: volumeRecord.setEtc(volumeRecord.getEtc() + volume);break;
-      default: throw new MyException(ErrorCode.INTERNAL_SERVER_ERROR);
-    }
+    this.addVolume(volumeRecord, bodyPart, volume);
+
     volumeRecordRepository.save(volumeRecord);
 
   }
@@ -87,19 +79,37 @@ public class VolumeRecordServiceImpl implements VolumeRecordService {
     BodyPart bodyPart = setRecord.getBodyPart();
     double volume = setRecord.getWeight() * setRecord.getReps();
 
-    switch (bodyPart){
-      case CHEST: volumeRecord.setChest(volumeRecord.getChest() - volume);break;
-      case BACK: volumeRecord.setBack(volumeRecord.getBack() - volume);break;
-      case LEGS: volumeRecord.setLegs(volumeRecord.getLegs() - volume);break;
-      case SHOULDER: volumeRecord.setShoulder(volumeRecord.getShoulder() - volume);break;
-      case BICEPS: volumeRecord.setBiceps(volumeRecord.getBiceps() - volume);break;
-      case TRICEPS: volumeRecord.setTriceps(volumeRecord.getTriceps() - volume);break;
-      case ABS: volumeRecord.setAbs(volumeRecord.getAbs() - volume);break;
-      case ETC: volumeRecord.setEtc(volumeRecord.getEtc() - volume);break;
-      default: throw new MyException(ErrorCode.INTERNAL_SERVER_ERROR);
-    }
+    this.addVolume(volumeRecord, bodyPart, volume * -1);
 
     volumeRecordRepository.save(volumeRecord);
+  }
+
+  @Override
+  public void updateVolumeRecordForUpdate(TrainingRecord trainingRecord, SetRecordUpdateRequest request) {
+    VolumeRecord volumeRecord = volumeRecordRepository.findByTrainingRecord(trainingRecord)
+        .orElseThrow(() -> new MyException(ErrorCode.VOLUME_RECORD_NOT_FOUND));
+
+    this.addVolume(volumeRecord, request.getBodyPartBefore(), request.getVolumeBefore() * -1);
+    this.addVolume(volumeRecord, request.getBodyPartAfter(), request.getVolumeAfter());
+
+    volumeRecordRepository.save(volumeRecord);
+  }
+
+  /**
+   * volume 추가 시에는 +volume, 삭제 시에는 -1을 곱한 값을 넘겨야 함
+   */
+  private void addVolume(VolumeRecord volumeRecord, BodyPart bodyPart, double volume){
+    switch (bodyPart){
+      case CHEST: volumeRecord.setChest(volumeRecord.getChest() + volume);break;
+      case BACK: volumeRecord.setBack(volumeRecord.getBack() + volume);break;
+      case LEGS: volumeRecord.setLegs(volumeRecord.getLegs() + volume);break;
+      case SHOULDER: volumeRecord.setShoulder(volumeRecord.getShoulder() + volume);break;
+      case BICEPS: volumeRecord.setBiceps(volumeRecord.getBiceps() + volume);break;
+      case TRICEPS: volumeRecord.setTriceps(volumeRecord.getTriceps() + volume);break;
+      case ABS: volumeRecord.setAbs(volumeRecord.getAbs() + volume);break;
+      case ETC: volumeRecord.setEtc(volumeRecord.getEtc() + volume);break;
+      default: throw new MyException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
   }
 
 

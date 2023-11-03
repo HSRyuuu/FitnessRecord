@@ -26,11 +26,7 @@ public interface SetRecordService {
   /**
    * SetRecord를 수정한다.
    */
-  SetRecordDto updateSetRecord(Long id, SetRecordInput input);
+  SetRecordDto updateSetRecord(Long id, Long userId, SetRecordInput input);
 
-  /**
-   * SetRecord의 쓰기 권한을 확인한다.
-   */
-  boolean hasAuthority(Long setRecordId, Long userId);
 
 }

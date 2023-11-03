@@ -69,9 +69,8 @@ public class SetRecordServiceImpl implements SetRecordService {
     SetRecord setRecord = setRecordRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
 
-    if (!Objects.equals(setRecord.getUser().getId(), userId)) {
-      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
-    }
+    this.authorityValidation(userId, setRecord);
+
     TrainingRecord trainingRecord = setRecord.getTrainingRecord();
 
     setRecordRepository.delete(setRecord);
@@ -86,9 +85,13 @@ public class SetRecordServiceImpl implements SetRecordService {
   }
 
   @Override
-  public SetRecordDto updateSetRecord(Long id, SetRecordInput input) {
+  public SetRecordDto updateSetRecord(Long id, Long userId, SetRecordInput input) {
+
     SetRecord setRecord = setRecordRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
+
+    this.authorityValidation(userId, setRecord);
+
     SetRecordUpdateRequest request =
         new SetRecordUpdateRequest(setRecord.getBodyPart(), setRecord.getWeight() * setRecord.getReps());
 
@@ -106,12 +109,11 @@ public class SetRecordServiceImpl implements SetRecordService {
     return SetRecordDto.fromEntity(saved);
   }
 
-  @Override
-  public boolean hasAuthority(Long setRecordId, Long userId) {
-    SetRecord setRecord = setRecordRepository.findById(setRecordId)
-        .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
 
-    return setRecord.getUser().getId().equals(userId);
+  private void authorityValidation(Long userId, SetRecord setRecord) {
+    if(!setRecord.getUser().getId().equals(userId)){
+      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
+    }
   }
 
   private void saveLastModifiedDateOfTrainingRecord(TrainingRecord trainingRecord) {

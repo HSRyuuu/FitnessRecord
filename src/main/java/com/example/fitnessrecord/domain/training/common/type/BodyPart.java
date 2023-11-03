@@ -28,4 +28,9 @@ public enum BodyPart {
     }
     return null;
   }
+
+  @Override
+  public String toString() {
+    return "BodyPart[" + this.getDescription() + "]";
+  }
 }

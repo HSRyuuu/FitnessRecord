@@ -8,7 +8,5 @@ import java.util.List;
 public interface VolumeRecordService {
 
   int executeVolumeRecordProcess(List<TrainingRecord> trainingRecords);
-  void updateVolumeRecordForAdd(TrainingRecord trainingRecord, SetRecord setRecord);
-  void updateVolumeRecordForDelete(TrainingRecord trainingRecord, SetRecord setRecord);
-  void updateVolumeRecordForUpdate(TrainingRecord trainingRecord, SetRecordUpdateDto request);
+  void updateVolumeRecord(TrainingRecord trainingRecord);
 }

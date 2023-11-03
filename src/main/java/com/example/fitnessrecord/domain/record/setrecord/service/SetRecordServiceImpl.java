@@ -55,7 +55,7 @@ public class SetRecordServiceImpl implements SetRecordService {
 
     //오늘 만들어진 운동이 아니면 Volume 기록도 수정
     if (!trainingRecord.getDate().isEqual(LocalDate.now())) {
-      volumeRecordService.updateVolumeRecordForAdd(trainingRecord, saved);
+      volumeRecordService.updateVolumeRecord(trainingRecord);
       this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
     }
 
@@ -75,7 +75,7 @@ public class SetRecordServiceImpl implements SetRecordService {
 
     //오늘 만들어진 운동이 아니면 Volume 기록도 수정
     if (!trainingRecord.getDate().isEqual(LocalDate.now())) {
-      volumeRecordService.updateVolumeRecordForDelete(trainingRecord, setRecord);
+      volumeRecordService.updateVolumeRecord(trainingRecord);
       this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
     }
 
@@ -100,7 +100,7 @@ public class SetRecordServiceImpl implements SetRecordService {
     TrainingRecord trainingRecord = setRecord.getTrainingRecord();
 
     if(!trainingRecord.getDate().isEqual(LocalDate.now())){
-      volumeRecordService.updateVolumeRecordForUpdate(trainingRecord, updateDto);
+      volumeRecordService.updateVolumeRecord(trainingRecord);
       this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
     }
 

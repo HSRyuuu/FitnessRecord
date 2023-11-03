@@ -44,4 +44,13 @@ public class SetRecordInput {
         .build();
   }
 
+  public static SetRecord updateSetRecord(SetRecord setRecord, SetRecordInput input){
+    setRecord.setBodyPart(input.getBodyPart());
+    setRecord.setTrainingName(input.getTrainingName());
+    setRecord.setWeight(input.getWeight());
+    setRecord.setReps(input.getReps());
+    setRecord.setMemo(input.getMemo());
+    return setRecord;
+  }
+
 }

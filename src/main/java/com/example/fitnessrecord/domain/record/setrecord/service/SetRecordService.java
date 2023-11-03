@@ -4,7 +4,6 @@ import com.example.fitnessrecord.domain.record.setrecord.dto.AddSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.DeleteSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordDto;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordInput;
-import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import java.util.List;
 
 public interface SetRecordService {
@@ -23,4 +22,11 @@ public interface SetRecordService {
    * SetRecord를 삭제한다.
    */
   DeleteSetRecordResult deleteSetRecord(Long id, Long userId);
+
+  /**
+   * SetRecord를 수정한다.
+   */
+  SetRecordDto updateSetRecord(Long id, Long userId, SetRecordInput input);
+
+
 }

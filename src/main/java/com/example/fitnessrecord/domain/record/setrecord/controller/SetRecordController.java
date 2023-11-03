@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,8 +63,20 @@ public class SetRecordController {
   @DeleteMapping("/set-record/{id}")
   public ResponseEntity<?> deleteSetRecord(@PathVariable Long id,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
-    DeleteSetRecordResult result = setRecordService.deleteSetRecord(id,
-        principalDetails.getUserId());
+    DeleteSetRecordResult result =
+        setRecordService.deleteSetRecord(id, principalDetails.getUserId());
+
+    return ResponseEntity.ok(result);
+  }
+
+  @ApiOperation("set-record 수정")
+  @PutMapping("/set-record/{id}")
+  public ResponseEntity<?> updateSetRecord(@PathVariable Long id,
+      @RequestBody SetRecordInput input,
+      @AuthenticationPrincipal PrincipalDetails principalDetails){
+
+    SetRecordDto result =
+        setRecordService.updateSetRecord(id, principalDetails.getUserId(), input);
 
     return ResponseEntity.ok(result);
   }

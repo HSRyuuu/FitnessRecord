@@ -16,14 +16,14 @@ import com.example.fitnessrecord.global.exception.MyException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class SetRecordServiceImpl implements SetRecordService {
 
@@ -31,7 +31,9 @@ public class SetRecordServiceImpl implements SetRecordService {
   private final TrainingRecordRepository trainingRecordRepository;
   private final VolumeRecordService volumeRecordService;
 
+
   @Override
+  @Transactional
   public AddSetRecordResult addSetRecords(Long trainingRecordId, List<SetRecordInput> list) {
     TrainingRecord trainingRecord = trainingRecordRepository.findById(trainingRecordId)
         .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND));
@@ -46,6 +48,7 @@ public class SetRecordServiceImpl implements SetRecordService {
   }
 
   @Override
+  @Transactional
   public SetRecordDto addSetRecord(Long trainingRecordId, SetRecordInput input) {
     TrainingRecord trainingRecord = trainingRecordRepository.findById(trainingRecordId)
         .orElseThrow(() -> new MyException(ErrorCode.TRAINING_RECORD_NOT_FOUND));
@@ -63,6 +66,7 @@ public class SetRecordServiceImpl implements SetRecordService {
   }
 
   @Override
+  @Transactional
   public DeleteSetRecordResult deleteSetRecord(Long id, Long userId) {
     SetRecord setRecord = setRecordRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
@@ -83,6 +87,7 @@ public class SetRecordServiceImpl implements SetRecordService {
   }
 
   @Override
+  @Transactional(isolation = Isolation.REPEATABLE_READ)
   public SetRecordDto updateSetRecord(Long id, Long userId, SetRecordInput input) {
 
     SetRecord setRecord = setRecordRepository.findById(id)

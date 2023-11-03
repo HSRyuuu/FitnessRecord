@@ -57,8 +57,7 @@
 
 ### 운동 기록 데이터 정리 스케쥴링
 - 하루가 끝나면 운동 기록 별로 `가슴/등/하체/어깨/이두/삼두/기타` 대분류로 운동 volume을 기록한다.`(VOLUME_RECORD)매일 오전 2시로 Scheduling`
-  - 과거(하루 이전)의 SetRecord 수정 시에 VolumeRecord도 업데이트 하기 위해 `/training-records/{id}/update-volume`를 호출해야한다.
-  - 호출하지 않을 경우 volumeScheduling 시에 처리된다.
+  - 과거(하루 이전)의 SetRecord 수정 시에 VolumeRecord도 업데이트 된다. 
 - 한 주가 끝나면 주간 운동 기록을 유저 별로 따로 저장한다. `(WEEKLY_RECORD) 매주 화요일 2주전의 데이터 저장`
 
 ### 회원 별 운동 통계 제공

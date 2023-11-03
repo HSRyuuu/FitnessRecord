@@ -181,38 +181,40 @@ class TrainingRecordServiceTest {
 
   @Nested
   @DisplayName("일정 기간 내의 운동 기록 조회")
-  class GetTrainingRecordList{
+  class GetTrainingRecordList {
+
     @Test
     @DisplayName("성공")
-    void getTrainingRecordList(){
+    void getTrainingRecordList() {
       //given
       int trainingAmount = 3;
-      Long trainingRecordId = 1L;
-      for(int i = 0; i < trainingAmount; i++){
-        TrainingRecord trainingRecord = TrainingRecord.builder()
+      Long trainingRecordId = 0L;
+      for (int i = 0; i < trainingAmount; i++) {
+        TrainingRecord saved = trainingRecordRepository.save(TrainingRecord.builder()
             .user(user)
             .date(LocalDate.now())
-            .build();
-        TrainingRecord saved = trainingRecordRepository.save(trainingRecord);
+            .build());
         trainingRecordId = saved.getId();
-        SetRecord setRecord = SetRecord.builder()
+        SetRecord saved1 = setRecordRepository.save(SetRecord.builder()
             .trainingRecord(saved)
             .trainingName("test")
+            .user(user)
             .bodyPart(BodyPart.ETC)
             .date(LocalDate.now())
             .reps(10)
             .weight(100)
             .memo("test")
-            .build();
-        setRecordRepository.save(setRecord);
+            .build());
+
       }
+
       Long userId = user.getId();
       LocalDate start = LocalDate.now();
       LocalDate end = LocalDate.now();
 
       //when
       TrainingRecordListResponse result =
-          trainingRecordService.getTrainingRecordList(userId, start, end);
+          trainingRecordService.getTrainingRecordList(userId, 1, start, end);
       List<TrainingRecordResponse> list = result.getList();
 
       //then

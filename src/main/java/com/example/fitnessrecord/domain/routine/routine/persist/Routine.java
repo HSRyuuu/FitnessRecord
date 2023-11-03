@@ -1,7 +1,8 @@
-package com.example.fitnessrecord.domain.routine.persist;
+package com.example.fitnessrecord.domain.routine.routine.persist;
 
+import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
 import com.example.fitnessrecord.domain.user.persist.User;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -38,16 +39,15 @@ public class Routine {
 
   private String routineName;
 
-  private LocalDate lastModifiedDate;
+  private LocalDateTime lastModifiedTime;
 
   @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RoutineElement> list = new ArrayList<>();
 
   @Builder
-  private Routine(Long id, User user, String routineName, LocalDate lastModifiedDate) {
-    this.id = id;
+  private Routine(User user, String routineName, LocalDateTime lastModifiedTime) {
     this.user = user;
     this.routineName = routineName;
-    this.lastModifiedDate = lastModifiedDate;
+    this.lastModifiedTime = lastModifiedTime;
   }
 }

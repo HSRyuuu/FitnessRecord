@@ -1,6 +1,6 @@
 package com.example.fitnessrecord.community.routinepost.persist;
 
-import com.example.fitnessrecord.domain.routine.persist.Routine;
+import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;

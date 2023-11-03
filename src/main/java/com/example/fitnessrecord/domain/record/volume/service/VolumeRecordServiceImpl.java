@@ -1,6 +1,6 @@
 package com.example.fitnessrecord.domain.record.volume.service;
 
-import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordUpdateRequest;
+import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordUpdateDto;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
 import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRecord;
@@ -11,7 +11,6 @@ import com.example.fitnessrecord.domain.record.volume.util.VolumeRecordUtils;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -85,7 +84,7 @@ public class VolumeRecordServiceImpl implements VolumeRecordService {
   }
 
   @Override
-  public void updateVolumeRecordForUpdate(TrainingRecord trainingRecord, SetRecordUpdateRequest request) {
+  public void updateVolumeRecordForUpdate(TrainingRecord trainingRecord, SetRecordUpdateDto request) {
     VolumeRecord volumeRecord = volumeRecordRepository.findByTrainingRecord(trainingRecord)
         .orElseThrow(() -> new MyException(ErrorCode.VOLUME_RECORD_NOT_FOUND));
 

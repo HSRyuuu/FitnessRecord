@@ -4,7 +4,7 @@ import com.example.fitnessrecord.domain.record.setrecord.dto.AddSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.DeleteSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordDto;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordInput;
-import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordUpdateRequest;
+import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordUpdateDto;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordDto;
@@ -15,12 +15,10 @@ import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -92,17 +90,17 @@ public class SetRecordServiceImpl implements SetRecordService {
 
     this.authorityValidation(userId, setRecord);
 
-    SetRecordUpdateRequest request =
-        new SetRecordUpdateRequest(setRecord.getBodyPart(), setRecord.getWeight() * setRecord.getReps());
+    SetRecordUpdateDto updateDto =
+        new SetRecordUpdateDto(setRecord.getBodyPart(), setRecord.getWeight() * setRecord.getReps());
 
     SetRecord saved = setRecordRepository.save(SetRecordInput.updateSetRecord(setRecord, input));
-    request.setBodyPartAfter(saved.getBodyPart());
-    request.setVolumeAfter(saved.getWeight() * saved.getReps());
+    updateDto.setBodyPartAfter(saved.getBodyPart());
+    updateDto.setVolumeAfter(saved.getWeight() * saved.getReps());
 
     TrainingRecord trainingRecord = setRecord.getTrainingRecord();
 
     if(!trainingRecord.getDate().isEqual(LocalDate.now())){
-      volumeRecordService.updateVolumeRecordForUpdate(trainingRecord, request);
+      volumeRecordService.updateVolumeRecordForUpdate(trainingRecord, updateDto);
       this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
     }
 

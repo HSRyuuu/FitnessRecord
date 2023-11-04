@@ -27,6 +27,9 @@ public enum ErrorCode {
     SET_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "세트 기록을 찾을 수 없습니다."),
     VOLUME_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "볼륨 기록을 찾을 수 없습니다."),
 
+    //Routine 관련
+    ROUTINE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴을 찾을 수 없습니다."),
+
 
 
 

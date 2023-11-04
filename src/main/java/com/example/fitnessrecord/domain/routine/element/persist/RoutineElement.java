@@ -3,10 +3,10 @@ package com.example.fitnessrecord.domain.routine.element.persist;
 
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,17 +23,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "ROUTINE_ELEMENT")
+@Entity
 public class RoutineElement {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "ELEMENT_ID")
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ROUTINE_ID")
   private Routine routine;
+
+  private int orderNumber; //순서
 
   private String trainingName; //운동 명
 

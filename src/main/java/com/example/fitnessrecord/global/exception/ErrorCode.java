@@ -31,7 +31,8 @@ public enum ErrorCode {
     ROUTINE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴을 찾을 수 없습니다."),
 
 
-
+    //Redisson
+    REDIS_LOCK(HttpStatus.LOCKED.value(), "REDIS_LOCK"),
 
     //Security
     TOKEN_TIME_OUT(HttpStatus.CONFLICT.value(), "토큰이 만료되었습니다."),

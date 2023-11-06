@@ -11,7 +11,7 @@
 ### 라이브러리
 - google GSON
 - Gmail smtp 메일 발송
-- Swagger `/swagger-ui.html`
+- Swagger `/swagger-ui/index.html`
 
 # 요구사항 
 

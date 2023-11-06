@@ -4,7 +4,6 @@ import com.example.fitnessrecord.domain.record.setrecord.dto.AddSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.DeleteSetRecordResult;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordDto;
 import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordInput;
-import com.example.fitnessrecord.domain.record.setrecord.dto.SetRecordUpdateDto;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecord;
 import com.example.fitnessrecord.domain.record.setrecord.persist.SetRecordRepository;
 import com.example.fitnessrecord.domain.record.trainingrecord.dto.TrainingRecordDto;
@@ -13,13 +12,16 @@ import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRe
 import com.example.fitnessrecord.domain.record.volume.service.VolumeRecordService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import com.example.fitnessrecord.global.redis.xxx.DistributedLock;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -30,6 +32,7 @@ public class SetRecordServiceImpl implements SetRecordService {
   private final SetRecordRepository setRecordRepository;
   private final TrainingRecordRepository trainingRecordRepository;
   private final VolumeRecordService volumeRecordService;
+  private final RedissonClient redissonClient;
 
 
   @Override
@@ -87,29 +90,69 @@ public class SetRecordServiceImpl implements SetRecordService {
   }
 
   @Override
-  @Transactional(isolation = Isolation.REPEATABLE_READ)
+  @Transactional
   public SetRecordDto updateSetRecord(Long id, Long userId, SetRecordInput input) {
 
     SetRecord setRecord = setRecordRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
+    //user 1 : (1) -> (2)   (1) -> (3)
 
     this.authorityValidation(userId, setRecord);
+    String lockName = "SetRecord" + setRecord.getId();
 
-    SetRecordUpdateDto updateDto =
-        new SetRecordUpdateDto(setRecord.getBodyPart(), setRecord.getWeight() * setRecord.getReps());
+    SetRecord saved = lockExample(lockName, SetRecordInput.updateSetRecord(setRecord, input));
 
-    SetRecord saved = setRecordRepository.save(SetRecordInput.updateSetRecord(setRecord, input));
-    updateDto.setBodyPartAfter(saved.getBodyPart());
-    updateDto.setVolumeAfter(saved.getWeight() * saved.getReps());
+    return SetRecordDto.fromEntity(saved);
+  }
+
+  private SetRecord lockExample(String lockName, SetRecord setRecord){
+
+    RLock rLock = redissonClient.getLock(lockName);
+    log.info("RLock: {}", rLock);
+
+    long waitTime = 2L;
+    long leaseTime = 5L;
+    TimeUnit timeUnit = TimeUnit.SECONDS; //시간 단위 = 초
+    try{
+      boolean available =
+          rLock.tryLock(waitTime, leaseTime, timeUnit);
+      if(!available){
+        throw new MyException(ErrorCode.REDIS_LOCK);
+      }
+
+      return updateSetRecordAndVolumeRecord(setRecord);
+    }catch (InterruptedException e) {
+      log.info("=== InterruptedException ===");
+      throw new MyException(ErrorCode.REDIS_LOCK);
+    }catch (Exception e){
+      e.printStackTrace();
+    }finally {
+      log.info("=== finally ===");
+      try{
+        rLock.unlock();
+        log.info("=== unlock complete ===");
+      }catch (IllegalMonitorStateException e){
+        e.printStackTrace();
+      }
+    }
+    return null;
+  }
+
+  private SetRecord updateSetRecordAndVolumeRecord(SetRecord setRecord)
+      throws InterruptedException {
+    log.info("updateSetRecordAndVolumeRecord");
+    //SetRecord 업데이트
+    SetRecord saved = setRecordRepository.save(setRecord);
 
     TrainingRecord trainingRecord = setRecord.getTrainingRecord();
 
+    //VolumeRecord update
     if(!trainingRecord.getDate().isEqual(LocalDate.now())){
       volumeRecordService.updateVolumeRecord(trainingRecord);
       this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
     }
-
-    return SetRecordDto.fromEntity(saved);
+    Thread.sleep(3000L);
+    return saved;
   }
 
 

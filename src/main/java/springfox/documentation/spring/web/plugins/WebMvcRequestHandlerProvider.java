@@ -16,9 +16,6 @@
  *
  *
  */
-/*
-https://www.inflearn.com/questions/625844/%EC%84%A0%EC%83%9D%EB%8B%98%EC%9D%B4-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-spring-%EB%B2%84%EC%A0%84-%EA%B8%B0%EC%A4%80%EC%9C%BC%EB%A1%9C-%EC%8B%A4%EB%AC%B4-%ED%86%B5%ED%95%B4-redisson-%EC%A0%81%EC%9A%A9%EC%8B%9C-%EB%AC%B8%EC%A0%9C
- */
 package springfox.documentation.spring.web.plugins;
 
 
@@ -64,7 +61,8 @@ public class WebMvcRequestHandlerProvider implements RequestHandlerProvider {
       Optional<ServletContext> servletContext,
       HandlerMethodResolver methodResolver,
       List<RequestMappingInfoHandlerMapping> handlerMappings) {
-    this.handlerMappings = handlerMappings.stream().filter(mapping -> mapping.getPatternParser() == null)
+    this.handlerMappings = handlerMappings.stream()
+        .filter(mapping -> mapping.getPatternParser() == null)
         .collect(Collectors.toList());
     this.methodResolver = methodResolver;
     this.contextPath = servletContext

@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.config;
+package com.example.fitnessrecord.global.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.example.fitnessrecord"))
                 .paths(PathSelectors.any())
-                .build();
+                .build().apiInfo(apiInfo());
     }
 
     private ApiInfo apiInfo(){

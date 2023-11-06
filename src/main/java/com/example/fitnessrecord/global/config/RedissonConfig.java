@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis;
+package com.example.fitnessrecord.global.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

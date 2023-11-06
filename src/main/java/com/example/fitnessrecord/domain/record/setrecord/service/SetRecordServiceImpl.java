@@ -12,6 +12,7 @@ import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRe
 import com.example.fitnessrecord.domain.record.volume.service.VolumeRecordService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import com.example.fitnessrecord.global.redis.redisson.RedissonLockService;
 import com.example.fitnessrecord.global.redis.xxx.DistributedLock;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,7 +33,7 @@ public class SetRecordServiceImpl implements SetRecordService {
   private final SetRecordRepository setRecordRepository;
   private final TrainingRecordRepository trainingRecordRepository;
   private final VolumeRecordService volumeRecordService;
-  private final RedissonClient redissonClient;
+  private final RedissonLockService redissonLockService;
 
 
   @Override
@@ -95,53 +96,14 @@ public class SetRecordServiceImpl implements SetRecordService {
 
     SetRecord setRecord = setRecordRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
-    //user 1 : (1) -> (2)   (1) -> (3)
 
     this.authorityValidation(userId, setRecord);
+
     String lockName = "SetRecord" + setRecord.getId();
 
-    SetRecord saved = lockExample(lockName, SetRecordInput.updateSetRecord(setRecord, input));
-
-    return SetRecordDto.fromEntity(saved);
-  }
-
-  private SetRecord lockExample(String lockName, SetRecord setRecord){
-
-    RLock rLock = redissonClient.getLock(lockName);
-    log.info("RLock: {}", rLock);
-
-    long waitTime = 2L;
-    long leaseTime = 5L;
-    TimeUnit timeUnit = TimeUnit.SECONDS; //시간 단위 = 초
-    try{
-      boolean available =
-          rLock.tryLock(waitTime, leaseTime, timeUnit);
-      if(!available){
-        throw new MyException(ErrorCode.REDIS_LOCK);
-      }
-
-      return updateSetRecordAndVolumeRecord(setRecord);
-    }catch (InterruptedException e) {
-      log.info("=== InterruptedException ===");
-      throw new MyException(ErrorCode.REDIS_LOCK);
-    }catch (Exception e){
-      e.printStackTrace();
-    }finally {
-      log.info("=== finally ===");
-      try{
-        rLock.unlock();
-        log.info("=== unlock complete ===");
-      }catch (IllegalMonitorStateException e){
-        e.printStackTrace();
-      }
-    }
-    return null;
-  }
-
-  private SetRecord updateSetRecordAndVolumeRecord(SetRecord setRecord)
-      throws InterruptedException {
-    log.info("updateSetRecordAndVolumeRecord");
-    //SetRecord 업데이트
+    //rLock 획득
+    RLock rLock = redissonLockService.getLock(lockName);
+    log.info("RLock: {}", rLock.getName());
     SetRecord saved = setRecordRepository.save(setRecord);
 
     TrainingRecord trainingRecord = setRecord.getTrainingRecord();
@@ -151,10 +113,12 @@ public class SetRecordServiceImpl implements SetRecordService {
       volumeRecordService.updateVolumeRecord(trainingRecord);
       this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
     }
-    Thread.sleep(3000L);
-    return saved;
-  }
 
+    //로직 종료 후 unLock
+    redissonLockService.unLock(rLock);
+
+    return SetRecordDto.fromEntity(saved);
+  }
 
   private void authorityValidation(Long userId, SetRecord setRecord) {
     if(!setRecord.getUser().getId().equals(userId)){

@@ -20,10 +20,11 @@ public class RedissonConfig {
 
   @Bean
   public RedissonClient redissonClient(){
+    RedissonClient redisson = null;
     Config config = new Config();
     config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + host + ":" + port);
-
-    return Redisson.create(config);
+    redisson = Redisson.create(config);
+    return redisson;
   }
 
 }

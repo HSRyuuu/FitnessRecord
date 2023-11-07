@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis.xxx;
+package com.example.fitnessrecord.global.redis.redisson;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

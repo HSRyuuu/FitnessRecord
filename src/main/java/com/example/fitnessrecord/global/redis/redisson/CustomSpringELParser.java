@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis.xxx;
+package com.example.fitnessrecord.global.redis.redisson;
 
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;

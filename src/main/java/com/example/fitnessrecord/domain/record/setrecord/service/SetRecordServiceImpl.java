@@ -12,16 +12,13 @@ import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRe
 import com.example.fitnessrecord.domain.record.volume.service.VolumeRecordService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import com.example.fitnessrecord.global.redis.redisson.RedissonLockService;
-import com.example.fitnessrecord.global.redis.xxx.DistributedLock;
+import com.example.fitnessrecord.global.redis.redisson.DistributedLock;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +30,6 @@ public class SetRecordServiceImpl implements SetRecordService {
   private final SetRecordRepository setRecordRepository;
   private final TrainingRecordRepository trainingRecordRepository;
   private final VolumeRecordService volumeRecordService;
-  private final RedissonLockService redissonLockService;
 
 
   @Override
@@ -91,37 +87,28 @@ public class SetRecordServiceImpl implements SetRecordService {
   }
 
   @Override
-  @Transactional
+  @DistributedLock(key = "T(java.lang.String).format('SetRecord%d', #id)")
   public SetRecordDto updateSetRecord(Long id, Long userId, SetRecordInput input) {
-
     SetRecord setRecord = setRecordRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.SET_RECORD_NOT_FOUND));
 
     this.authorityValidation(userId, setRecord);
 
-    String lockName = "SetRecord" + setRecord.getId();
-
-    //rLock 획득
-    RLock rLock = redissonLockService.getLock(lockName);
-    log.info("RLock: {}", rLock.getName());
-    SetRecord saved = setRecordRepository.save(setRecord);
+    SetRecord saved = setRecordRepository.save(SetRecordInput.updateSetRecord(setRecord, input));
 
     TrainingRecord trainingRecord = setRecord.getTrainingRecord();
 
     //VolumeRecord update
-    if(!trainingRecord.getDate().isEqual(LocalDate.now())){
+    if (!trainingRecord.getDate().isEqual(LocalDate.now())) {
       volumeRecordService.updateVolumeRecord(trainingRecord);
       this.saveLastModifiedDateOfTrainingRecord(trainingRecord);
     }
-
-    //로직 종료 후 unLock
-    redissonLockService.unLock(rLock);
 
     return SetRecordDto.fromEntity(saved);
   }
 
   private void authorityValidation(Long userId, SetRecord setRecord) {
-    if(!setRecord.getUser().getId().equals(userId)){
+    if (!setRecord.getUser().getId().equals(userId)) {
       throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
     }
   }

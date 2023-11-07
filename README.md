@@ -6,6 +6,7 @@
 - Spring Data JPA, Spring Security
 - MariaDB
 - JUnit5
+- Redis
 - IntelliJ Idea
 
 ### 라이브러리
@@ -53,6 +54,7 @@
 - 운동 내역은 세트별(`SET_RECORD 테이블`)로 기록한다.
   - `SET_RECORD`는 `TRAINING_RECORD`에 포함된다.
   - `SET_RECORD`는 추가, 삭제만 가능하다.
+  - `SET_RECORD` 수정시 `redisson LOCK`을 획득하도록 하여 동시성문제를 해결한다.
 - 일정 기간 사이의 운동 기록을 조회할 수 있다. (query param: d1, d2)
 
 ### 운동 기록 데이터 정리 스케쥴링

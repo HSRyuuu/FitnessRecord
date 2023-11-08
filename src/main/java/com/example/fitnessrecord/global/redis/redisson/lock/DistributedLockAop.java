@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis.redisson;
+package com.example.fitnessrecord.global.redis.redisson.lock;
 
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
@@ -26,7 +26,7 @@ public class DistributedLockAop {
   private final RedissonClient redissonClient;
   private final AopForTransaction aopForTransaction;
 
-  @Around("@annotation(DistributedLock)")
+  @Around("@annotation(com.example.fitnessrecord.global.redis.redisson.lock.DistributedLock)")
   public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     Method method = signature.getMethod();

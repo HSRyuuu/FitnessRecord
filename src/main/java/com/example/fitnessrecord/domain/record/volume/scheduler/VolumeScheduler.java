@@ -22,7 +22,7 @@ public class VolumeScheduler {
   private final VolumeRecordService volumeRecordService;
 
   /**
-   * 오늘 날짜로부터 7일 이전의 데이터를 Volume Record로 저장
+   * 오늘 날짜로부터 하루 이전의 데이터를 Volume Record로 저장
    */
   @Scheduled(cron = "0 0 2 * * *") //매일 오전 2시에 실행
   public void saveVolumes() {

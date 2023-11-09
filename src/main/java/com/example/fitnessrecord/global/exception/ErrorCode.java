@@ -31,6 +31,10 @@ public enum ErrorCode {
     ROUTINE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴을 찾을 수 없습니다."),
 
 
+    //Redisson
+    LOCK_NOT_AVAILABLE(HttpStatus.LOCKED.value(), "락을 획득할 수 없습니다."),
+    LOCK_INTERRUPTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "스레드 인터럽트 에러 발생"),
+    UNLOCKING_A_LOCK_WHICH_IS_NOT_LOCKED(HttpStatus.INTERNAL_SERVER_ERROR.value(), "이미 종료된 락을 unlocking 하려고 시도하였습니다."),
 
 
     //Security

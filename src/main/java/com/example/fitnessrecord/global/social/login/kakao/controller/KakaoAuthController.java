@@ -1,15 +1,16 @@
 package com.example.fitnessrecord.global.social.login.kakao.controller;
 
-import com.example.fitnessrecord.global.social.login.kakao.api.KakaoApi;
-import com.example.fitnessrecord.global.social.login.kakao.model.KakaoProfile;
-import com.example.fitnessrecord.global.social.login.kakao.model.OAuthToken;
 import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.service.UserService;
-import com.example.fitnessrecord.global.auth.dto.AuthResponse;
+import com.example.fitnessrecord.global.auth.dto.TokenResponse;
 import com.example.fitnessrecord.global.auth.sercurity.jwt.TokenProvider;
+import com.example.fitnessrecord.global.social.login.kakao.api.KakaoApi;
+import com.example.fitnessrecord.global.social.login.kakao.model.KakaoProfile;
+import com.example.fitnessrecord.global.social.login.kakao.model.OAuthToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class KakaoAuthController {
   private final TokenProvider tokenProvider;
 
   @RequestMapping("/login/kakao")
-  public AuthResponse kakaoLogin(@RequestParam String code) {
+  public ResponseEntity<?> kakaoLogin(@RequestParam String code) {
     // 토큰 받기
     OAuthToken oAuthToken = kakaoApi.getOAuthToken(code);
 
@@ -43,8 +44,9 @@ public class KakaoAuthController {
       userDto = userService.findByEmail(kakaoProfile.getEmail());
     }
 
-    String token = tokenProvider.generateToken(userDto.getEmail(),userDto.getUserType());
+    TokenResponse tokenResponse =
+        tokenProvider.generateToken(userDto.getEmail(), userDto.getUserType());
 
-    return new AuthResponse(userDto.getEmail(), userDto.getNickname(), token);
+    return ResponseEntity.ok(tokenResponse);
   }
 }

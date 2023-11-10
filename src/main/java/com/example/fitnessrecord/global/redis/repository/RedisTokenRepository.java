@@ -36,4 +36,9 @@ public class RedisTokenRepository {
     RMap<String, String> map = redissonClient.getMap(ACCESS_TOKEN_DENIED_MAP);
     map.put(token, "logged out");
   }
+
+  public boolean existsBlackListAccessToken(String token){
+    RMap<String, String> map = redissonClient.getMap(ACCESS_TOKEN_DENIED_MAP);
+    return map.containsKey(token);
+  }
 }

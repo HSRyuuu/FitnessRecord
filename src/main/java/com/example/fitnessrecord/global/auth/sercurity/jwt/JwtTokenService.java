@@ -39,8 +39,9 @@ public class JwtTokenService {
 
   public static final String TOKEN_PREFIX = "Bearer ";
   private static final String KEY_ROLES = "roles";
-  private static final long ACCESS_TOKEN_EXPIRE_TIME = (long)1000 * 60 * 60 * 24;// 24시간 (실제로는 30분정도로 수정해야함)
-  private static final long REFRESH_TOKEN_EXPIRE_TIME = (long)1000 * 60 * 60 * 24 * 30;// 한 달
+  private static final long ACCESS_TOKEN_EXPIRE_TIME =
+      (long) 1000 * 60 * 60 * 24;// 24시간 (실제로는 30분정도로 수정해야함)
+  private static final long REFRESH_TOKEN_EXPIRE_TIME = (long) 1000 * 60 * 60 * 24 * 30;// 한 달
 
 
   /**
@@ -81,7 +82,7 @@ public class JwtTokenService {
    * refreshToken을 확인한 뒤 accessToken을 재발행한다.
    */
   public TokenResponse regenerateAccessToken(String refreshToken) {
-    if(!this.validateToken(refreshToken)){
+    if (!this.validateToken(refreshToken)) {
       throw new MyException(ErrorCode.TOKEN_TIME_OUT);
     }
     Claims claims = parseClaims(refreshToken);
@@ -89,7 +90,7 @@ public class JwtTokenService {
     String email = claims.getSubject();
 
     String findToken = redisTokenRepository.getRefreshToken(email);
-    if(!refreshToken.equals(findToken)){
+    if (!refreshToken.equals(findToken)) {
       throw new MyException(ErrorCode.JWT_REFRESH_TOKEN_NOT_FOUND);
     }
 
@@ -145,6 +146,12 @@ public class JwtTokenService {
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 
+  /**
+   * access token이 redis denied map에 포함되었는지 확인
+   */
+  public boolean isAccessTokenDenied(String accessToken){
+    return redisTokenRepository.existsBlackListAccessToken(accessToken);
+  }
 
   /**
    * 헤더로 받은 값에서 PREFIX("Bearer ") 제거

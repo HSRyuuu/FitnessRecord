@@ -1,6 +1,8 @@
 package com.example.fitnessrecord.global.auth.sercurity.filter;
 
 import com.example.fitnessrecord.global.auth.sercurity.jwt.JwtTokenService;
+import com.example.fitnessrecord.global.exception.ErrorCode;
+import com.example.fitnessrecord.global.exception.MyException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,12 +33,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     String token = jwtTokenService.resolveTokenFromRequest(request.getHeader(TOKEN_HEADER));
 
-    if (StringUtils.hasText(token) && jwtTokenService.validateToken(token)) {
+
+    if (StringUtils.hasText(token) && jwtTokenService.validateToken(token) && !jwtTokenService.isAccessTokenDenied(token)) {
       //토큰 유효성 검증 성공
       Authentication auth = jwtTokenService.getAuthentication(token);
       SecurityContextHolder.getContext().setAuthentication(auth);
     } else {
       log.info("토큰 유효성 검증 실패!!!");
+      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
     }
     filterChain.doFilter(request, response);
   }

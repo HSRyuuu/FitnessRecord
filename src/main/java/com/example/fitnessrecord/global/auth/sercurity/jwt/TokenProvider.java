@@ -4,6 +4,8 @@ import com.example.fitnessrecord.domain.user.type.UserType;
 import com.example.fitnessrecord.global.auth.dto.TokenResponse;
 import com.example.fitnessrecord.global.auth.service.AuthService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
+import com.example.fitnessrecord.global.exception.MyException;
+import com.example.fitnessrecord.global.redis.repository.RedisTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -11,6 +13,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,46 +32,74 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class TokenProvider {
 
+  private final AuthService authService;
+  private final RedisTokenRepository redisTokenRepository;
+
   @Value("${spring.jwt.secret}")
   private String secretKey;
 
   private static final String KEY_ROLES = "roles";
-  private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24;// 24시간
-  private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 30;// 한 달
-  private final AuthService authService;
+  private static final long ACCESS_TOKEN_EXPIRE_TIME = (long)1000 * 60 * 60 * 24;// 24시간 (실제로는 30분정도로 수정해야함)
+  private static final long REFRESH_TOKEN_EXPIRE_TIME = (long)1000 * 60 * 60 * 24 * 30;// 한 달
+
 
   /**
    * 토큰 생성 (발급)
    */
-  public TokenResponse generateToken(String email, UserType userType) {
+  public TokenResponse generateTokenResponse(String email, UserType userType) {
     List<String> roles = getRolesByUserType(userType);
 
     Claims claims = Jwts.claims().setSubject(email);
     claims.put(KEY_ROLES, roles);
 
-    var now = new Date();
-    var accessTokenexpiredDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME);
-    var refreshTokenexpiredDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME);
+    String accessToken = generateToken(claims, ACCESS_TOKEN_EXPIRE_TIME);
 
-    String accessToken = Jwts.builder()
-        .setClaims(claims)
-        .setIssuedAt(now) // 토큰 생성 시간
-        .setExpiration(accessTokenexpiredDate) // 토큰 만료시간
-        .signWith(SignatureAlgorithm.HS512, this.secretKey) //사용할 암호화 알고리즘, 시크릿 키
-        .compact();
+    String refreshToken = generateToken(claims, REFRESH_TOKEN_EXPIRE_TIME);
 
-    String refreshToken = Jwts.builder()
-        .setClaims(claims)
-        .setIssuedAt(now) // 토큰 생성 시간
-        .setExpiration(refreshTokenexpiredDate) // 토큰 만료시간
-        .signWith(SignatureAlgorithm.HS512, this.secretKey) //사용할 암호화 알고리즘, 시크릿 키
-        .compact();
+    //redisTokenRepository(tokenMap)에 (email, refreshToken) k-v쌍을 넣는다.
+    redisTokenRepository.addToken(email, refreshToken);
 
     TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
     tokenResponse.setEmail(email);
 
+    return tokenResponse;
+  }
+
+  public TokenResponse regenerateAccessToken(String refreshToken) {
+    if(!this.validateToken(refreshToken)){
+      throw new MyException(ErrorCode.TOKEN_TIME_OUT);
+    }
+    Claims claims = parseClaims(refreshToken);
+
+    String email = claims.getSubject();
+
+    String findToken = redisTokenRepository.getToken(email);
+    if(!refreshToken.equals(findToken)){
+      throw new MyException(ErrorCode.JWT_REFRESH_TOKEN_NOT_FOUND);
+    }
+
+    String accessToken = generateToken(claims, ACCESS_TOKEN_EXPIRE_TIME);
+
+    //refreshToken은 재발급하지 않는다.
+    TokenResponse tokenResponse = TokenResponse.builder()
+        .email(email)
+        .accessToken(accessToken)
+        .refreshToken(refreshToken)
+        .build();
 
     return tokenResponse;
+  }
+
+  private String generateToken(Claims claims, Long expiredTime) {
+    Date now = new Date();
+    Date expired = new Date(now.getTime() + expiredTime);
+    System.out.println(expired);
+    return Jwts.builder()
+        .setClaims(claims)
+        .setIssuedAt(now) // 토큰 생성 시간
+        .setExpiration(expired) // 토큰 만료시간
+        .signWith(SignatureAlgorithm.HS512, this.secretKey) //사용할 암호화 알고리즘, 시크릿 키
+        .compact();
   }
 
   private List<String> getRolesByUserType(UserType userType) {
@@ -89,6 +120,7 @@ public class TokenProvider {
 
   /**
    * 토큰 유효성 검사
+   * - text 존재 여부, parseClaims 예외 찾음, expiredDate 조회
    */
   public boolean validateToken(String token) {
     try {
@@ -96,6 +128,7 @@ public class TokenProvider {
         return false;
       }
       Claims claims = this.parseClaims(token);
+      System.out.println(claims);
       return !claims.getExpiration().before(new Date());
     } catch (JwtException e) {
       throw new JwtException(e.getMessage());

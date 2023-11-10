@@ -45,7 +45,7 @@ public class KakaoAuthController {
     }
 
     TokenResponse tokenResponse =
-        tokenProvider.generateToken(userDto.getEmail(), userDto.getUserType());
+        tokenProvider.generateTokenResponse(userDto.getEmail(), userDto.getUserType());
 
     return ResponseEntity.ok(tokenResponse);
   }

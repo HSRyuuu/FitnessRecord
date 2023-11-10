@@ -13,7 +13,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,7 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TokenProvider {
+public class JwtTokenService {
 
   private final AuthService authService;
   private final RedisTokenRepository redisTokenRepository;
@@ -38,6 +37,7 @@ public class TokenProvider {
   @Value("${spring.jwt.secret}")
   private String secretKey;
 
+  public static final String TOKEN_PREFIX = "Bearer ";
   private static final String KEY_ROLES = "roles";
   private static final long ACCESS_TOKEN_EXPIRE_TIME = (long)1000 * 60 * 60 * 24;// 24시간 (실제로는 30분정도로 수정해야함)
   private static final long REFRESH_TOKEN_EXPIRE_TIME = (long)1000 * 60 * 60 * 24 * 30;// 한 달
@@ -57,7 +57,7 @@ public class TokenProvider {
     String refreshToken = generateToken(claims, REFRESH_TOKEN_EXPIRE_TIME);
 
     //redisTokenRepository(tokenMap)에 (email, refreshToken) k-v쌍을 넣는다.
-    redisTokenRepository.addToken(email, refreshToken);
+    redisTokenRepository.addRefreshToken(email, refreshToken);
 
     TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
     tokenResponse.setEmail(email);
@@ -65,6 +65,21 @@ public class TokenProvider {
     return tokenResponse;
   }
 
+  /**
+   * UserType으로 List roles를 만들어준다.
+   */
+  private List<String> getRolesByUserType(UserType userType) {
+    List<String> roles = new ArrayList<>();
+    roles.add("ROLE_USER");
+    if (userType.equals(UserType.ADMIN)) {
+      roles.add("ROLE_ADMIN");
+    }
+    return roles;
+  }
+
+  /**
+   * refreshToken을 확인한 뒤 accessToken을 재발행한다.
+   */
   public TokenResponse regenerateAccessToken(String refreshToken) {
     if(!this.validateToken(refreshToken)){
       throw new MyException(ErrorCode.TOKEN_TIME_OUT);
@@ -73,7 +88,7 @@ public class TokenProvider {
 
     String email = claims.getSubject();
 
-    String findToken = redisTokenRepository.getToken(email);
+    String findToken = redisTokenRepository.getRefreshToken(email);
     if(!refreshToken.equals(findToken)){
       throw new MyException(ErrorCode.JWT_REFRESH_TOKEN_NOT_FOUND);
     }
@@ -90,32 +105,19 @@ public class TokenProvider {
     return tokenResponse;
   }
 
+
+  /**
+   * Claims와 expiredTime으로 JWT Token을 생성한다.
+   */
   private String generateToken(Claims claims, Long expiredTime) {
     Date now = new Date();
     Date expired = new Date(now.getTime() + expiredTime);
-    System.out.println(expired);
     return Jwts.builder()
         .setClaims(claims)
         .setIssuedAt(now) // 토큰 생성 시간
         .setExpiration(expired) // 토큰 만료시간
         .signWith(SignatureAlgorithm.HS512, this.secretKey) //사용할 암호화 알고리즘, 시크릿 키
         .compact();
-  }
-
-  private List<String> getRolesByUserType(UserType userType) {
-    List<String> roles = new ArrayList<>();
-    roles.add("ROLE_USER");
-    if (userType.equals(UserType.ADMIN)) {
-      roles.add("ROLE_ADMIN");
-    }
-    return roles;
-  }
-
-  /**
-   * token으로 username(사용자 email) 찾기
-   */
-  public String getUsername(String token) {
-    return this.parseClaims(token).getSubject();
   }
 
   /**
@@ -128,11 +130,37 @@ public class TokenProvider {
         return false;
       }
       Claims claims = this.parseClaims(token);
-      System.out.println(claims);
       return !claims.getExpiration().before(new Date());
     } catch (JwtException e) {
       throw new JwtException(e.getMessage());
     }
+  }
+
+  /**
+   * token으로 User를 찾아서 SecurityContext에 올릴 Authentication 생성
+   */
+  public Authentication getAuthentication(String token) {
+    String username = this.getUsername(token);
+    UserDetails userDetails = authService.loadUserByUsername(username);
+    return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+  }
+
+
+  /**
+   * 헤더로 받은 값에서 PREFIX("Bearer ") 제거
+   */
+  public String resolveTokenFromRequest(String token) {
+    if (StringUtils.hasText(token) && token.startsWith(TOKEN_PREFIX)) {
+      return token.substring(TOKEN_PREFIX.length());
+    }
+    return null;
+  }
+
+  /**
+   * token으로 username(사용자 email) 찾기
+   */
+  private String getUsername(String token) {
+    return this.parseClaims(token).getSubject();
   }
 
   /**
@@ -148,15 +176,6 @@ public class TokenProvider {
     } catch (MalformedJwtException e) {
       throw new JwtException(ErrorCode.JWT_TOKEN_MALFORMED.getDescription());
     }
-  }
-
-  /**
-   * token으로 User를 찾아서 SecurityContext에 올릴 Authentication 생성
-   */
-  public Authentication getAuthentication(String token) {
-    String username = this.getUsername(token);
-    UserDetails userDetails = authService.loadUserByUsername(username);
-    return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 
 }

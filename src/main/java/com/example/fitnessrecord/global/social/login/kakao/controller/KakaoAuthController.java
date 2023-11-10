@@ -4,7 +4,7 @@ import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.service.UserService;
 import com.example.fitnessrecord.global.auth.dto.TokenResponse;
-import com.example.fitnessrecord.global.auth.sercurity.jwt.TokenProvider;
+import com.example.fitnessrecord.global.auth.sercurity.jwt.JwtTokenService;
 import com.example.fitnessrecord.global.social.login.kakao.api.KakaoApi;
 import com.example.fitnessrecord.global.social.login.kakao.model.KakaoProfile;
 import com.example.fitnessrecord.global.social.login.kakao.model.OAuthToken;
@@ -23,7 +23,7 @@ public class KakaoAuthController {
   private final KakaoApi kakaoApi;
 
   private final UserService userService;
-  private final TokenProvider tokenProvider;
+  private final JwtTokenService jwtTokenService;
 
   @RequestMapping("/login/kakao")
   public ResponseEntity<?> kakaoLogin(@RequestParam String code) {
@@ -45,7 +45,7 @@ public class KakaoAuthController {
     }
 
     TokenResponse tokenResponse =
-        tokenProvider.generateTokenResponse(userDto.getEmail(), userDto.getUserType());
+        jwtTokenService.generateTokenResponse(userDto.getEmail(), userDto.getUserType());
 
     return ResponseEntity.ok(tokenResponse);
   }

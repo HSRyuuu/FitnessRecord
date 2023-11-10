@@ -11,20 +11,29 @@ public class RedisTokenRepository {
 
   private final RedissonClient redissonClient;
   private static final String REFRESH_TOKEN_MAP = "RefreshTokenMap";
+  private static final String ACCESS_TOKEN_DENIED_MAP = "AccessTokenDeniedMap";
 
 
-  public void addToken(String key, String value) {
+  public void addRefreshToken(String key, String value) {
     RMap<String, String> tokenMap = redissonClient.getMap(REFRESH_TOKEN_MAP);
     tokenMap.put(key, value);
   }
 
-  public String getToken(String key) {
+  public String getRefreshToken(String key) {
     RMap<String, String> tokenMap = redissonClient.getMap(REFRESH_TOKEN_MAP);
     return tokenMap.get(key);
   }
 
-//  public void deleteToken(String key) {
-//    RMap<String, String> tokenMap = redissonClient.getMap(REFRESH_TOKEN_MAP);
-//    tokenMap.remove(key);
-//  }
+  public boolean deleteRefreshToken(String key) {
+    RMap<String, String> tokenMap = redissonClient.getMap(REFRESH_TOKEN_MAP);
+    boolean result = tokenMap.containsKey(key);
+    tokenMap.remove(key);
+
+    return result;
+  }
+
+  public void addBlackListAccessToken(String token){
+    RMap<String, String> map = redissonClient.getMap(ACCESS_TOKEN_DENIED_MAP);
+    map.put(token, "logged out");
+  }
 }

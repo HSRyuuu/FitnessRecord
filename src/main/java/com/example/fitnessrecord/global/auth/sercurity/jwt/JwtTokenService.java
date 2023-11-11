@@ -5,7 +5,7 @@ import com.example.fitnessrecord.global.auth.dto.TokenResponse;
 import com.example.fitnessrecord.global.auth.service.AuthService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import com.example.fitnessrecord.global.redis.repository.RedisTokenRepository;
+import com.example.fitnessrecord.global.redis.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
 public class JwtTokenService {
 
   private final AuthService authService;
-  private final RedisTokenRepository redisTokenRepository;
+  private final TokenRepository tokenRepository;
 
   @Value("${spring.jwt.secret}")
   private String secretKey;
@@ -58,7 +58,7 @@ public class JwtTokenService {
     String refreshToken = generateToken(claims, REFRESH_TOKEN_EXPIRE_TIME);
 
     //redisTokenRepository(tokenMap)에 (email, refreshToken) k-v쌍을 넣는다.
-    redisTokenRepository.addRefreshToken(email, refreshToken);
+    tokenRepository.addRefreshToken(email, refreshToken);
 
     TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
     tokenResponse.setEmail(email);
@@ -72,7 +72,7 @@ public class JwtTokenService {
   private List<String> getRolesByUserType(UserType userType) {
     List<String> roles = new ArrayList<>();
     roles.add("ROLE_USER");
-    if (userType.equals(UserType.ADMIN)) {
+    if (userType == UserType.ADMIN) {
       roles.add("ROLE_ADMIN");
     }
     return roles;
@@ -89,7 +89,7 @@ public class JwtTokenService {
 
     String email = claims.getSubject();
 
-    String findToken = redisTokenRepository.getRefreshToken(email);
+    String findToken = tokenRepository.getRefreshToken(email);
     if (!refreshToken.equals(findToken)) {
       throw new MyException(ErrorCode.JWT_REFRESH_TOKEN_NOT_FOUND);
     }
@@ -122,15 +122,14 @@ public class JwtTokenService {
   }
 
   /**
-   * 토큰 유효성 검사
-   * - text 존재 여부, parseClaims 예외 찾음, expiredDate 조회
+   * 토큰 유효성 검사 - text 존재 여부, parseClaims 예외 찾음, expiredDate 조회
    */
-  public boolean validateToken(String token){
-      if (!StringUtils.hasText(token)) {
-        return false;
-      }
-      Claims claims = this.parseClaims(token);
-      return !claims.getExpiration().before(new Date());
+  public boolean validateToken(String token) {
+    if (!StringUtils.hasText(token)) {
+      return false;
+    }
+    Claims claims = this.parseClaims(token);
+    return !claims.getExpiration().before(new Date());
   }
 
   /**
@@ -145,8 +144,8 @@ public class JwtTokenService {
   /**
    * access token이 redis denied map에 포함되었는지 확인
    */
-  public boolean isAccessTokenDenied(String accessToken){
-    return redisTokenRepository.existsBlackListAccessToken(accessToken);
+  public boolean isAccessTokenDenied(String accessToken) {
+    return tokenRepository.existsBlackListAccessToken(accessToken);
   }
 
   /**

@@ -125,16 +125,12 @@ public class JwtTokenService {
    * 토큰 유효성 검사
    * - text 존재 여부, parseClaims 예외 찾음, expiredDate 조회
    */
-  public boolean validateToken(String token) {
-    try {
+  public boolean validateToken(String token){
       if (!StringUtils.hasText(token)) {
         return false;
       }
       Claims claims = this.parseClaims(token);
       return !claims.getExpiration().before(new Date());
-    } catch (JwtException e) {
-      throw new JwtException(e.getMessage());
-    }
   }
 
   /**

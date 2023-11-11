@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         log.info("[로그인이 되지 않았습니다.] MyAuthenticationEntryPoint -> /exception/unauthorized");
         response.sendRedirect("/exception/unauthorized");
     }

@@ -56,16 +56,16 @@ public class SecurityConfiguration {
         .csrf().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+    http.formLogin().disable();
+
     http
         .authorizeRequests()
         .antMatchers(PERMIT_URL)
         .permitAll()
         .antMatchers("/admin/**")
         .hasAuthority("ROLE_ADMIN")
-        .antMatchers("/user/**")
+        .antMatchers("/**")
         .hasAuthority("ROLE_USER");
-
-
     http
         .exceptionHandling()
         .authenticationEntryPoint(myAuthenticationEntryPoint)

@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.mail;
+package com.example.fitnessrecord.global.components.mail;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

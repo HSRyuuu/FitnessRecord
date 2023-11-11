@@ -1,6 +1,6 @@
-package com.example.fitnessrecord.global.social.login.common.model;
+package com.example.fitnessrecord.global.components.social.login.common.model;
 
-import com.example.fitnessrecord.global.social.login.common.component.AuthConstUtil;
+import com.example.fitnessrecord.global.components.social.login.common.component.AuthConstUtil;
 import lombok.Data;
 
 

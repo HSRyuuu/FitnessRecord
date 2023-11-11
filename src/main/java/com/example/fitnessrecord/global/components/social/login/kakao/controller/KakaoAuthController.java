@@ -1,13 +1,13 @@
-package com.example.fitnessrecord.global.social.login.kakao.controller;
+package com.example.fitnessrecord.global.components.social.login.kakao.controller;
 
 import com.example.fitnessrecord.domain.user.dto.UserDto;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.service.UserService;
 import com.example.fitnessrecord.global.auth.dto.TokenResponse;
 import com.example.fitnessrecord.global.auth.sercurity.jwt.JwtTokenService;
-import com.example.fitnessrecord.global.social.login.kakao.api.KakaoApi;
-import com.example.fitnessrecord.global.social.login.kakao.model.KakaoProfile;
-import com.example.fitnessrecord.global.social.login.kakao.model.OAuthToken;
+import com.example.fitnessrecord.global.components.social.login.kakao.model.KakaoProfile;
+import com.example.fitnessrecord.global.components.social.login.kakao.api.KakaoApi;
+import com.example.fitnessrecord.global.components.social.login.kakao.model.OAuthToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

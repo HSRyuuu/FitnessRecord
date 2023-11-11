@@ -1,7 +1,6 @@
-package com.example.fitnessrecord.global.social.login.common.controller;
+package com.example.fitnessrecord.global.components.social.login.common.controller;
 
-import com.example.fitnessrecord.global.social.login.common.model.AuthAttributes;
-import io.swagger.annotations.Api;
+import com.example.fitnessrecord.global.components.social.login.common.model.AuthAttributes;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

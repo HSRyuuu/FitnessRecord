@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.social.login.kakao.model;
+package com.example.fitnessrecord.global.components.social.login.kakao.model;
 
 
 import lombok.AllArgsConstructor;

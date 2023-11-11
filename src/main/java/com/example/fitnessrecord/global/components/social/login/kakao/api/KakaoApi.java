@@ -1,8 +1,8 @@
-package com.example.fitnessrecord.global.social.login.kakao.api;
+package com.example.fitnessrecord.global.components.social.login.kakao.api;
 
-import com.example.fitnessrecord.global.social.login.common.component.AuthConstUtil;
-import com.example.fitnessrecord.global.social.login.kakao.model.KakaoProfile;
-import com.example.fitnessrecord.global.social.login.kakao.model.OAuthToken;
+import com.example.fitnessrecord.global.components.social.login.kakao.model.KakaoProfile;
+import com.example.fitnessrecord.global.components.social.login.common.component.AuthConstUtil;
+import com.example.fitnessrecord.global.components.social.login.kakao.model.OAuthToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

@@ -66,7 +66,6 @@ public class SecurityConfiguration {
         .hasAuthority("ROLE_USER");
 
 
-
     http
         .exceptionHandling()
         .authenticationEntryPoint(myAuthenticationEntryPoint)

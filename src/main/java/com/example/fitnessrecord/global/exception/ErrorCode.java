@@ -38,12 +38,14 @@ public enum ErrorCode {
 
 
     //Security
-    TOKEN_TIME_OUT(HttpStatus.CONFLICT.value(), "토큰이 만료되었습니다."),
     LOGIN_FAILED_USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "계정이 존재하지 않습니다."),
     LOGIN_FAILED_PASSWORD_INCORRECT(HttpStatus.UNAUTHORIZED.value(), "비밀번호가 틀립니다."),
-
     ACCESS_DENIED(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다."),
     LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED.value(), "로그인이 되지 않았습니다."),
+
+    JWT_REFRESH_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 RefreshToken 입니다. 다시 로그인 해주세요."),
+    JWT_TOKEN_ALREADY_LOGGED_OUT(HttpStatus.UNAUTHORIZED.value(), "로그아웃된 인증 정보입니다."),
+    TOKEN_TIME_OUT(HttpStatus.CONFLICT.value(), "토큰이 만료되었습니다."),
     JWT_TOKEN_WRONG_TYPE(HttpStatus.UNAUTHORIZED.value(), "JWT 토큰 형식에 문제가 있습니다."),
     JWT_TOKEN_MALFORMED(HttpStatus.UNAUTHORIZED.value(), "JWT 토큰 형식에 문제가 있습니다."),
 

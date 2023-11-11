@@ -18,8 +18,13 @@
 
 ## 회원 관리
 ### 공통
-- 로그인 시 JWT Token이 발행된다.
+- 로그인 시 JWT accessToken과 refreshToken이 발행된다.
 - 이후 `Authorization` 헤더에 `Bearer {token}`을 추가하여 권한을 확인한다.
+
+### 토큰 관리
+- redis로 refreshToken과 로그아웃 된 accessToken을 관리한다.
+- refreshToken으로 reissue 요청 시 accessToken을 새로 발행한다.
+- 로그아웃 시 해당 refreshTokend을 삭제하고, accessToken에 대한 blackList를 추가하여, 이후 해당 accessToken으로 로그인 할 시 거부되도록 한다. 
 
 ### 이메일 회원
 - 이메일, 비밀 번호를 통해 로그인 할 수 있다.
@@ -65,7 +70,8 @@
 ## 루틴 만들기
 - 회원은 자신만의 루틴을 만들 수 있다.
 - 하나의 루틴은 여러개의 `ROUTINE_ELEMENT`로 구성된다.
-- [ ] 루틴 요소를 추가, 수정, 삭제할 수 있다.
+- `ROUTINE_ELEMENT`를 `ROUTINE`에 추가 할 수 있다.
+- [ ] 루틴 요소를 수정, 삭제할 수 있다.
 
 ### 루틴 공유 게시판 
 ( ElasticSearch를 이용해보자. )

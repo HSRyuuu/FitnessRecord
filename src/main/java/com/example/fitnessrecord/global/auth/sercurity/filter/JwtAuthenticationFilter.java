@@ -1,6 +1,8 @@
 package com.example.fitnessrecord.global.auth.sercurity.filter;
 
-import com.example.fitnessrecord.global.auth.sercurity.jwt.TokenProvider;
+import com.example.fitnessrecord.global.auth.sercurity.jwt.JwtTokenService;
+import com.example.fitnessrecord.global.exception.ErrorCode;
+import com.example.fitnessrecord.global.exception.MyException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,32 +25,24 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   public static final String TOKEN_HEADER = "Authorization";
-  public static final String TOKEN_PREFIX = "Bearer ";
 
-  private final TokenProvider tokenProvider;
+  private final JwtTokenService jwtTokenService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
-    String token = resolveTokenFromRequest(request.getHeader(TOKEN_HEADER));
+    String token = jwtTokenService.resolveTokenFromRequest(request.getHeader(TOKEN_HEADER));
 
-    if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+
+    if (StringUtils.hasText(token) && jwtTokenService.validateToken(token) && !jwtTokenService.isAccessTokenDenied(token)) {
       //토큰 유효성 검증 성공
-      Authentication auth = tokenProvider.getAuthentication(token);
+      Authentication auth = jwtTokenService.getAuthentication(token);
       SecurityContextHolder.getContext().setAuthentication(auth);
     } else {
       log.info("토큰 유효성 검증 실패!!!");
+      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
     }
     filterChain.doFilter(request, response);
   }
 
-  /**
-   * 헤더로 받은 값에서 PREFIX("Bearer ") 제거
-   */
-  private static String resolveTokenFromRequest(String token) {
-    if (StringUtils.hasText(token) && token.startsWith(TOKEN_PREFIX)) {
-      return token.substring(TOKEN_PREFIX.length());
-    }
-    return null;
-  }
 }

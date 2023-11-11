@@ -8,6 +8,7 @@ import com.example.fitnessrecord.global.auth.dto.LoginInput;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import com.example.fitnessrecord.global.redis.repository.RedisTokenRepository;
 import com.example.fitnessrecord.global.util.PasswordUtils;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class AuthService implements UserDetailsService {
 
   private final UserRepository userRepository;
+  private final RedisTokenRepository redisTokenRepository;
 
   public UserDto authenticateUser(LoginInput input) {
     User user = userRepository.findByEmail(input.getEmail())
@@ -34,6 +36,14 @@ public class AuthService implements UserDetailsService {
       throw new MyException(ErrorCode.EMAIL_AUTH_REQUIRED);
     }
     return UserDto.fromEntity(user);
+  }
+
+  public boolean logout(String accessToken, String email){
+    boolean result = redisTokenRepository.deleteRefreshToken(email);
+
+    redisTokenRepository.addBlackListAccessToken(accessToken);
+
+    return result;
   }
 
   @Override

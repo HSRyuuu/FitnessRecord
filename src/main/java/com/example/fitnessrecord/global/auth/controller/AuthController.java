@@ -36,7 +36,7 @@ public class AuthController {
 
   @ApiOperation("RefreshToken을 받아서 AccessToken을 새로 발행한다.")
   @PostMapping("/login/reissue")
-  public ResponseEntity<?> reissueToken(@RequestHeader("Authorization") String refreshToken){
+  public ResponseEntity<?> reissueToken(@RequestHeader("RefreshToken") String refreshToken){
     TokenResponse tokenResponse = jwtTokenService.regenerateAccessToken(refreshToken);
 
     return ResponseEntity.ok(tokenResponse);

@@ -1,14 +1,12 @@
 package com.example.fitnessrecord.domain.routine.element.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.fitnessrecord.domain.routine.element.dto.AddRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElementRepository;
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.routine.routine.persist.RoutineRepository;
-import com.example.fitnessrecord.domain.routine.routine.service.RoutineService;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
@@ -17,7 +15,6 @@ import com.example.fitnessrecord.global.exception.MyException;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +47,7 @@ class RoutineElementServiceTest {
     Routine inputRoutine = Routine.builder()
         .user(user)
         .routineName("test")
-        .lastModifiedTime(LocalDateTime.now())
+        .lastModifiedDateTime(LocalDateTime.now())
         .build();
 
     routine = routineRepository.save(inputRoutine);

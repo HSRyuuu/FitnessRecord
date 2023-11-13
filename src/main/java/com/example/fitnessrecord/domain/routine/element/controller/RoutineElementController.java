@@ -2,6 +2,7 @@ package com.example.fitnessrecord.domain.routine.element.controller;
 
 import com.example.fitnessrecord.domain.routine.element.dto.AddRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
+import com.example.fitnessrecord.domain.routine.element.dto.UpdateRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.service.RoutineElementService;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,6 +44,16 @@ public class RoutineElementController {
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
     List<RoutineElementDto> result =
         routineElementService.deleteRoutineElement(routineElementId, principalDetails.getUserId());
+
+    return ResponseEntity.ok(result);
+  }
+
+  @ApiOperation("루틴 요소 1개 수정")
+  @PutMapping("/routine/element/{id}")
+  public ResponseEntity<?> updateRoutineElements(@PathVariable Long id, @RequestBody UpdateRoutineElementInput input,
+      @AuthenticationPrincipal PrincipalDetails principalDetails){
+    List<RoutineElementDto> result =
+        routineElementService.updateRoutineElement(id, input,  principalDetails.getUserId());
 
     return ResponseEntity.ok(result);
   }

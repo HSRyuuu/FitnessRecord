@@ -2,6 +2,7 @@ package com.example.fitnessrecord.domain.routine.element.service;
 
 import com.example.fitnessrecord.domain.routine.element.dto.AddRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
+import com.example.fitnessrecord.domain.routine.element.dto.UpdateRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElementRepository;
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
@@ -45,8 +46,8 @@ public class RoutineElementServiceImpl implements RoutineElementService {
   }
 
   /**
-   * RoutineElement 추가 시 다른 모든 Element에 대한 OrderNumber 수정
-   * ex) 1,2,3이 있을 경우 새로운 element가 2번으로 들어올 경우 기존의 2번이 3번으로, 3번이 4번으로 가도록 함.
+   * RoutineElement 추가 시 다른 모든 Element에 대한 OrderNumber 수정 ex) 1,2,3이 있을 경우 새로운 element가 2번으로 들어올 경우
+   * 기존의 2번이 3번으로, 3번이 4번으로 가도록 함.
    */
   private void setOrderNumbersForAdd(List<RoutineElement> list, AddRoutineElementInput input) {
     int orderNumber = input.getOrderNumber();
@@ -78,7 +79,7 @@ public class RoutineElementServiceImpl implements RoutineElementService {
 
     this.updateOthers(targetElement.getOrderNumber(), list); //삭제 대상 이외의 요소들 OrderNumber 수정
 
-   this.deleteTargetElement(list, targetElement);//list와 db에서 targetElement 삭제
+    this.deleteTargetElement(list, targetElement);//list와 db에서 targetElement 삭제
 
     List<RoutineElement> saved = routineElementRepository.saveAll(list);// wjwkd
 
@@ -90,8 +91,8 @@ public class RoutineElementServiceImpl implements RoutineElementService {
   /**
    * 수정 시 targetElement 이외의 요소들 orderNumber 수정
    */
-  private void updateOthers(int targetOrderNumber, List<RoutineElement> list){
-    for(int i = targetOrderNumber; i < list.size(); i++){
+  private void updateOthers(int targetOrderNumber, List<RoutineElement> list) {
+    for (int i = targetOrderNumber; i < list.size(); i++) {
       RoutineElement e = list.get(i);
       e.setOrderNumber(i);
     }
@@ -100,10 +101,28 @@ public class RoutineElementServiceImpl implements RoutineElementService {
   /**
    * Collection과 db에서 target 요소 삭제
    */
-  private void deleteTargetElement(List<RoutineElement> list, RoutineElement targetElement){
+  private void deleteTargetElement(List<RoutineElement> list, RoutineElement targetElement) {
     list.remove(targetElement);
     routineElementRepository.delete(targetElement);
   }
+
+  @Override
+  public List<RoutineElementDto> updateRoutineElement(
+      Long routineElementId, UpdateRoutineElementInput input, Long userId) {
+    RoutineElement targetElement = routineElementRepository.findById(routineElementId)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_ELEMENT_NOT_FOUND));
+    Routine routine = targetElement.getRoutine();
+
+    this.validateAuthority(routine, userId);
+
+    targetElement.update(input);
+
+    routineElementRepository.save(targetElement);
+
+    return this.entityListToSortedDtoList(
+        routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId()));
+  }
+
 
   /**
    * 해당 루틴의 소유권을 가진 userId가 맞는지 검증

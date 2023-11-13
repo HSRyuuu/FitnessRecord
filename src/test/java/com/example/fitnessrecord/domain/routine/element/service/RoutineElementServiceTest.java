@@ -1,9 +1,10 @@
 package com.example.fitnessrecord.domain.routine.element.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.fitnessrecord.domain.routine.element.dto.AddRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
+import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElementRepository;
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.routine.routine.persist.RoutineRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,7 +40,8 @@ class RoutineElementServiceTest {
   static Routine routine;
 
   @BeforeAll
-  static void addUser(@Autowired UserRepository userRepository, @Autowired RoutineRepository routineRepository) {
+  static void addUser(@Autowired UserRepository userRepository,
+      @Autowired RoutineRepository routineRepository) {
     User inputUser = User.builder()
         .email("test@test.com")
         .build();
@@ -53,18 +56,18 @@ class RoutineElementServiceTest {
     routine = routineRepository.save(inputRoutine);
 
 
-
   }
 
   @AfterAll
-  static void deleteUser(@Autowired UserRepository userRepository, @Autowired RoutineRepository routineRepository) {
+  static void deleteUser(@Autowired UserRepository userRepository,
+      @Autowired RoutineRepository routineRepository) {
     routineRepository.delete(routine);
     userRepository.delete(user);
   }
 
   @Nested
   @DisplayName("루틴 요소 추가하기")
-  class AddRoutineElement{
+  class AddRoutineElement {
 
     @Test
     @DisplayName("성공")
@@ -124,7 +127,7 @@ class RoutineElementServiceTest {
     void addRoutineElement_addLast() {
       //given
       int listSize = 5;
-      for(int i = 0; i < 5; i++){
+      for (int i = 0; i < 5; i++) {
         AddRoutineElementInput input = AddRoutineElementInput.builder()
             .routineId(routine.getId())
             .orderNumber(i + 1)
@@ -137,7 +140,7 @@ class RoutineElementServiceTest {
 
       AddRoutineElementInput input = AddRoutineElementInput.builder()
           .routineId(routine.getId())
-          .orderNumber(listSize  + 5)
+          .orderNumber(listSize + 5)
           .trainingName("test")
           .bodyPart(BodyPart.ETC)
           .reps(10)
@@ -163,7 +166,7 @@ class RoutineElementServiceTest {
     void addRoutineElement_addMiddle() {
       //given
       int listSize = 5;
-      for(int i = 0; i < 5; i++){
+      for (int i = 0; i < 5; i++) {
         AddRoutineElementInput input = AddRoutineElementInput.builder()
             .routineId(routine.getId())
             .orderNumber(i + 1)
@@ -191,7 +194,7 @@ class RoutineElementServiceTest {
 
       //then
       assertThat(resultList.size()).isEqualTo(6);
-      for(int i =0; i < resultList.size(); i++) {
+      for (int i = 0; i < resultList.size(); i++) {
         assertThat(resultList.get(i).getOrderNumber()).isEqualTo(i + 1);
       }
       assertThat(resultList.get(testOrder - 1).getOrderNumber()).isEqualTo(testOrder);
@@ -213,9 +216,9 @@ class RoutineElementServiceTest {
 
       //when
       //then
-      try{
+      try {
         routineElementService.addRoutineElement(input, userId);
-      }catch(MyException e){
+      } catch (MyException e) {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.ROUTINE_NOT_FOUND);
       }
     }
@@ -235,13 +238,88 @@ class RoutineElementServiceTest {
 
       //when
       //then
-      try{
+      try {
         routineElementService.addRoutineElement(input, userId);
-      }catch(MyException e){
+      } catch (MyException e) {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
       }
     }
+  }
 
+  @Nested
+  @DisplayName("루틴 요소 삭제")
+  class DeleteRoutineElement {
+
+    static final int listSize = 5;
+
+    @BeforeEach
+    void addElements() {
+      for (int i = 1; i <= listSize; i++) {
+        routineElementRepository.save(
+            RoutineElement.builder()
+                .routine(routine)
+                .orderNumber(i)
+                .trainingName("test")
+                .bodyPart(BodyPart.CHEST)
+                .reps(10)
+                .build());
+      }
+    }
+
+    @Test
+    @DisplayName("성공")
+    void deleteRoutineElement() {
+      //given
+      List<RoutineElement> routineElements =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      int targetOrderNumber = 2;
+      RoutineElement targetElement = routineElements.get(targetOrderNumber - 1);
+      Long routineElementId = targetElement.getId();
+
+      //when
+      routineElementService.deleteRoutineElement(routineElementId, user.getId());
+
+      List<RoutineElement> afterList =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      //then
+      assertThat(afterList.size()).isEqualTo(listSize - 1);
+      for (int i = 1; i < afterList.size(); i++) {
+        assertThat(afterList.get(i - 1).getOrderNumber()).isEqualTo(i);
+      }
+    }
+
+    @Test
+    @DisplayName("실패: RoutineElementId 틀림 or 존재하지 않음")
+    void deleteRoutineElement_ROUTINE_ELEMENT_NOT_FOUND() {
+      //given
+      //when
+      try {
+        routineElementService.deleteRoutineElement(-1L, user.getId());
+      } catch (MyException e) {
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.ROUTINE_ELEMENT_NOT_FOUND);
+      }
+    }
+
+    @Test
+    @DisplayName("실패: 권한 없음")
+    void deleteRoutineElement_NO_AUTHORITY_ERROR() {
+      //given
+      List<RoutineElement> routineElements =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      int targetOrderNumber = 2;
+      RoutineElement targetElement = routineElements.get(targetOrderNumber - 1);
+      Long routineElementId = targetElement.getId();
+
+      //when
+      try {
+        routineElementService.deleteRoutineElement(routineElementId, -1L);
+      } catch (MyException e) {
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
+      }
+    }
 
   }
 

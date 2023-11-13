@@ -79,9 +79,9 @@ public class RoutineElementServiceImpl implements RoutineElementService {
 
     this.updateOthers(targetElement.getOrderNumber(), list); //삭제 대상 이외의 요소들 OrderNumber 수정
 
-    this.deleteTargetElement(list, targetElement);//list와 db에서 targetElement 삭제
+    this.deleteTargetElement(list, targetElement); //list와 db에서 targetElement 삭제
 
-    List<RoutineElement> saved = routineElementRepository.saveAll(list);// wjwkd
+    List<RoutineElement> saved = routineElementRepository.saveAll(list);//저장
 
     this.updateLastModifiedTimeOfRoutine(routine);
 

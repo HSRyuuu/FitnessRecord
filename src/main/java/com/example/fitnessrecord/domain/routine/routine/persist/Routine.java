@@ -41,6 +41,8 @@ public class Routine {
 
   private LocalDateTime lastModifiedDateTime;
 
+  private String description;
+
   @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RoutineElement> list = new ArrayList<>();
 

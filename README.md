@@ -70,8 +70,12 @@
 ## 루틴 만들기
 - 회원은 자신만의 루틴을 만들 수 있다.
 - 하나의 루틴은 여러개의 `ROUTINE_ELEMENT`로 구성된다.
-- `ROUTINE_ELEMENT`를 `ROUTINE`에 추가 할 수 있다.
-- [ ] 루틴 요소를 수정, 삭제할 수 있다.
+- `ROUTINE_ELEMENT`를 `ROUTINE`에 추가, 삭제할 수 있다.
+  - 추가, 삭제 시 OrderNumber가 1부터 순차적으로 증가되는 것이 유지되도록 한다. 
+- `ROUTINE_ELEMENT`의 내용을 수정할 수 있다. 
+  - OrderNumber(순서)는 수정이 불가하고, 삭제, 추가만 가능하다.
+
+
 
 ### 루틴 공유 게시판 
 ( ElasticSearch를 이용해보자. )

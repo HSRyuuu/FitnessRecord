@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +29,19 @@ public class RoutineElementController {
   @ApiOperation("루틴 요소 1개 추가")
   @PostMapping("/routine/element")
   public ResponseEntity<?> addRoutineElements(@Valid @RequestBody AddRoutineElementInput input,
-      @AuthenticationPrincipal PrincipalDetails principalDetails){
+      @AuthenticationPrincipal PrincipalDetails principalDetails) {
     List<RoutineElementDto> result =
         routineElementService.addRoutineElement(input, principalDetails.getUserId());
+
+    return ResponseEntity.ok(result);
+  }
+
+  @ApiOperation("루틴 요소 삭제")
+  @DeleteMapping("/routine/element/{id}")
+  public ResponseEntity<?> deleteRoutineElements(@PathVariable("id") Long routineElementId,
+      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    List<RoutineElementDto> result =
+        routineElementService.deleteRoutineElement(routineElementId, principalDetails.getUserId());
 
     return ResponseEntity.ok(result);
   }

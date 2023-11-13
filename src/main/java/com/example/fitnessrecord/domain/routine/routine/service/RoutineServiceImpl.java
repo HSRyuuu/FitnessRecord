@@ -28,7 +28,7 @@ public class RoutineServiceImpl implements RoutineService {
     Routine saved = routineRepository.save(Routine.builder()
         .user(user)
         .routineName(routineName)
-        .lastModifiedTime(LocalDateTime.now())
+        .lastModifiedDateTime(LocalDateTime.now())
         .build());
 
     return AddRoutineResult.fromEntity(saved);

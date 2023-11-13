@@ -4,13 +4,10 @@ import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 @Data
@@ -31,7 +28,7 @@ public class AddRoutineElementInput {
 
   private Integer reps; //횟수
 
-  public static RoutineElement toEntity(AddRoutineElementInput input, Routine routine){
+  public static RoutineElement toEntity(AddRoutineElementInput input, Routine routine) {
     return RoutineElement.builder()
         .routine(routine)
         .orderNumber(input.getOrderNumber())

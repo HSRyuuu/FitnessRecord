@@ -11,4 +11,10 @@ public interface RoutineElementService {
    * @return 해당 루틴의 전체를 반환한다.
    */
   List<RoutineElementDto> addRoutineElement(AddRoutineElementInput input, Long userId);
+
+  /**
+   * 루틴을 하나 삭제한다.
+   * @return 해당 루틴의 전체를 반환한다.
+   */
+  List<RoutineElementDto> deleteRoutineElement(Long routineElementId, Long userId);
 }

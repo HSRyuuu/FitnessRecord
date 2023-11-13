@@ -45,7 +45,6 @@ public class RoutineElement {
   private Integer reps; //횟수
 
   public void update(UpdateRoutineElementInput input) {
-    this.orderNumber = input.getOrderNumber();
     this.trainingName = input.getTrainingName();
     this.bodyPart = input.getBodyPart();
     this.reps = input.getReps();

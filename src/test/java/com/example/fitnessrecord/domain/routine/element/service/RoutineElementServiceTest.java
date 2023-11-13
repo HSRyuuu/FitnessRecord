@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.fitnessrecord.domain.routine.element.dto.AddRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
+import com.example.fitnessrecord.domain.routine.element.dto.UpdateRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElementRepository;
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
@@ -267,13 +268,61 @@ class RoutineElementServiceTest {
     }
 
     @Test
-    @DisplayName("성공")
-    void deleteRoutineElement() {
+    @DisplayName("성공_중간 요소 삭제")
+    void deleteRoutineElement_middle() {
       //given
       List<RoutineElement> routineElements =
           routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
 
-      int targetOrderNumber = 2;
+      int targetOrderNumber = 3;
+      RoutineElement targetElement = routineElements.get(targetOrderNumber - 1);
+      Long routineElementId = targetElement.getId();
+
+      //when
+      routineElementService.deleteRoutineElement(routineElementId, user.getId());
+
+      List<RoutineElement> afterList =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      //then
+      assertThat(afterList.size()).isEqualTo(listSize - 1);
+      for (int i = 1; i < afterList.size(); i++) {
+        assertThat(afterList.get(i - 1).getOrderNumber()).isEqualTo(i);
+      }
+    }
+
+    @Test
+    @DisplayName("성공_첫번째 요소 삭제")
+    void deleteRoutineElement_first() {
+      //given
+      List<RoutineElement> routineElements =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      int targetOrderNumber = 1;
+      RoutineElement targetElement = routineElements.get(targetOrderNumber - 1);
+      Long routineElementId = targetElement.getId();
+
+      //when
+      routineElementService.deleteRoutineElement(routineElementId, user.getId());
+
+      List<RoutineElement> afterList =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      //then
+      assertThat(afterList.size()).isEqualTo(listSize - 1);
+      for (int i = 1; i < afterList.size(); i++) {
+        assertThat(afterList.get(i - 1).getOrderNumber()).isEqualTo(i);
+      }
+    }
+
+    @Test
+    @DisplayName("성공_마지막 요소 삭제")
+    void deleteRoutineElement_last() {
+      //given
+      List<RoutineElement> routineElements =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      int targetOrderNumber = listSize;
       RoutineElement targetElement = routineElements.get(targetOrderNumber - 1);
       Long routineElementId = targetElement.getId();
 
@@ -316,6 +365,88 @@ class RoutineElementServiceTest {
       //when
       try {
         routineElementService.deleteRoutineElement(routineElementId, -1L);
+      } catch (MyException e) {
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
+      }
+    }
+
+  }
+
+  @Nested
+  @DisplayName("루틴 요소 수정")
+  class UpdateRoutineElement{
+
+    static final int listSize = 5;
+
+    @BeforeEach
+    void addElements() {
+      for (int i = 1; i <= listSize; i++) {
+        routineElementRepository.save(
+            RoutineElement.builder()
+                .routine(routine)
+                .orderNumber(i)
+                .trainingName("test")
+                .bodyPart(BodyPart.CHEST)
+                .reps(10)
+                .build());
+      }
+    }
+
+    @Test
+    @DisplayName("성공")
+    void updateRoutineElement(){
+      //given
+      UpdateRoutineElementInput input = UpdateRoutineElementInput.builder()
+          .trainingName("update")
+          .bodyPart(BodyPart.ETC)
+          .reps(100)
+          .build();
+
+      List<RoutineElement> routineElements =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      int targetOrderNumber = 2;
+      RoutineElement targetElement = routineElements.get(targetOrderNumber - 1);
+      Long routineElementId = targetElement.getId();
+
+      //when
+      List<RoutineElementDto> updatedList = routineElementService.updateRoutineElement(
+          routineElementId, input, user.getId());
+      RoutineElementDto updatedRoutineElement = updatedList.get(targetOrderNumber - 1);
+
+      //then
+      assertThat(updatedRoutineElement.getOrderNumber()).isEqualTo(targetOrderNumber);
+      assertThat(updatedRoutineElement.getTrainingName()).isEqualTo(input.getTrainingName());
+      assertThat(updatedRoutineElement.getBodyPart()).isEqualTo(input.getBodyPart());
+      assertThat(updatedRoutineElement.getReps()).isEqualTo(input.getReps());
+    }
+
+    @Test
+    @DisplayName("실패: RoutineElementId 틀림 or 존재하지 않음")
+    void updateRoutineElement_ROUTINE_ELEMENT_NOT_FOUND() {
+      //given
+      //when
+      try {
+        routineElementService.updateRoutineElement(-1L, new UpdateRoutineElementInput(), user.getId());
+      } catch (MyException e) {
+        assertThat(e.getErrorCode()).isEqualTo(ErrorCode.ROUTINE_ELEMENT_NOT_FOUND);
+      }
+    }
+
+    @Test
+    @DisplayName("실패: 권한 없음")
+    void updateRoutineElement_NO_AUTHORITY_ERROR() {
+      //given
+      List<RoutineElement> routineElements =
+          routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routine.getId());
+
+      int targetOrderNumber = 2;
+      RoutineElement targetElement = routineElements.get(targetOrderNumber - 1);
+      Long routineElementId = targetElement.getId();
+
+      //when
+      try {
+        routineElementService.updateRoutineElement(routineElementId, new UpdateRoutineElementInput(), -1L);
       } catch (MyException e) {
         assertThat(e.getErrorCode()).isEqualTo(ErrorCode.NO_AUTHORITY_ERROR);
       }

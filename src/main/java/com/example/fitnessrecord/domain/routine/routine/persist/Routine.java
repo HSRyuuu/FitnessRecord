@@ -33,21 +33,21 @@ public class Routine {
   @Column(name = "ROUTINE_ID")
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "USER_ID")
   private User user;
 
   private String routineName;
 
-  private LocalDateTime lastModifiedTime;
+  private LocalDateTime lastModifiedDateTime;
 
   @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RoutineElement> list = new ArrayList<>();
 
   @Builder
-  private Routine(User user, String routineName, LocalDateTime lastModifiedTime) {
+  private Routine(User user, String routineName, LocalDateTime lastModifiedDateTime) {
     this.user = user;
     this.routineName = routineName;
-    this.lastModifiedTime = lastModifiedTime;
+    this.lastModifiedDateTime = lastModifiedDateTime;
   }
 }

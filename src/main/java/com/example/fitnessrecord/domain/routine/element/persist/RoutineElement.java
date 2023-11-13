@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.domain.routine.element.persist;
 
 
+import com.example.fitnessrecord.domain.routine.element.dto.UpdateRoutineElementInput;
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.training.common.type.BodyPart;
 import javax.persistence.Entity;
@@ -42,5 +43,12 @@ public class RoutineElement {
   private BodyPart bodyPart; //운동 부위
 
   private Integer reps; //횟수
+
+  public void update(UpdateRoutineElementInput input) {
+    this.orderNumber = input.getOrderNumber();
+    this.trainingName = input.getTrainingName();
+    this.bodyPart = input.getBodyPart();
+    this.reps = input.getReps();
+  }
 
 }

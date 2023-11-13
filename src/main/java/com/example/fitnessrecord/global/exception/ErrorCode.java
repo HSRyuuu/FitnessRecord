@@ -29,6 +29,8 @@ public enum ErrorCode {
 
     //Routine 관련
     ROUTINE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴을 찾을 수 없습니다."),
+    ROUTINE_ELEMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴 요소를 찾을 수 없습니다."),
+    ROUTINE_ELEMENT_NOT_MATCH_ROUTINE(HttpStatus.NOT_FOUND.value(), "루틴 요소가 루틴에 포함되지 않습니다."),
 
 
     //Redisson

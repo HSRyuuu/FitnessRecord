@@ -47,9 +47,10 @@ public class Routine {
   private List<RoutineElement> list = new ArrayList<>();
 
   @Builder
-  private Routine(User user, String routineName, LocalDateTime lastModifiedDateTime) {
+  private Routine(User user, String routineName, LocalDateTime lastModifiedDateTime, String description) {
     this.user = user;
     this.routineName = routineName;
     this.lastModifiedDateTime = lastModifiedDateTime;
+    this.description = description;
   }
 }

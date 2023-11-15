@@ -39,8 +39,9 @@ public class BoardController {
 
   @ApiOperation("루틴 공유 글을 조회한다.")
   @GetMapping("/post/{id}")
-  public ResponseEntity<?> getRoutinePost(@PathVariable Long id) {
-    RoutinePostDto routinePost = routinePostService.getRoutinePost(id);
+  public ResponseEntity<?> getRoutinePost(@PathVariable Long id,
+      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    RoutinePostDto routinePost = routinePostService.getRoutinePost(id, principalDetails.getUserId());
     return ResponseEntity.ok(routinePost);
   }
 

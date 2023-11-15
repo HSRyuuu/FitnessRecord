@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RedisViewsRepository implements ViewsRepository{
+public class RedisViewRecordRepository implements ViewRecordRepository {
 
   private final RedissonClient redissonClient;
   private static final String ROUTINE_POST_VIEW_MAP = "RoutinePostViewMap";
-  private static final String KEY_ROUTINE_POST_HEADER = "ROUTINEPOST";
-  private static final String KEY_USER_HEADER = "USER";
+  private static final String KEY_ROUTINE_POST_HEADER = "ROUTINE_POST:";
+  private static final String KEY_USER_HEADER = "USER:";
   private static final Long expireTime = 60L * 30; //30분
 
   @Override

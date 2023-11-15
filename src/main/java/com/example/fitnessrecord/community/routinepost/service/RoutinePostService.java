@@ -16,7 +16,7 @@ public interface RoutinePostService {
   /**
    * 게시글 조회
    */
-  RoutinePostDto getRoutinePost(Long id);
+  RoutinePostDto getRoutinePost(Long id, Long userId);
 
   /**
    * 게시글 수정

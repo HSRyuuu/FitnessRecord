@@ -16,6 +16,7 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import com.example.fitnessrecord.global.redis.lock.DistributedLock;
+import com.example.fitnessrecord.global.redis.views.ViewRecordRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class RoutinePostServiceImpl implements RoutinePostService {
   private final RoutinePostRepository routinePostRepository;
   private final RoutineRepository routineRepository;
   private final RoutineElementRepository routineElementRepository;
+  private final ViewRecordRepository viewRecordRepository;
 
   @Override
   public RoutinePostResult addRoutinePost(AddRoutinePostInput input, Long userId) {
@@ -50,10 +52,14 @@ public class RoutinePostServiceImpl implements RoutinePostService {
 
   @Override
   @DistributedLock(key = "T(java.lang.String).format('RoutinePost%d', #id)")
-  public RoutinePostDto getRoutinePost(Long id) {
+  public RoutinePostDto getRoutinePost(Long id, Long userId) {
     RoutinePost routinePost = routinePostRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
-    routinePost.addViews();
+
+    if(!viewRecordRepository.existsViewRecord(userId, id)){
+      viewRecordRepository.addViewRecord(userId, id);
+      routinePost.addViews();
+    }
 
     RoutinePost saved = routinePostRepository.save(routinePost);
 

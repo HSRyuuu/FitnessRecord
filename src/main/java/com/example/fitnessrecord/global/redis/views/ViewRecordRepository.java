@@ -1,6 +1,6 @@
 package com.example.fitnessrecord.global.redis.views;
 
-public interface ViewsRepository {
+public interface ViewRecordRepository {
 
   void addViewRecord(Long userId, Long routinePostId);
 

@@ -3,6 +3,7 @@ package com.example.fitnessrecord.community.routinepost.service;
 import com.example.fitnessrecord.community.routinepost.dto.AddRoutinePostInput;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostDto;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostResult;
+import com.example.fitnessrecord.community.routinepost.dto.UpdateRoutinePostInput;
 
 public interface RoutinePostService {
 
@@ -15,5 +16,10 @@ public interface RoutinePostService {
    * 게시글 조회
    */
   RoutinePostDto getRoutinePost(Long id);
+
+  /**
+   * 게시글 수정
+   */
+  RoutinePostResult updateRoutinePost(Long id, UpdateRoutinePostInput input, Long userId);
 }
 

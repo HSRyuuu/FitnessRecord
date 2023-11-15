@@ -2,6 +2,7 @@ package com.example.fitnessrecord.community.routinepost.persist;
 
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.user.persist.User;
+import io.jsonwebtoken.lang.Strings;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 
@@ -50,6 +51,16 @@ public class RoutinePost {
 
   public void addViews(){
     this.views += 1;
+  }
+
+  public void update(String title, String content){
+    if(Strings.hasText(title)){
+      this.title = title;
+    }
+    if(Strings.hasText(content)){
+      this.content = content;
+    }
+    this.lastModifiedDateTime = LocalDateTime.now();
   }
 
 }

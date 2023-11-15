@@ -3,6 +3,7 @@ package com.example.fitnessrecord.community.routinepost.service;
 import com.example.fitnessrecord.community.routinepost.dto.AddRoutinePostInput;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostDto;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostResult;
+import com.example.fitnessrecord.community.routinepost.dto.UpdateRoutinePostInput;
 import com.example.fitnessrecord.community.routinepost.persist.RoutinePost;
 import com.example.fitnessrecord.community.routinepost.persist.RoutinePostRepository;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
@@ -54,6 +55,20 @@ public class RoutinePostServiceImpl implements RoutinePostService {
     RoutinePost saved = routinePostRepository.save(routinePost);
 
     return RoutinePostDto.fromEntity(
+        saved, this.getRoutineElementDtoList(routinePost.getRoutine().getId()));
+  }
+
+  @Override
+  public RoutinePostResult updateRoutinePost(Long id, UpdateRoutinePostInput input, Long userId) {
+    RoutinePost routinePost = routinePostRepository.findById(id)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
+
+    this.validateRoutineAuthority(routinePost.getUser(), userId);
+
+    routinePost.update(input.getTitle(), input.getContent());
+    RoutinePost saved = routinePostRepository.save(routinePost);
+
+    return RoutinePostResult.fromEntity(
         saved, this.getRoutineElementDtoList(routinePost.getRoutine().getId()));
   }
 

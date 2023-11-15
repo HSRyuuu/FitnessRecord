@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis.redisson.lock;
+package com.example.fitnessrecord.global.redis.lock;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;

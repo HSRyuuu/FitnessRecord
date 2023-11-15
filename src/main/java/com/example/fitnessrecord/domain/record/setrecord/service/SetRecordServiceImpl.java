@@ -12,7 +12,7 @@ import com.example.fitnessrecord.domain.record.trainingrecord.persist.TrainingRe
 import com.example.fitnessrecord.domain.record.volume.service.VolumeRecordService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import com.example.fitnessrecord.global.redis.redisson.lock.DistributedLock;
+import com.example.fitnessrecord.global.redis.lock.DistributedLock;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;

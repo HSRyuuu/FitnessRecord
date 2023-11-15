@@ -1,9 +1,8 @@
-package com.example.fitnessrecord.global.redis.repository;
+package com.example.fitnessrecord.global.redis.token;
 
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
-import org.springframework.security.core.token.Token;
 import org.springframework.stereotype.Component;
 
 @Component

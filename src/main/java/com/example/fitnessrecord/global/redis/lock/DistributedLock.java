@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis.redisson.lock;
+package com.example.fitnessrecord.global.redis.lock;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

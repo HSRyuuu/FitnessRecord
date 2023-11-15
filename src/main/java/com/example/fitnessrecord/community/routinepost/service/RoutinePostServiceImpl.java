@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.community.routinepost.service;
 
 import com.example.fitnessrecord.community.routinepost.dto.AddRoutinePostInput;
+import com.example.fitnessrecord.community.routinepost.dto.DeleteRoutinePostResult;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostDto;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostResult;
 import com.example.fitnessrecord.community.routinepost.dto.UpdateRoutinePostInput;
@@ -20,9 +21,11 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class RoutinePostServiceImpl implements RoutinePostService {
 
@@ -70,6 +73,21 @@ public class RoutinePostServiceImpl implements RoutinePostService {
 
     return RoutinePostResult.fromEntity(
         saved, this.getRoutineElementDtoList(routinePost.getRoutine().getId()));
+  }
+
+  @Override
+  public DeleteRoutinePostResult deleteRoutinePost(Long id, Long userId) {
+    RoutinePost routinePost = routinePostRepository.findById(id)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
+
+    this.validateRoutineAuthority(routinePost.getUser(), userId);
+
+    DeleteRoutinePostResult result =
+        DeleteRoutinePostResult.fromEntity(routinePost);
+
+    routinePostRepository.delete(routinePost);
+
+    return result;
   }
 
   private List<RoutineElementDto> getRoutineElementDtoList(Long routineId){

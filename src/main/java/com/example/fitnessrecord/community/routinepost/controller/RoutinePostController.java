@@ -1,6 +1,7 @@
 package com.example.fitnessrecord.community.routinepost.controller;
 
 import com.example.fitnessrecord.community.routinepost.dto.AddRoutinePostInput;
+import com.example.fitnessrecord.community.routinepost.dto.DeleteRoutinePostResult;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostResult;
 import com.example.fitnessrecord.community.routinepost.dto.UpdateRoutinePostInput;
 import com.example.fitnessrecord.community.routinepost.service.RoutinePostService;
@@ -46,5 +47,15 @@ public class RoutinePostController {
 
     return ResponseEntity.ok(result);
   }
+
+  @ApiOperation("루틴 공유 글을 삭제한다.")
+  @DeleteMapping("/post/{id}")
+  public ResponseEntity<?> deleteRoutinePost(@PathVariable Long id,
+      @AuthenticationPrincipal PrincipalDetails principalDetails){
+    DeleteRoutinePostResult result = routinePostService.deleteRoutinePost(id,
+        principalDetails.getUserId());
+    return ResponseEntity.ok(result);
+  }
+
 
 }

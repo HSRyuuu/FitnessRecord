@@ -1,9 +1,9 @@
-
 package com.example.fitnessrecord.community.routinepost.dto;
 
 import com.example.fitnessrecord.community.routinepost.persist.RoutinePost;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
 import java.time.LocalDateTime;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +16,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoutinePostDto {
+public class RoutinePostResult {
 
   private Long id;
 
-  private String nickname;
+  private Long userId;
+  private Long routineId;
 
   private String title;
   private String content;
@@ -33,11 +34,11 @@ public class RoutinePostDto {
 
   private List<RoutineElementDto> elements;
 
-  public static RoutinePostDto fromEntity(RoutinePost routinePost,
-      List<RoutineElementDto> elements) {
-    return RoutinePostDto.builder()
+  public static RoutinePostResult fromEntity(RoutinePost routinePost, List<RoutineElementDto> elements){
+    return RoutinePostResult.builder()
         .id(routinePost.getId())
-        .nickname(routinePost.getUser().getNickname())
+        .userId(routinePost.getUser().getId())
+        .routineId(routinePost.getRoutine().getId())
         .title(routinePost.getTitle())
         .content(routinePost.getContent())
         .createDateTime(routinePost.getCreateDateTime())

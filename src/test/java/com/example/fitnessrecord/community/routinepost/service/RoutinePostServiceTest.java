@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.example.fitnessrecord.community.routinepost.dto.AddRoutinePostInput;
-import com.example.fitnessrecord.community.routinepost.dto.RoutinePostDto;
+import com.example.fitnessrecord.community.routinepost.dto.RoutinePostResult;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElementRepository;
@@ -40,11 +40,12 @@ class RoutinePostServiceTest {
   static int elementAmount = 5;
 
   @BeforeEach
-  void addAllArgs(@Autowired UserRepository userRepository,
+  void addAllData(@Autowired UserRepository userRepository,
       @Autowired RoutineRepository routineRepository,
       @Autowired RoutineElementRepository routineElementRepository) {
     User input = User.builder()
         .email("test@test.com")
+        .nickname("testNickname")
         .build();
 
     user = userRepository.save(input);
@@ -72,7 +73,7 @@ class RoutinePostServiceTest {
   }
 
   @AfterEach
-  void deleteAllArgs(@Autowired UserRepository userRepository,
+  void deleteAllData(@Autowired UserRepository userRepository,
       @Autowired RoutineRepository routineRepository,
       @Autowired RoutineElementRepository routineElementRepository) {
     routineElementRepository.deleteAllByRoutine(routine);
@@ -95,7 +96,7 @@ class RoutinePostServiceTest {
           .build();
 
       //when
-      RoutinePostDto result = routinePostService.addRoutinePost(input, user.getId());
+      RoutinePostResult result = routinePostService.addRoutinePost(input, user.getId());
       List<RoutineElementDto> resultElements = result.getElements();
 
       //then
@@ -143,6 +144,5 @@ class RoutinePostServiceTest {
     }
 
   }
-
 
 }

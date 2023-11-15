@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis.repository;
+package com.example.fitnessrecord.global.redis.token;
 
 public interface TokenRepository {
   void addRefreshToken(String key, String value);

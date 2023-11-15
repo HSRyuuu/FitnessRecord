@@ -8,7 +8,7 @@ import com.example.fitnessrecord.global.auth.dto.LoginInput;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import com.example.fitnessrecord.global.redis.repository.TokenRepository;
+import com.example.fitnessrecord.global.redis.token.TokenRepository;
 import com.example.fitnessrecord.global.util.PasswordUtils;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;

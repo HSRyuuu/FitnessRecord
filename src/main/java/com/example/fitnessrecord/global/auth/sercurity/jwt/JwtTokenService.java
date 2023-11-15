@@ -5,7 +5,7 @@ import com.example.fitnessrecord.global.auth.dto.TokenResponse;
 import com.example.fitnessrecord.global.auth.service.AuthService;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import com.example.fitnessrecord.global.redis.repository.TokenRepository;
+import com.example.fitnessrecord.global.redis.token.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

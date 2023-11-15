@@ -15,7 +15,7 @@ import com.example.fitnessrecord.domain.routine.routine.persist.RoutineRepositor
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import com.example.fitnessrecord.global.redis.redisson.lock.DistributedLock;
+import com.example.fitnessrecord.global.redis.lock.DistributedLock;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

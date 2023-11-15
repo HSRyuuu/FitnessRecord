@@ -1,4 +1,4 @@
-package com.example.fitnessrecord.global.redis.redisson.lock;
+package com.example.fitnessrecord.global.redis.lock;
 
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;

@@ -32,6 +32,9 @@ public enum ErrorCode {
     ROUTINE_ELEMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴 요소를 찾을 수 없습니다."),
     ROUTINE_ELEMENT_NOT_MATCH_ROUTINE(HttpStatus.NOT_FOUND.value(), "루틴 요소가 루틴에 포함되지 않습니다."),
 
+    //RoutinePost 관련
+    ROUTINE_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴 게시물을 찾을 수 없습니다."),
+
 
     //Redisson
     LOCK_NOT_AVAILABLE(HttpStatus.LOCKED.value(), "락을 획득할 수 없습니다."),

@@ -48,4 +48,8 @@ public class RoutinePost {
   private int views;
   private int likes;
 
+  public void addViews(){
+    this.views += 1;
+  }
+
 }

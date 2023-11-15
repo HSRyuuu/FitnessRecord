@@ -2,6 +2,7 @@ package com.example.fitnessrecord.community.routinepost.service;
 
 import com.example.fitnessrecord.community.routinepost.dto.AddRoutinePostInput;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostDto;
+import com.example.fitnessrecord.community.routinepost.dto.RoutinePostResult;
 import com.example.fitnessrecord.community.routinepost.persist.RoutinePost;
 import com.example.fitnessrecord.community.routinepost.persist.RoutinePostRepository;
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
@@ -12,6 +13,7 @@ import com.example.fitnessrecord.domain.routine.routine.persist.RoutineRepositor
 import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
+import com.example.fitnessrecord.global.redis.redisson.lock.DistributedLock;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class RoutinePostServiceImpl implements RoutinePostService {
   private final RoutineElementRepository routineElementRepository;
 
   @Override
-  public RoutinePostDto addRoutinePost(AddRoutinePostInput input, Long userId) {
+  public RoutinePostResult addRoutinePost(AddRoutinePostInput input, Long userId) {
     Routine routine = routineRepository.findById(input.getRoutineId())
         .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_NOT_FOUND));
     User user = routine.getUser();
@@ -39,7 +41,20 @@ public class RoutinePostServiceImpl implements RoutinePostService {
 
     RoutinePost saved = routinePostRepository.save(routinePost);
 
-    return RoutinePostDto.fromEntity(saved, getRoutineElementDtoList(routine.getId()));
+    return RoutinePostResult.fromEntity(saved, this.getRoutineElementDtoList(routine.getId()));
+  }
+
+  @Override
+  @DistributedLock(key = "T(java.lang.String).format('RoutinePost%d', #id)")
+  public RoutinePostDto getRoutinePost(Long id) {
+    RoutinePost routinePost = routinePostRepository.findById(id)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
+    routinePost.addViews();
+
+    RoutinePost saved = routinePostRepository.save(routinePost);
+
+    return RoutinePostDto.fromEntity(
+        saved, this.getRoutineElementDtoList(routinePost.getRoutine().getId()));
   }
 
   private List<RoutineElementDto> getRoutineElementDtoList(Long routineId){

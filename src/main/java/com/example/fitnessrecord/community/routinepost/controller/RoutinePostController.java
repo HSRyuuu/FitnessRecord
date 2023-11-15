@@ -57,5 +57,4 @@ public class RoutinePostController {
     return ResponseEntity.ok(result);
   }
 
-
 }

@@ -20,9 +20,13 @@ public class LikesServiceImpl implements LikesService {
 
   @Override
   public LikesDto doLikes(Long userId, Long routinePostId) {
-    boolean routinePostExists = routinePostRepository.existsById(routinePostId);
-    boolean isAlreadyLikes = likesRepository.existsByUserIdAndRoutinePostId(userId, routinePostId);
-    validation(routinePostExists, isAlreadyLikes);
+
+    if (routinePostRepository.existsById(routinePostId)) {
+      throw new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND);
+    }
+    if (likesRepository.existsByUserIdAndRoutinePostId(userId, routinePostId)) {
+      throw new MyException(ErrorCode.USER_ALREADY_LIKES_ROUTINE_POST);
+    }
 
     Likes saved = likesRepository.save(new Likes(userId, routinePostId));
 
@@ -39,14 +43,5 @@ public class LikesServiceImpl implements LikesService {
     likesRepository.delete(likes);
 
     return result;
-  }
-
-  private void validation(boolean routinePostExists, boolean isAlreadyLikes) {
-    if (!routinePostExists) {
-      throw new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND);
-    }
-    if (isAlreadyLikes) {
-      throw new MyException(ErrorCode.USER_ALREADY_LIKES_ROUTINE_POST);
-    }
   }
 }

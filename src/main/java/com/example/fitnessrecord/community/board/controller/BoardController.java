@@ -41,8 +41,13 @@ public class BoardController {
   @GetMapping("/post/{id}")
   public ResponseEntity<?> getRoutinePost(@PathVariable Long id,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
-    RoutinePostDto routinePost = routinePostService.getRoutinePost(id, principalDetails.getUserId());
-    return ResponseEntity.ok(routinePost);
+    RoutinePostDto result = routinePostService.getRoutinePost(id, principalDetails.getUserId());
+
+    boolean addViewResult = routinePostService.addView(principalDetails.getUserId(), result.getId());
+
+    result.addView(addViewResult);
+    log.info("조회수 증가 성공 여부: {}", addViewResult);
+    return ResponseEntity.ok(result);
   }
 
   @ApiOperation("루틴 공유 글에 좋아요(likes)를 누른다.")

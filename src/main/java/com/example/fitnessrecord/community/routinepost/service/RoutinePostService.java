@@ -19,6 +19,11 @@ public interface RoutinePostService {
   RoutinePostDto getRoutinePost(Long id, Long userId);
 
   /**
+   * 조회수 1 증가
+   */
+  boolean addView(Long userId, Long routinePostId);
+
+  /**
    * 게시글 수정
    */
   RoutinePostResult updateRoutinePost(Long id, UpdateRoutinePostInput input, Long userId);

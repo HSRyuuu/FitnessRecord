@@ -51,20 +51,30 @@ public class RoutinePostServiceImpl implements RoutinePostService {
   }
 
   @Override
-  @DistributedLock(key = "T(java.lang.String).format('RoutinePost%d', #id)")
+
   public RoutinePostDto getRoutinePost(Long id, Long userId) {
     RoutinePost routinePost = routinePostRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
-
-    if(!viewRecordRepository.existsViewRecord(userId, id)){
-      viewRecordRepository.addViewRecord(userId, id);
-      routinePost.addViews();
-    }
 
     RoutinePost saved = routinePostRepository.save(routinePost);
 
     return RoutinePostDto.fromEntity(
         saved, this.getRoutineElementDtoList(routinePost.getRoutine().getId()));
+  }
+
+  @Override
+  @DistributedLock(key = "T(java.lang.String).format('RoutinePost%d', #routinePostId)")
+  public boolean addView(Long userId, Long routinePostId) {
+    RoutinePost routinePost = routinePostRepository.findById(routinePostId)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
+
+    if (!viewRecordRepository.existsViewRecord(userId, routinePostId)) {
+      viewRecordRepository.addViewRecord(userId, routinePostId);
+      routinePost.addViews();
+      return true;
+    }
+
+    return false;
   }
 
   @Override
@@ -96,7 +106,7 @@ public class RoutinePostServiceImpl implements RoutinePostService {
     return result;
   }
 
-  private List<RoutineElementDto> getRoutineElementDtoList(Long routineId){
+  private List<RoutineElementDto> getRoutineElementDtoList(Long routineId) {
     List<RoutineElement> findList =
         routineElementRepository.findAllByRoutineIdOrderByOrderNumber(routineId);
 
@@ -105,8 +115,8 @@ public class RoutinePostServiceImpl implements RoutinePostService {
         .collect(Collectors.toList());
   }
 
-  private void validateRoutineAuthority(User user, Long userId){
-    if(!user.getId().equals(userId)){
+  private void validateRoutineAuthority(User user, Long userId) {
+    if (!user.getId().equals(userId)) {
       throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
     }
   }

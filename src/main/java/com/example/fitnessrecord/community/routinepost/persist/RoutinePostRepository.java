@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoutinePostRepository extends JpaRepository<RoutinePost, Long> {
 
+  boolean existsById(Long id);
 }

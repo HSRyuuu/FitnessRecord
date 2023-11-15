@@ -33,6 +33,12 @@ public class RoutinePostDto {
 
   private List<RoutineElementDto> elements;
 
+  public void addView(boolean b){
+    if(b){
+      this.views += 1;
+    }
+  }
+
   public static RoutinePostDto fromEntity(RoutinePost routinePost,
       List<RoutineElementDto> elements) {
     return RoutinePostDto.builder()

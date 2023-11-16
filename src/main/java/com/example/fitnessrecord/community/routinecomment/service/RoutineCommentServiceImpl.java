@@ -9,7 +9,6 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,16 +38,34 @@ public class RoutineCommentServiceImpl implements RoutineCommentService{
   }
 
   @Override
-  public RoutineCommentDto deleteRoutineComment(Long postId, Long commentId, Long userId) {
+  public RoutineCommentDto deleteRoutineComment(Long commentId, Long userId) {
     RoutineComment routineComment = routineCommentRepository.findById(commentId)
         .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_COMMENT_NOT_FOUND));
 
-    if(!routineComment.getWriter().getId().equals(userId)){
-      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
-    }
+    this.authorityValidation(routineComment, userId);
 
     routineCommentRepository.delete(routineComment);
 
     return RoutineCommentDto.fromEntity(routineComment);
   }
+
+  @Override
+  public RoutineCommentDto updateRoutineComment(Long commentId, Long userId, String text) {
+    RoutineComment routineComment = routineCommentRepository.findById(commentId)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_COMMENT_NOT_FOUND));
+
+    this.authorityValidation(routineComment, userId);
+
+    routineComment.updateText(text);
+    RoutineComment saved = routineCommentRepository.save(routineComment);
+
+    return RoutineCommentDto.fromEntity(saved);
+  }
+
+  private void authorityValidation(RoutineComment routineComment, Long userId){
+    if(!routineComment.getWriter().getId().equals(userId)){
+      throw new MyException(ErrorCode.NO_AUTHORITY_ERROR);
+    }
+  }
+
 }

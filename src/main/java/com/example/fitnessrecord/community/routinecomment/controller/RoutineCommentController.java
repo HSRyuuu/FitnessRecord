@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,15 +36,26 @@ public class RoutineCommentController {
   }
 
   @ApiOperation("댓글 삭제")
-  @DeleteMapping("/post/{postId}/comment/{commentId}")
-  public ResponseEntity<?> deleteRoutineComment(@PathVariable Long postId,
-      @PathVariable Long commentId,
+  @DeleteMapping("/comment/{commentId}")
+  public ResponseEntity<?> deleteRoutineComment(@PathVariable Long commentId,
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
     RoutineCommentDto deleted =
-        routineCommentService.deleteRoutineComment(postId, commentId, principalDetails.getUserId());
+        routineCommentService.deleteRoutineComment(commentId, principalDetails.getUserId());
 
     return ResponseEntity.ok(deleted);
+  }
+
+  @ApiOperation("댓글 수정")
+  @PutMapping("/comment/{commentId}")
+  public ResponseEntity<?> updateRoutineComment(@PathVariable Long commentId,
+      @RequestBody String text,
+      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+    RoutineCommentDto result =
+        routineCommentService.updateRoutineComment(commentId, principalDetails.getUserId(), text);
+
+    return ResponseEntity.ok(result);
   }
 
 

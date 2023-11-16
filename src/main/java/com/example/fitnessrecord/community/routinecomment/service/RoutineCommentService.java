@@ -12,5 +12,10 @@ public interface RoutineCommentService {
   /**
    * 댓글 삭제
    */
-  RoutineCommentDto deleteRoutineComment(Long postId, Long commentId, Long userId);
+  RoutineCommentDto deleteRoutineComment(Long commentId, Long userId);
+
+  /**
+   * 댓글 수정
+   */
+  RoutineCommentDto updateRoutineComment(Long commentId, Long userId, String text);
 }

@@ -49,4 +49,9 @@ public class RoutineComment {
     this.lastModifiedDateTime = LocalDateTime.now();
   }
 
+  public void updateText(String text){
+    this.text = text;
+    this.lastModifiedDateTime = LocalDateTime.now();
+  }
+
 }

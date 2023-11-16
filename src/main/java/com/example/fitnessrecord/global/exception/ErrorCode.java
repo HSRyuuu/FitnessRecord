@@ -36,6 +36,7 @@ public enum ErrorCode {
     ROUTINE_POST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴 게시물을 찾을 수 없습니다."),
     USER_ALREADY_LIKES_ROUTINE_POST(HttpStatus.BAD_REQUEST.value(), "이미 좋아요를 누른 게시물입니다.."),
     LIKES_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "좋아요가 존재하지 않습니다."),
+    ROUTINE_COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "댓글이 존재하지 않습니다."),
 
 
     //Redisson

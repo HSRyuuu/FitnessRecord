@@ -20,9 +20,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 public class RoutineComment {
 
@@ -42,5 +40,13 @@ public class RoutineComment {
 
   private LocalDateTime createDateTime;
   private LocalDateTime lastModifiedDateTime;
+
+  public RoutineComment(RoutinePost routinePost, User user, String text){
+    this.routinePost = routinePost;
+    this.writer = user;
+    this.text = text;
+    this.createDateTime = LocalDateTime.now();
+    this.lastModifiedDateTime = LocalDateTime.now();
+  }
 
 }

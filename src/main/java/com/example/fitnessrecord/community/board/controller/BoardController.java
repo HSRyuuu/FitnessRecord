@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
 
   private final BoardService boardService;
-  private final RoutinePostService routinePostService;
-  private final LikesService likesService;
 
   @ApiOperation("루틴 공유 게시판 Main 화면")
   @GetMapping("/main")
@@ -37,37 +35,5 @@ public class BoardController {
     return ResponseEntity.ok(boardMainData);
   }
 
-  @ApiOperation("루틴 공유 글을 조회한다.")
-  @GetMapping("/post/{id}")
-  public ResponseEntity<?> getRoutinePost(@PathVariable Long id,
-      @AuthenticationPrincipal PrincipalDetails principalDetails) {
-    RoutinePostDto result = routinePostService.getRoutinePost(id, principalDetails.getUserId());
-
-    boolean addViewResult = routinePostService.addView(principalDetails.getUserId(), result.getId());
-
-    result.addView(addViewResult);
-    log.info("조회수 증가 성공 여부: {}", addViewResult);
-    return ResponseEntity.ok(result);
-  }
-
-  @ApiOperation("루틴 공유 글에 좋아요(likes)를 누른다.")
-  @PostMapping("/post/{id}/likes")
-  public ResponseEntity<?> likesRoutinePost(@PathVariable Long id,
-      @AuthenticationPrincipal PrincipalDetails principalDetails) {
-
-    LikesDto result = likesService.doLikes(principalDetails.getUserId(), id);
-
-    return ResponseEntity.ok(result);
-  }
-
-  @ApiOperation("루틴 공유 글에 좋아요(likes)를 취소한다.")
-  @DeleteMapping("/post/{id}/likes")
-  public ResponseEntity<?> cancelLikesRoutinePost(@PathVariable Long id,
-      @AuthenticationPrincipal PrincipalDetails principalDetails) {
-
-    LikesDto result = likesService.cancelLikes(principalDetails.getUserId(), id);
-
-    return ResponseEntity.ok(result);
-  }
 
 }

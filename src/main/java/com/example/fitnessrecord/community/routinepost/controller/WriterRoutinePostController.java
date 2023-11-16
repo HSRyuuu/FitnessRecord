@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/board")
 @RestController
-public class RoutinePostController {
+public class WriterRoutinePostController {
 
   private final RoutinePostService routinePostService;
 

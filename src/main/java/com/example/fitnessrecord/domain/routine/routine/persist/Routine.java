@@ -53,4 +53,11 @@ public class Routine {
     this.lastModifiedDateTime = lastModifiedDateTime;
     this.description = description;
   }
+
+  public Routine(Routine routine, User user){
+    this.user = user;
+    this.routineName = routine.getRoutineName() + "_copy";
+    this.lastModifiedDateTime = LocalDateTime.now();
+    this.description = routine.getDescription();
+  }
 }

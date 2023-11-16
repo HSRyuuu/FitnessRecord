@@ -5,6 +5,7 @@ import com.example.fitnessrecord.community.routinepost.dto.DeleteRoutinePostResu
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostDto;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostResult;
 import com.example.fitnessrecord.community.routinepost.dto.UpdateRoutinePostInput;
+import com.example.fitnessrecord.domain.routine.routine.dto.RoutineDto;
 
 public interface RoutinePostService {
 
@@ -32,5 +33,10 @@ public interface RoutinePostService {
    * 게시글 삭제
    */
   DeleteRoutinePostResult deleteRoutinePost(Long id, Long userId);
+
+  /**
+   * 다른 사람의 루틴을 나의 루틴으로 저장
+   */
+  RoutineDto quoteAndSaveRoutine(Long routinePostId, Long userId);
 }
 

@@ -1,13 +1,10 @@
 package com.example.fitnessrecord.domain.routine.routine.dto;
 
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
-import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
-import com.example.fitnessrecord.domain.user.dto.UserDto;
-import com.example.fitnessrecord.domain.user.persist.User;
+import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +19,7 @@ import lombok.Setter;
 public class RoutineDto {
 
   private Long id;
-  private UserDto user;
+  private Long userId;
 
   private String routineName;
 
@@ -31,6 +28,17 @@ public class RoutineDto {
   private String description;
 
   private List<RoutineElementDto> elementList = new ArrayList<>();
+
+  public static RoutineDto fromEntity(Routine routine, List<RoutineElementDto> list) {
+    return RoutineDto.builder()
+        .id(routine.getId())
+        .userId(routine.getUser().getId())
+        .routineName(routine.getRoutineName())
+        .lastModifiedDateTime(routine.getLastModifiedDateTime())
+        .description(routine.getDescription())
+        .elementList(list)
+        .build();
+  }
 
 
 }

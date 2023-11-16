@@ -10,13 +10,16 @@ import com.example.fitnessrecord.community.routinepost.persist.RoutinePostReposi
 import com.example.fitnessrecord.domain.routine.element.dto.RoutineElementDto;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElement;
 import com.example.fitnessrecord.domain.routine.element.persist.RoutineElementRepository;
+import com.example.fitnessrecord.domain.routine.routine.dto.RoutineDto;
 import com.example.fitnessrecord.domain.routine.routine.persist.Routine;
 import com.example.fitnessrecord.domain.routine.routine.persist.RoutineRepository;
 import com.example.fitnessrecord.domain.user.persist.User;
+import com.example.fitnessrecord.domain.user.persist.UserRepository;
 import com.example.fitnessrecord.global.exception.ErrorCode;
 import com.example.fitnessrecord.global.exception.MyException;
 import com.example.fitnessrecord.global.redis.lock.DistributedLock;
 import com.example.fitnessrecord.global.redis.views.ViewRecordRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +37,7 @@ public class RoutinePostServiceImpl implements RoutinePostService {
   private final RoutineRepository routineRepository;
   private final RoutineElementRepository routineElementRepository;
   private final ViewRecordRepository viewRecordRepository;
+  private final UserRepository userRepository;
 
   @Override
   public RoutinePostResult addRoutinePost(AddRoutinePostInput input, Long userId) {
@@ -105,6 +109,38 @@ public class RoutinePostServiceImpl implements RoutinePostService {
 
     return result;
   }
+
+  @Override
+  public RoutineDto quoteAndSaveRoutine(Long routinePostId, Long userId) {
+    RoutinePost routinePost = routinePostRepository.findById(routinePostId)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
+    Routine routine = routinePost.getRoutine();
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new MyException(ErrorCode.USER_NOT_FOUND));
+
+    Routine myRoutine = routineRepository.save(new Routine(routine, user));
+    routineElementRepository.saveAll(this.duplicateRoutineElements(routine.getList(), myRoutine));
+
+    return RoutineDto.fromEntity(myRoutine, this.getRoutineElementDtoList(myRoutine.getId()));
+  }
+
+  private List<RoutineElement> duplicateRoutineElements(
+      List<RoutineElement> list, Routine routine) {
+    List<RoutineElement> newList = new ArrayList<>();
+    for (RoutineElement routineElement : list) {
+      newList.add(
+          RoutineElement.builder()
+              .routine(routine)
+              .orderNumber(routineElement.getOrderNumber())
+              .trainingName(routineElement.getTrainingName())
+              .bodyPart(routineElement.getBodyPart())
+              .reps(routineElement.getReps())
+              .build());
+    }
+    return newList;
+  }
+
 
   private List<RoutineElementDto> getRoutineElementDtoList(Long routineId) {
     List<RoutineElement> findList =

@@ -1,11 +1,10 @@
 package com.example.fitnessrecord.community.routinepost.controller;
 
-import com.example.fitnessrecord.community.board.dto.BoardMainDto;
-import com.example.fitnessrecord.community.board.service.BoardService;
 import com.example.fitnessrecord.community.likes.dto.LikesDto;
 import com.example.fitnessrecord.community.likes.service.LikesService;
 import com.example.fitnessrecord.community.routinepost.dto.RoutinePostDto;
 import com.example.fitnessrecord.community.routinepost.service.RoutinePostService;
+import com.example.fitnessrecord.domain.routine.routine.dto.RoutineDto;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -35,7 +33,8 @@ public class UserRoutinePostController {
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
     RoutinePostDto result = routinePostService.getRoutinePost(id, principalDetails.getUserId());
 
-    boolean addViewResult = routinePostService.addView(principalDetails.getUserId(), result.getId());
+    boolean addViewResult = routinePostService.addView(principalDetails.getUserId(),
+        result.getId());
 
     result.addView(addViewResult);
     log.info("조회수 증가 성공 여부: {}", addViewResult);
@@ -58,6 +57,16 @@ public class UserRoutinePostController {
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
     LikesDto result = likesService.cancelLikes(principalDetails.getUserId(), id);
+
+    return ResponseEntity.ok(result);
+  }
+
+  @ApiOperation("다른 유저의 루틴을 저장한다.")
+  @PostMapping("/post/{id}/save")
+  public ResponseEntity<?> quoteAndSaveRoutine(@PathVariable("id") Long routinePostId,
+      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    RoutineDto result = routinePostService.quoteAndSaveRoutine(routinePostId,
+        principalDetails.getUserId());
 
     return ResponseEntity.ok(result);
   }

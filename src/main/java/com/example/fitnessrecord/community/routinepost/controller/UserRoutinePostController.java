@@ -47,7 +47,7 @@ public class UserRoutinePostController {
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
     LikesDto result = likesService.doLikes(principalDetails.getUserId(), id);
-
+    routinePostService.addLikes(id);
     return ResponseEntity.ok(result);
   }
 
@@ -57,7 +57,7 @@ public class UserRoutinePostController {
       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
     LikesDto result = likesService.cancelLikes(principalDetails.getUserId(), id);
-
+    routinePostService.cancelLikes(id);
     return ResponseEntity.ok(result);
   }
 

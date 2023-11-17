@@ -53,6 +53,14 @@ public class RoutinePost {
     this.views += 1;
   }
 
+  public void addLikes(){
+    this.likes += 1;
+  }
+
+  public void cancelLikes(){
+    this.likes -= 1;
+  }
+
   public void update(String title, String content){
     if(Strings.hasText(title)){
       this.title = title;

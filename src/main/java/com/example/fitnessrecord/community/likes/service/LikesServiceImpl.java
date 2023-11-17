@@ -20,10 +20,10 @@ public class LikesServiceImpl implements LikesService {
 
   @Override
   public LikesDto doLikes(Long userId, Long routinePostId) {
-
-    if (routinePostRepository.existsById(routinePostId)) {
+    if (!routinePostRepository.existsById(routinePostId)) {
       throw new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND);
     }
+
     if (likesRepository.existsByUserIdAndRoutinePostId(userId, routinePostId)) {
       throw new MyException(ErrorCode.USER_ALREADY_LIKES_ROUTINE_POST);
     }

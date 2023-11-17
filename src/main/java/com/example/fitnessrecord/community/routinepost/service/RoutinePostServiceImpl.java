@@ -55,7 +55,6 @@ public class RoutinePostServiceImpl implements RoutinePostService {
   }
 
   @Override
-
   public RoutinePostDto getRoutinePost(Long id, Long userId) {
     RoutinePost routinePost = routinePostRepository.findById(id)
         .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
@@ -79,6 +78,24 @@ public class RoutinePostServiceImpl implements RoutinePostService {
     }
 
     return false;
+  }
+
+  @Override
+  @DistributedLock(key = "T(java.lang.String).format('Likes%d', #routinePostId)")
+  public void addLikes(Long routinePostId) {
+    RoutinePost routinePost = routinePostRepository.findById(routinePostId)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
+    routinePost.addLikes();
+    routinePostRepository.save(routinePost);
+  }
+
+  @Override
+  @DistributedLock(key = "T(java.lang.String).format('Likes%d', #routinePostId)")
+  public void cancelLikes(Long routinePostId) {
+    RoutinePost routinePost = routinePostRepository.findById(routinePostId)
+        .orElseThrow(() -> new MyException(ErrorCode.ROUTINE_POST_NOT_FOUND));
+    routinePost.cancelLikes();
+    routinePostRepository.save(routinePost);
   }
 
   @Override

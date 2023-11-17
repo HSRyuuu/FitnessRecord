@@ -25,6 +25,16 @@ public interface RoutinePostService {
   boolean addView(Long userId, Long routinePostId);
 
   /**
+   * 좋아요 1 증가
+   */
+  void addLikes(Long routinePostId);
+
+  /**
+   * 좋아요 1 감소
+   */
+  void cancelLikes(Long routinePostId);
+
+  /**
    * 게시글 수정
    */
   RoutinePostResult updateRoutinePost(Long id, UpdateRoutinePostInput input, Long userId);

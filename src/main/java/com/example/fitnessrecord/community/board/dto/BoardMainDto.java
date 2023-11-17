@@ -2,7 +2,8 @@ package com.example.fitnessrecord.community.board.dto;
 
 import com.example.fitnessrecord.community.routinepost.persist.RoutinePost;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import java.util.stream.Collectors;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
@@ -11,20 +12,19 @@ import org.springframework.data.domain.Page;
 @Setter
 public class BoardMainDto {
 
-  private List<RoutinePost> hotPosts;
+  private int page;
 
-  private Page<RoutinePost> posts;
+  private List<BoardRoutinePostDto> hotPosts;
 
-  public BoardMainDto(List<RoutinePost> hotPosts) {
-    this.hotPosts = hotPosts;
-  }
+  private List<BoardRoutinePostDto> posts;
 
-  public BoardMainDto(Page<RoutinePost> posts) {
-    this.posts = posts;
-  }
-
-  public BoardMainDto(List<RoutinePost> hotPosts, Page<RoutinePost> posts) {
-    this.hotPosts = hotPosts;
-    this.posts = posts;
+  public BoardMainDto(int page, List<RoutinePost> hotPosts, Page<RoutinePost> posts) {
+    this.page = page;
+    this.hotPosts = hotPosts.stream()
+        .map(BoardRoutinePostDto::fromEntity)
+        .collect(Collectors.toList());
+    this.posts = posts.getContent().stream()
+        .map(BoardRoutinePostDto::fromEntity)
+        .collect(Collectors.toList());
   }
 }

@@ -16,6 +16,6 @@ public interface RoutinePostRepository extends JpaRepository<RoutinePost, Long> 
 
   Page<RoutinePost> findAllByOrderByCreateDateTimeDesc(Pageable pageable);
 
-  @Query("SELECT p FROM RoutinePost p WHERE p.createDateTime >= :twentyFourHoursAgo ORDER BY p.likes DESC")
+  @Query("SELECT p FROM RoutinePost p WHERE p.createDateTime >= :twentyFourHoursAgo ORDER BY p.likes DESC limit 10")
   List<RoutinePost> findTop10ByLikesInLast24Hours(@Param("twentyFourHoursAgo") LocalDateTime twentyFourHoursAgo);
 }

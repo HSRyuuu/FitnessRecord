@@ -27,6 +27,9 @@ public enum ErrorCode {
     SET_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "세트 기록을 찾을 수 없습니다."),
     VOLUME_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "볼륨 기록을 찾을 수 없습니다."),
 
+    //Statistics 관련
+    PERIOD_TOO_LONG(HttpStatus.BAD_REQUEST.value(), "기간이 너무 깁니다. 최대 1년 사이의 데이터만 불러올 수 있습니다."),
+
     //Routine 관련
     ROUTINE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴을 찾을 수 없습니다."),
     ROUTINE_ELEMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "루틴 요소를 찾을 수 없습니다."),

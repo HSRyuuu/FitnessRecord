@@ -1,10 +1,13 @@
 package com.example.fitnessrecord.domain.statistics.controller;
 
 
+import com.example.fitnessrecord.domain.record.volume.dto.VolumeRecordDto;
+import com.example.fitnessrecord.domain.statistics.service.StatisticsService;
 import com.example.fitnessrecord.global.auth.sercurity.principal.PrincipalDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,16 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/statistics")
 public class StatisticsController {
 
-  @ApiOperation("d1부터 d2간의 운동 기록")
+  private final StatisticsService statisticsService;
+
+  @ApiOperation(value = "d1부터 d2간의 운동 기록", notes = "최대 1년 간의 데이터만 불러올 수 있다.")
   @GetMapping("/volumes")
   public ResponseEntity<?> volumeStatistics(
       @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate d1,
       @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate d2,
+      @RequestParam(value = "p", defaultValue = "1") Integer page,
       @AuthenticationPrincipal PrincipalDetails principalDetails
       ){
+    List<VolumeRecordDto> result =
+        statisticsService.getVolumeStatistics(d1, d2, principalDetails.getUserId(), page);
 
-
-      return ResponseEntity.ok(null);
+    return ResponseEntity.ok(result);
   }
 
 

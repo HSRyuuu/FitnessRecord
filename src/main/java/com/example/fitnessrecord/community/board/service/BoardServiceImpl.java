@@ -27,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
             this.getPageRequest(page, PageConstant.MAIN_PAGE_SIZE));
 
     List<RoutinePost> top10 = routinePostRepository.findTop10ByLikesInLast24Hours(
-        LocalDateTime.now().minusDays(1L));
+        LocalDateTime.now().minusDays(1L), PageRequest.of(0, 10));
 
     return new BoardMainDto(page, top10, list);
   }

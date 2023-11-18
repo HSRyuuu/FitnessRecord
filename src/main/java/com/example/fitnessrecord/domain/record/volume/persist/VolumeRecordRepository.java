@@ -5,6 +5,8 @@ import com.example.fitnessrecord.domain.user.persist.User;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +21,6 @@ public interface VolumeRecordRepository extends JpaRepository<VolumeRecord, Long
       LocalDate end);
 
   List<VolumeRecord> findAllByUserAndDateBetween(User user, LocalDate start, LocalDate end);
+
+  Page<VolumeRecord> findAllByUserIdAndDateBetween(Long userId, LocalDate d1, LocalDate d2, Pageable pageable);
 }

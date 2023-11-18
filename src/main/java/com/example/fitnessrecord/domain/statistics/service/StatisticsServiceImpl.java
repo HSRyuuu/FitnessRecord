@@ -26,10 +26,6 @@ public class StatisticsServiceImpl implements StatisticsService {
   public List<VolumeRecordDto> getVolumeStatistics(LocalDate d1, LocalDate d2, Long userId,
       Integer page) {
 
-    if (d1.plusYears(1L).isBefore(d2)) {
-      throw new MyException(ErrorCode.PERIOD_TOO_LONG);
-    }
-
     Page<VolumeRecord> volumeRecords = volumeRecordRepository.findAllByUserIdAndDateBetween(
         userId, d1, d2, PageRequest.of(page - 1, PageConstant.DEFAULT_PAGE_SIZE));
 

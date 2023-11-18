@@ -27,19 +27,18 @@ public class StatisticsController {
 
   private final StatisticsService statisticsService;
 
-  @ApiOperation(value = "d1부터 d2간의 운동 기록", notes = "최대 1년 간의 데이터만 불러올 수 있다.")
-  @GetMapping("/volumes")
-  public ResponseEntity<?> volumeStatistics(
+  @ApiOperation("d1부터 d2간의 일간 운동 기록")
+  @GetMapping("/volumes/daily")
+  public ResponseEntity<?> volumeStatisticsDaily(
       @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate d1,
       @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate d2,
       @RequestParam(value = "p", defaultValue = "1") Integer page,
-      @AuthenticationPrincipal PrincipalDetails principalDetails
-      ){
+      @AuthenticationPrincipal PrincipalDetails principalDetails){
+
     List<VolumeRecordDto> result =
         statisticsService.getVolumeStatistics(d1, d2, principalDetails.getUserId(), page);
 
     return ResponseEntity.ok(result);
   }
-
 
 }

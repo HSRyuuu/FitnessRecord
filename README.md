@@ -1,22 +1,26 @@
 # FitnessRecord
-운동(웨이트 트레이닝) 기록 서비스
+- 프로젝트 명: FitnessRecord
+- 개발 기간: 2023.10.18 ~ 2023.11.18
+- 개발 인원: 1명
+- 주요 기능: 운동(웨이트 트레이닝) 기록, 루틴 공유 커뮤니티 서비스
 
 ## Skills
-- Java 11, Spring Boot 2.7.10, gradle 8.2.1
+- Java 11, Spring Boot 2.7.16, gradle 8.2.1
 - Spring Data JPA, Spring Security
-- MariaDB
+- MariaDB, Redis
 - JUnit5
-- Redis
 - IntelliJ Idea
 
-### 라이브러리
+### 기술 상세
+- JWT
+- redisson
 - google GSON
 - Gmail smtp 메일 발송
 - Swagger `/swagger-ui/index.html`
 
 # 요구사항 
 
-## 회원 관리
+## 인증
 ### 공통
 - 로그인 시 JWT accessToken과 refreshToken이 발행된다.
 - 이후 `Authorization` 헤더에 `Bearer {token}`을 추가하여 권한을 확인한다.
@@ -26,6 +30,7 @@
 - refreshToken으로 reissue 요청 시 accessToken을 새로 발행한다.
 - 로그아웃 시 해당 refreshTokend을 삭제하고, accessToken에 대한 blackList를 추가하여, 이후 해당 accessToken으로 로그인 할 시 거부되도록 한다. 
 
+## 회원 관리
 ### 이메일 회원
 - 이메일, 비밀 번호를 통해 로그인 할 수 있다.
 - 이메일로 회원가입 할 수 있다.`UserType.BASIC`
@@ -33,10 +38,10 @@
   - 이메일 발송 시에 5초 정도의 시간이 소요되므로 `비동기`로 처리한다.
   - 이메일 인증 기한은 24시간이다. 기한 내에 인증하지 못한 경우 새로운 인증 키로 재발송한다.
 
-### 소셜 회원
+### 카카오 회원
 - `KAKAO`
 - `/login-page`에서 소셜 로그인을 통해 회원가입, 로그인 할 수 있다.
-  - REST API를 제공하는 애플리케이션이지만 인증 코드를 불러오는부분 까지만 thymeleaf form을 사용한다. 
+  - (REST API를 제공하는 애플리케이션이지만 인증 코드를 불러오는부분 까지만 thymeleaf form을 사용한다.) 
 - 처음 로그인 시에는 회원가입이 되고, 이후에는 로그인이 된다.
 
 ### 회원 바디 데이터 기록
@@ -45,7 +50,6 @@
   - 회원 Body 데이터 추가는 하루에 한번만 가능하다. 여러번 추가 시 기존 데이터가 수정되게 된다.
 - 회원은 특정 날짜의 바디 데이터를 삭제할 수 있다.
 - 회원은 특정 기간의 바디 데이터 변화 리스트를 조회할 수 있다.
-(프론트에서 회원 몸 상태 변화 그래프를 보여줄 때 사용)
 
 ## 운동 종목 (카테 고리)
 - 기본적으로 서비스에서 제공하는 운동 종목`BASIC_TRAINING 테이블` 존재
@@ -69,7 +73,6 @@
 
 ### 회원 별 운동 기록 열람
 일정 기간 내의 운동 volume 기록을 열람할 수 있다.
-
 
 ## 루틴 만들기
 - 회원은 자신만의 루틴을 만들 수 있다.

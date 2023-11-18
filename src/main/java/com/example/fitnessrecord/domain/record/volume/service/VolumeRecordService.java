@@ -7,6 +7,13 @@ import java.util.List;
 
 public interface VolumeRecordService {
 
+  /**
+   * volumeRecord 저장
+   */
   int executeVolumeRecordProcess(List<TrainingRecord> trainingRecords);
+
+  /**
+   * volumeRecord 수정
+   */
   void updateVolumeRecord(TrainingRecord trainingRecord);
 }
